@@ -8,6 +8,9 @@
         <li>
           <router-link to="/addBudget">Add Budget</router-link>
         </li>
+        <li>
+          <router-link to="/addScheduledTransaction">Add Scheduled Transaction</router-link>
+        </li>
         <!-- Other sidebar items -->
       </ul>
     </nav>
