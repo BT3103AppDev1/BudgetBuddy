@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "../components/login.vue";
 import addTransactionPage from "@/views/addTransactionPage.vue";
+import addBudgetPage from "@/views/addBudgetPage.vue";
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: "/addTransaction",
     name: "addTransactionPage",
     component: addTransactionPage,
+  },
+  {
+    path: "/addBudget",
+    name: "addBudgetPage",
+    component: addBudgetPage,
   },
 ];
 

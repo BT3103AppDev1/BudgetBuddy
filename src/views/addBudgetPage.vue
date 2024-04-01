@@ -1,16 +1,16 @@
 <template>
   <sidebar />
-  <addTransaction></addTransaction>
+  <addBudget></addBudget>
 </template>
 
 <script>
 import sidebar from "../components/sidebar.vue";
-import addTransaction from "../components/addTransaction.vue";
+import addBudget from "../components/addBudget.vue";
 
 export default {
-  name: "addTransactionPage",
+  name: "addBudgetPage",
   components: {
-    addTransaction,
+    addBudget,
     sidebar,
   },
 };
