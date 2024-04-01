@@ -4,11 +4,21 @@
     <form @submit.prevent="handleLogin">
       <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" id="username" v-model="loginForm.username" required>
+        <input
+          type="text"
+          id="username"
+          v-model="loginForm.username"
+          required
+        />
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" v-model="loginForm.password" required>
+        <input
+          type="password"
+          id="password"
+          v-model="loginForm.password"
+          required
+        />
       </div>
       <button type="submit">Log In</button>
     </form>
@@ -16,33 +26,37 @@
 </template>
 
 <script>
-
-import firebase from "@/firebase";
+import "firebase/compat/auth";
 
 export default {
   name: "Login",
   data() {
     return {
       loginForm: {
-        username: '',
-        password: ''
+        username: "",
+        password: "",
       },
       loginError: false,
-      loginErrorMessage: ''
+      loginErrorMessage: "",
     };
   },
   methods: {
     async handleLogin() {
       this.loginError = false;
       try {
-        await firebase.auth().signInWithEmailAndPassword(this.loginForm.username, this.loginForm.password);
+        await firebase
+          .auth()
+          .signInWithEmailAndPassword(
+            this.loginForm.username,
+            this.loginForm.password
+          );
         // Redirect or do something upon successful login
-        this.$router.push({ name: 'dashboard' }); // Adjust route as necessary
+        this.$router.push({ name: "dashboard" }); // Adjust route as necessary
       } catch (error) {
         this.loginError = true;
         this.loginErrorMessage = error.message;
       }
-    }
-  }
+    },
+  },
 };
 </script>
