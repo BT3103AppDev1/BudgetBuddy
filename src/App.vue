@@ -7,6 +7,7 @@ console.log("in App");
 
 export default {
   name: "App",
+  
 };
 </script>
 

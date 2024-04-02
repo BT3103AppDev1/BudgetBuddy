@@ -6,6 +6,7 @@
           BudgetBuddy is an app to track your budgets and expenditures. <br>
           Feel free to explore our application!
       </div>
+      <button @click="goToSignUp">Create Account</button>
 
   </div>
 </template>
@@ -34,6 +35,11 @@ export default {
       };
 
       ui.start('#firebaseui-auth-container', uiConfig)
+  },
+  methods: {
+    goToSignUp() {
+      this.$router.push({ name: 'signUpPage' });
+    }
   }
 }
 </script>
