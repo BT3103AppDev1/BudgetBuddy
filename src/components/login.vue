@@ -1,12 +1,12 @@
 <template>
   <div style="text-align: center;">
-      <h1 id="mainHead">CRYPTO PAPER PORTFOLIO</h1>
+      <h1 id="mainHead">Welcome to BudgetBuddy</h1>
       <div id="firebaseui-auth-container"></div>
       <div id="pagecontent">
-          Crypto Paper Portfolio (CPP) is an app to track your crypto portfolio. <br>
-          Enter coin details and get real time Profit and Loss update of your Portfolio.
+          BudgetBuddy is an app to track your budgets and expenditures. <br>
+          Feel free to explore our application!
       </div>
-      <h5>copyright@cpp-2024</h5>
+
   </div>
 </template>
 
