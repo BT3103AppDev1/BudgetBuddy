@@ -1,62 +1,39 @@
 <template>
-  <div class="login-container">
-    <h1>BudgetBuddy Login</h1>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          v-model="loginForm.username"
-          required
-        />
+  <div style="text-align: center;">
+      <h1 id="mainHead">CRYPTO PAPER PORTFOLIO</h1>
+      <div id="firebaseui-auth-container"></div>
+      <div id="pagecontent">
+          Crypto Paper Portfolio (CPP) is an app to track your crypto portfolio. <br>
+          Enter coin details and get real time Profit and Loss update of your Portfolio.
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          v-model="loginForm.password"
-          required
-        />
-      </div>
-      <button type="submit">Log In</button>
-    </form>
+      <h5>copyright@cpp-2024</h5>
   </div>
 </template>
 
 <script>
-import "firebase/compat/auth";
+import firebase from '@/uifire.js'
+import 'firebase/compat/auth'
+import * as firebaseui from 'firebaseui'
+import 'firebaseui/dist/firebaseui.css'
 
 export default {
   name: "Login",
-  data() {
-    return {
-      loginForm: {
-        username: "",
-        password: "",
-      },
-      loginError: false,
-      loginErrorMessage: "",
-    };
-  },
-  methods: {
-    async handleLogin() {
-      this.loginError = false;
-      try {
-        await firebase
-          .auth()
-          .signInWithEmailAndPassword(
-            this.loginForm.username,
-            this.loginForm.password
-          );
-        // Redirect or do something upon successful login
-        this.$router.push({ name: "dashboard" }); // Adjust route as necessary
-      } catch (error) {
-        this.loginError = true;
-        this.loginErrorMessage = error.message;
+
+  mounted() {
+      var ui = firebaseui.auth.AuthUI.getInstance();
+      if (!ui) {
+          ui = new firebaseui.auth.AuthUI(firebase.auth());
       }
-    },
-  },
-};
+
+      var uiConfig = {
+          signInSuccessUrl: '/home',
+          signInOptions: [
+              firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+              firebase.auth.EmailAuthProvider.PROVIDER_ID,
+          ]
+      };
+
+      ui.start('#firebaseui-auth-container', uiConfig)
+  }
+}
 </script>
