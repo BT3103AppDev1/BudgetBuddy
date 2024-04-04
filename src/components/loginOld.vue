@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div style="text-align: center;">
       <h1 id="mainHead">Welcome to BudgetBuddy</h1>
       <div id="firebaseui-auth-container"></div>
@@ -42,4 +42,4 @@ export default {
     }
   }
 }
-</script>
+</script> -->
