@@ -13,8 +13,10 @@
         <label for="category">Category *</label>
         <select id="category" v-model="budget.category" required>
           <option disabled value="">Please select one</option>
-          <option value="food">Food</option>
+          <option value="NIL"></option>
           <option value="transport">Transport</option>
+          <option value="shopping">Shopping</option>
+          <option value="food">Food</option>
           <!-- more options -->
         </select>
       </div>
@@ -23,7 +25,9 @@
       <div class="input-group">
         <label for="currency">Currency *</label>
         <select id="currency" v-model="budget.currency" required>
+          <option value="NIL"></option>
           <option value="SGD">SGD - Singapore Dollar</option>
+          <option value="USD">USD - US Dollar</option>
           <!-- more options -->
         </select>
       </div>
@@ -45,6 +49,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -59,6 +64,7 @@ export default {
   },
   methods: {
     async submitBudget() {
+
       // Here you would interact with Firebase
       // Example: this.$firestore.collection('budgets').add(this.budget);
       // After successful submission, you might want to reset the form or navigate the user
