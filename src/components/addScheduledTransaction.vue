@@ -20,6 +20,7 @@
         <label for="category">Category *</label>
         <select id="category" v-model="scheduledTransaction.category" required>
         <option disabled value="">Please select one</option>
+        
         <option value="income">Income</option>
         <!-- more options -->
         </select>
