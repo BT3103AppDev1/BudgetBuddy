@@ -44,13 +44,13 @@
         <input type="date" id="date" v-model="transaction.date" required />
       </div>
 
-      <button type="button" v-on:click="savetofs">Add Transaction</button>
+      <button type="button" v-on:click="saveAddTransac">Add Transaction</button>
     </form>
   </div>
 </template>
 
 <script>
-import firebaseApp from '../firebase.js';
+import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
 const db = getFirestore(firebaseApp);
@@ -64,39 +64,36 @@ export default {
         currency: "",
         date: "",
       },
-    }
+    };
   },
   methods: {
-    async savetofs() {
+    async saveAddTransac() {
       // Process the form data here, such as sending it to a server or updating local state
-
       console.log(this.transaction);
-    let amount = document.getElementById("amount").value;
-    let description = document.getElementById("description").value;
-    let category = document.getElementById("category").value;
-    let currency = document.getElementById("currency").value;
-    let date = document.getElementById("date").value;
+      let amount = document.getElementById("amount").value;
+      let description = document.getElementById("description").value;
+      let category = document.getElementById("category").value;
+      let currency = document.getElementById("currency").value;
+      let date = document.getElementById("date").value;
 
-
-    alert("Saving data for Transaction : " + category + " " + amount);
-    try {
-      const docRef = await setDoc(doc(db, "transactions", description), {
-        amount: amount,
-        description: description,
-        category: category,
-        currency: currency,
-        date: date
-      });
-      console.log(docRef)
-      document.getElementById('transactionform').reset();
-      this.$emit("added")
+      alert("Saving data for Transaction : " + category + " " + amount);
+      try {
+        const docRef = await setDoc(doc(db, "transactions", description), {
+          amount: amount,
+          description: description,
+          category: category,
+          currency: currency,
+          date: date,
+        });
+        console.log(docRef);
+        document.getElementById("transactionform").reset();
+        this.$emit("added");
+      } catch (error) {
+        console.error("Error adding document: ", error);
       }
-    catch(error) {
-      console.error("Error adding document: ", error);
-    }
-      }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

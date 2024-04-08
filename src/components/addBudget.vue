@@ -5,7 +5,13 @@
       <!-- Amount Input -->
       <div class="input-group">
         <label for="name">Budget Name *</label>
-        <input type="text" id="name" v-model="budget.name" required class="input-field" />
+        <input
+          type="text"
+          id="name"
+          v-model="budget.name"
+          required
+          class="input-field"
+        />
       </div>
       <!-- Amount Input -->
       <div class="input-group">
@@ -47,13 +53,13 @@
       </div>
 
       <!-- Submit Button -->
-      <button type="button" v-on:click="savetofs">Add Budget</button>
+      <button type="button" v-on:click="saveAddBudget">Add Budget</button>
     </form>
   </div>
 </template>
 
 <script>
-import firebaseApp from '../firebase.js';
+import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
 const db = getFirestore(firebaseApp);
@@ -71,35 +77,34 @@ export default {
     };
   },
   methods: {
-    async savetofs() {
+    async saveAddBudget() {
       console.log(this.transaction);
-    let name = document.getElementById("name").value;
-    let amount = document.getElementById("amount").value;
-    let category = document.getElementById("category").value;
-    let currency = document.getElementById("currency").value;
-    let startDate = document.getElementById("startDate").value;
-    let endDate = document.getElementById("endDate").value;
+      let name = document.getElementById("name").value;
+      let amount = document.getElementById("amount").value;
+      let category = document.getElementById("category").value;
+      let currency = document.getElementById("currency").value;
+      let startDate = document.getElementById("startDate").value;
+      let endDate = document.getElementById("endDate").value;
 
-    alert("Saving data for Budget : " + name);
-    try {
-      const docRef = await setDoc(doc(db, "budgets", name), {
-        name: name,
-        amount: amount,
-        category: category,
-        currency: currency,
-        startDate: startDate,
-        endDate: endDate
-      });
-      console.log(docRef)
-      document.getElementById('submitBudget').reset();
-      this.$emit("added")
+      alert("Saving data for Budget : " + name);
+      try {
+        const docRef = await setDoc(doc(db, "budgets", name), {
+          name: name,
+          amount: amount,
+          category: category,
+          currency: currency,
+          startDate: startDate,
+          endDate: endDate,
+        });
+        console.log(docRef);
+        document.getElementById("submitBudget").reset();
+        this.$emit("added");
+      } catch (error) {
+        console.error("Error adding document: ", error);
       }
-    catch(error) {
-      console.error("Error adding document: ", error);
-    }
-      }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
