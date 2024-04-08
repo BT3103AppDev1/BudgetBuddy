@@ -4,7 +4,7 @@ import loginPage from "@/views/loginPage.vue";
 import dashboardPage from "@/views/dashboardPage.vue";
 import addTransactionPage from "@/views/addTransactionPage.vue";
 import addBudgetPage from "@/views/addBudgetPage.vue";
-import addScheduledTransactionPage from "@/components/addScheduledTransaction.vue";
+import addScheduledTransactionPage from "@/views/addScheduledTransactionPage.vue";
 
 const routes = [
   {
