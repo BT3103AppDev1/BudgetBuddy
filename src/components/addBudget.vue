@@ -61,7 +61,7 @@
 <script>
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
 const db = getFirestore(firebaseApp);
 export default {
   data() {
@@ -78,9 +78,9 @@ export default {
   },
   methods: {
     async saveAddBudget() {
-      console.log(this.transaction);
+      console.log(this.budget);
       let name = document.getElementById("name").value;
-      let amount = document.getElementById("amount").value;
+      let amount = +document.getElementById("amount").value;
       let category = document.getElementById("category").value;
       let currency = document.getElementById("currency").value;
       let startDate = document.getElementById("startDate").value;
@@ -88,7 +88,7 @@ export default {
 
       alert("Saving data for Budget : " + name);
       try {
-        const docRef = await setDoc(doc(db, "budgets", name), {
+        const docRef = await addDoc(collection(db, "budgets"), {
           name: name,
           amount: amount,
           category: category,
@@ -96,7 +96,7 @@ export default {
           startDate: startDate,
           endDate: endDate,
         });
-        console.log(docRef);
+        console.log("Document written with ID: ", docRef.id);
         document.getElementById("submitBudget").reset();
         this.$emit("added");
       } catch (error) {

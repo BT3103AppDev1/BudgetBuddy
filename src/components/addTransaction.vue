@@ -4,6 +4,17 @@
       <h2>Add Transaction</h2>
 
       <div class="form-group">
+        <label for="name">Transaction Name *</label>
+        <input
+          type="text"
+          id="name"
+          v-model="transaction.name"
+          required
+          class="input-field"
+        />
+      </div>
+
+      <div class="form-group">
         <label for="amount">Amount *</label>
         <input
           type="number"
@@ -52,12 +63,13 @@
 <script>
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
 const db = getFirestore(firebaseApp);
 export default {
   data() {
     return {
       transaction: {
+        name: "",
         amount: null,
         description: "",
         category: "",
@@ -70,22 +82,25 @@ export default {
     async saveAddTransac() {
       // Process the form data here, such as sending it to a server or updating local state
       console.log(this.transaction);
-      let amount = document.getElementById("amount").value;
+      let name = document.getElementById("name").value;
+      let amount = +document.getElementById("amount").value;
       let description = document.getElementById("description").value;
       let category = document.getElementById("category").value;
       let currency = document.getElementById("currency").value;
       let date = document.getElementById("date").value;
 
       alert("Saving data for Transaction : " + category + " " + amount);
+
       try {
-        const docRef = await setDoc(doc(db, "transactions", description), {
+        const docRef = await addDoc(collection(db, "transactions"), {
+          name: name,
           amount: amount,
           description: description,
           category: category,
           currency: currency,
           date: date,
         });
-        console.log(docRef);
+        console.log("Document written with ID: ", docRef.id);
         document.getElementById("transactionform").reset();
         this.$emit("added");
       } catch (error) {

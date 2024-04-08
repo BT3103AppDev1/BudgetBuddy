@@ -91,7 +91,7 @@
 <script>
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
 const db = getFirestore(firebaseApp);
 
 export default {
@@ -138,18 +138,15 @@ export default {
           schedTransactionAmount
       );
       try {
-        const docRef = await setDoc(
-          doc(db, "scheduledTransaction", schedTransactionName),
-          {
-            schedTransactionName: schedTransactionName,
-            schedTransactionAmount: schedTransactionAmount,
-            schedTransactionsCategory: schedTransactionsCategory,
-            schedTransactionsCurrency: schedTransactionsCurrency,
-            schedTransactionsDate: schedTransactionsDate,
-            schedTransactionsRecurrence: schedTransactionsRecurrence,
-          }
-        );
-        console.log(docRef);
+        const docRef = await addDoc(collection(db, "scheduledTransaction"), {
+          schedTransactionName: schedTransactionName,
+          schedTransactionAmount: schedTransactionAmount,
+          schedTransactionsCategory: schedTransactionsCategory,
+          schedTransactionsCurrency: schedTransactionsCurrency,
+          schedTransactionsDate: schedTransactionsDate,
+          schedTransactionsRecurrence: schedTransactionsRecurrence,
+        });
+        console.log("Document written with ID: ", docRef.id);
         document.getElementById("submitScheduledTransaction").reset();
         this.$emit("added");
       } catch (error) {
