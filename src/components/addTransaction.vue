@@ -1,7 +1,7 @@
 <template>
   <div class="add-transaction">
     <form id="transactionform">
-      <h2>Add Transaction</h2>
+      <h1>Add Transaction</h1>
 
       <div class="form-group">
         <label for="name">Transaction Name *</label>
