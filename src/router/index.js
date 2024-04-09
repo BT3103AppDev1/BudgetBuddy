@@ -7,6 +7,7 @@ import addBudgetPage from "@/views/addBudgetPage.vue";
 import addScheduledTransactionPage from "@/views/addScheduledTransactionPage.vue";
 import transactionHistoryPage from "@/views/transactionHistoryPage.vue";
 import userProfile from "@/views/userProfile.vue";
+import editProfile from "@/views/editProfile.vue";
 
 const routes = [
   {
@@ -50,6 +51,11 @@ const routes = [
     path: '/userProfile',
     name: "userProfile",
     component: userProfile,
+  },
+  {
+    path: '/editProfile',
+    name: 'editProfile',
+    component: editProfile,
   }
 ];
 
