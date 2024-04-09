@@ -115,7 +115,7 @@ export default {
       let schedTransactionName = document.getElementById(
         "schedTransactionName"
       ).value;
-      let schedTransactionAmount = document.getElementById(
+      let schedTransactionAmount = +document.getElementById(
         "schedTransactionAmount"
       ).value;
       let schedTransactionsCategory = document.getElementById(
