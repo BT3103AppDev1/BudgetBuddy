@@ -17,9 +17,8 @@
         <div class="button-container">
             <button class="btn" @click="editProfile()">Edit Profile</button>
         </div>
-
-        <Logout :user="user" />
     </div>
+    <Logout :user="user" />
 </template>
 
 <script>
