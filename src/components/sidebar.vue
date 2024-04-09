@@ -3,6 +3,9 @@
     <nav>
       <ul>
         <li>
+          <router-link to="/dashboardPage">Dashboard</router-link>
+        </li>
+        <li>
           <router-link to="/addTransaction">Add Transaction</router-link>
         </li>
         <li>
