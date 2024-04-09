@@ -34,11 +34,10 @@
           required
         >
           <option disabled value="">Please select one</option>
-
           <option value="income">Income</option>
-          <option value="income">Subscriptions</option>
-          <option value="income">Others</option>
-          <!-- more options -->
+          <option value="subscriptions">Subscriptions</option>
+          <option value="others">Others</option>
+          <!-- Correct the values for each option -->
         </select>
       </div>
 
@@ -115,7 +114,7 @@ export default {
       let schedTransactionName = document.getElementById(
         "schedTransactionName"
       ).value;
-      let schedTransactionAmount = document.getElementById(
+      let schedTransactionAmount = +document.getElementById(
         "schedTransactionAmount"
       ).value;
       let schedTransactionsCategory = document.getElementById(
@@ -147,7 +146,14 @@ export default {
           schedTransactionsRecurrence: schedTransactionsRecurrence,
         });
         console.log("Document written with ID: ", docRef.id);
-        document.getElementById("submitScheduledTransaction").reset();
+        this.scheduledTransaction = {
+          schedTransactionName: "",
+          schedTransactionAmount: null,
+          schedTransactionsCategory: "",
+          schedTransactionsCurrency: "",
+          schedTransactionsDate: "",
+          schedTransactionsRecurrence: "",
+        };
         this.$emit("added");
       } catch (error) {
         console.error("Error adding document: ", error);
