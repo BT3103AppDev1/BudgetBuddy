@@ -80,9 +80,11 @@
       </div>
 
       <!-- Submit Button -->
-      <button type="button" v-on:click="saveScheduledTransac">
-        Add Scheduled Transaction
-      </button>
+      <div class="button-container">
+        <button class="btn" v-on:click="saveScheduledTransac">
+          Add Scheduled Transaction
+        </button>
+      </div>
     </form>
   </div>
 </template>
@@ -191,19 +193,26 @@ export default {
         border-radius: 5px;
         font-size: 1rem;
 }
-
-button {
-  width: 100%;
-  padding: 1rem;
-  background-color: #333; /* Adjust the color */
+.btn {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  font-size: 25px;
   color: white;
-  border: none;
-  border-radius: 4px;
+  margin-top: 20px;
+  width: 100%;
+  padding: 2%;
+  background-color: #474745;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #555; /* Darker shade for hover state */
+.btn:hover {
+  text-decoration: underline;
+  font-weight: 900;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
 }
 
 /* Add responsive styles as necessary */
