@@ -27,6 +27,7 @@
           <option value="transport">Transport</option>
           <option value="shopping">Shopping</option>
           <option value="food">Food</option>
+          <option value="others">Others</option>
           <!-- more options -->
         </select>
       </div>
@@ -97,7 +98,14 @@ export default {
           endDate: endDate,
         });
         console.log("Document written with ID: ", docRef.id);
-        document.getElementById("submitBudget").reset();
+        this.budget = {
+          name: "",
+          amount: null,
+          category: "",
+          currency: "",
+          startDate: "",
+          endDate: "",
+        };
         this.$emit("added");
       } catch (error) {
         console.error("Error adding document: ", error);
