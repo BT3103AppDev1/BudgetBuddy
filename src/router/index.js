@@ -6,6 +6,7 @@ import addTransactionPage from "@/views/addTransactionPage.vue";
 import addBudgetPage from "@/views/addBudgetPage.vue";
 import addScheduledTransactionPage from "@/views/addScheduledTransactionPage.vue";
 import transactionHistoryPage from "@/views/transactionHistoryPage.vue";
+import userProfile from "@/views/userProfile.vue";
 
 const routes = [
   {
@@ -45,6 +46,11 @@ const routes = [
     name: "transactionHistoryPage",
     component: transactionHistoryPage,
   },
+  {
+    path: '/userProfile',
+    name: "userProfile",
+    component: userProfile,
+  }
 ];
 
 const router = createRouter({
