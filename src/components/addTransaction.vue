@@ -55,7 +55,9 @@
         <input type="date" id="date" v-model="transaction.date" required />
       </div>
 
-      <button type="button" v-on:click="saveAddTransac">Add Transaction</button>
+      <div class="button-container">
+        <button class="btn" v-on:click="saveAddTransac">Add Transaction</button>
+      </div>
     </form>
   </div>
 </template>
@@ -149,20 +151,26 @@ export default {
   font-size: 1rem;
 }
 
-.form-group button {
+.btn {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  font-size: 25px;
+  color: white;
+  margin-top: 20px;
   width: 100%;
-  padding: 1rem;
-  border: none;
-  background-color: #333; /* Use color from your design */
-  color: white; /* Text color */
-  font-size: 1.1rem;
-  border-radius: 5px;
+  padding: 2%;
+  background-color: #474745;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.form-group button:hover {
-  background-color: #555; /* Darken button on hover */
+.btn:hover {
+  text-decoration: underline;
+  font-weight: 900;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
 }
 
 /* Adjust this path to wherever your icons are coming from */
