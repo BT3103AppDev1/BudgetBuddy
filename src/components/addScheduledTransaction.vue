@@ -172,7 +172,11 @@ export default {
   border-radius: 10px; /* Rounded corners */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
 }
-
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #666; /* Use color from your design */
+}
 .input-group {
   margin-bottom: 1rem;
 }
@@ -181,13 +185,11 @@ export default {
     input[type="number"],
     input[type="date"],
     select {
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem; /* Ensure the font size is consistent */
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd; /* Use color from your design */
+        border-radius: 5px;
+        font-size: 1rem;
 }
 
 button {
