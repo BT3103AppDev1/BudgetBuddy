@@ -26,6 +26,15 @@
         </li>
         <li
           class="item"
+          :class="{ active: $route.path === '/viewScheduledTransactions' }"
+        >
+          <ion-icon name="alarm"></ion-icon>
+          <router-link to="/viewScheduledTransactions"
+            >View Scheduled Transactions</router-link
+          >
+        </li>
+        <li
+          class="item"
           :class="{ active: $route.path === '/transactionHistory' }"
         >
           <ion-icon name="calendar"></ion-icon>
