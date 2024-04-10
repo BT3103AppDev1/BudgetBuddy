@@ -89,6 +89,13 @@
         <button type="submit" class="btn">Add Scheduled Transaction</button>
       </div>
     </form>
+    <router-link
+            to="/viewScheduledTransactions"
+            tag="button"
+            class="view-sched-transaction-btn"
+        >
+            View Scheduled Transactions
+    </router-link>
   </div>
 </template>
 
@@ -216,6 +223,19 @@ export default {
 .button-container {
   display: flex;
   justify-content: center;
+}
+
+.view-sched-transaction-btn {
+  background-color: #5cb85c; /* Example: a green button */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: block; /* Center button in the container */
+  width: max-content;
+  margin: 10px auto; /* Centering button */
 }
 
 /* Add responsive styles as necessary */
