@@ -38,6 +38,8 @@
         >
           <option disabled value="">Please select one</option>
           <option value="income">Income</option>
+          <option value="allowance">Allowance</option>
+          <option value="expenses">Expenses</option>
           <option value="subscriptions">Subscriptions</option>
           <option value="others">Others</option>
           <!-- Correct the values for each option -->

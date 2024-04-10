@@ -1,5 +1,3 @@
-
-import ViewScheduledTransactions from '@/components/viewScheduledTransactions.vue';
 <template>
     <sidebar />
     <viewScheduledTransactions></viewScheduledTransactions>
