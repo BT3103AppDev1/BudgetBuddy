@@ -1,7 +1,10 @@
 <template>
   <div class="schedule-transactions-container">
     <h1>Schedule Transactions</h1>
-    <form id="submitScheduledTransaction">
+    <form
+      id="submitScheduledTransaction"
+      @submit.prevent="saveScheduledTransac"
+    >
       <!-- Transaction Name Input -->
       <div class="input-group">
         <label for="schedTransactionName">Transaction Name *</label>
@@ -187,11 +190,11 @@ export default {
     input[type="number"],
     input[type="date"],
     select {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #ddd; /* Use color from your design */
-        border-radius: 5px;
-        font-size: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd; /* Use color from your design */
+  border-radius: 5px;
+  font-size: 1rem;
 }
 .btn {
   font-family: "Roboto", sans-serif;

@@ -1,6 +1,6 @@
 <template>
   <div class="add-transaction">
-    <form id="transactionform">
+    <form id="transactionform" @submit.prevent="saveAddTransac">
       <h1>Add Transaction</h1>
 
       <div class="form-group">

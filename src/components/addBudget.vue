@@ -1,7 +1,7 @@
 <template>
   <div class="add-budget-container">
     <h1>Add Budget</h1>
-    <form id="submitBudget">
+    <form id="submitBudget" @submit.prevent="saveAddBudget">
       <!-- Amount Input -->
       <div class="input-group">
         <label for="name">Budget Name *</label>
