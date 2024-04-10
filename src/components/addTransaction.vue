@@ -36,6 +36,7 @@
           <option value="transport">Transport</option>
           <option value="shopping">Shopping</option>
           <option value="food">Food</option>
+          <option value="food">Others</option>
           <!-- Add more categories here -->
         </select>
       </div>
@@ -103,7 +104,14 @@ export default {
           date: date,
         });
         console.log("Document written with ID: ", docRef.id);
-        document.getElementById("transactionform").reset();
+        this.transaction = {
+          name: "",
+          amount: null,
+          description: "",
+          category: "",
+          currency: "",
+          date: "",
+        };
         this.$emit("added");
       } catch (error) {
         console.error("Error adding document: ", error);

@@ -1,6 +1,5 @@
 <template>
   <div class="transaction-history-page">
-    <sidebar></sidebar>
     <div class="transaction-list">
       <ul>
         <li

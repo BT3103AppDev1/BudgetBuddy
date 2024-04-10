@@ -3,27 +3,37 @@
     <h2>BudgetBuddy</h2>
     <nav>
       <ul class="menu">
-        <li class="item" :class="{ 'active': $route.path === '/dashboardPage' }">
+        <li class="item" :class="{ active: $route.path === '/dashboardPage' }">
           <ion-icon name="list-circle"></ion-icon>
           <router-link to="/dashboardPage">Dashboard</router-link>
         </li>
-        <li class="item" :class="{ 'active': $route.path === '/addTransaction' }">
+        <li class="item" :class="{ active: $route.path === '/addTransaction' }">
           <ion-icon name="card"></ion-icon>
           <router-link to="/addTransaction">Add Transaction</router-link>
         </li>
-        <li class="item" :class="{ 'active': $route.path === '/addBudget' }">
+        <li class="item" :class="{ active: $route.path === '/addBudget' }">
           <ion-icon name="chatbubble-ellipses"></ion-icon>
           <router-link to="/addBudget">Add Budget</router-link>
         </li>
-        <li class="item" :class="{ 'active': $route.path === '/addScheduledTransaction' }"> 
+        <li
+          class="item"
+          :class="{ active: $route.path === '/addScheduledTransaction' }"
+        >
           <ion-icon name="alarm"></ion-icon>
-          <router-link to="/addScheduledTransaction">Add Scheduled Transactions</router-link>
+          <router-link to="/addScheduledTransaction"
+            >Add Scheduled Transactions</router-link
+          >
         </li>
-        <li class="item" :class="{ 'active': $route.path === '/transactionHistory' }">
+        <li
+          class="item"
+          :class="{ active: $route.path === '/transactionHistory' }"
+        >
           <ion-icon name="calendar"></ion-icon>
-          <router-link to="/transactionHistory">Transaction History</router-link>
+          <router-link to="/transactionHistory"
+            >Transaction History</router-link
+          >
         </li>
-        <li class="item" :class="{ 'active': $route.path === '/userProfile' }">
+        <li class="item" :class="{ active: $route.path === '/userProfile' }">
           <ion-icon name="person-circle"></ion-icon>
           <router-link to="/userProfile">User Profile</router-link>
         </li>
@@ -79,8 +89,8 @@ export default {
 .menu .item.active {
   background-color: #c5c4c458; /* Slightly darker grey */
 }
-ion-icon{
-  color:#959BA2;
+ion-icon {
+  color: #959ba2;
   height: 20px;
   width: 20px;
   margin-right: 5px;
