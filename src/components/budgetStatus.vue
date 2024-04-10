@@ -1,4 +1,5 @@
 <template>
+  <h2>View Budgets</h2>
     <div class="budget-status-page">
     <div class="budget-list">
       <ul>
@@ -9,9 +10,11 @@
         >
           <div class="transaction-icon"><!-- Icon based on category --></div>
           <div class="budget-details">
-            <h3 class="budget-name">{{ budget.name }}</h3>
-            <p class="budget-start-date">{{ budget.startDate }}</p>
-            <p class="budget-end-date">{{ budget.endDate }}</p>
+            <h3 class="budget-name">{{ budget.name }} ({{ budget.currency }})</h3>
+            <p class="budget-start-date">Start Date: {{ budget.startDate }}</p>
+            <p class="budget-end-date"> End Date: {{ budget.endDate }}</p>
+            <p class="budget-amount">Amount: {{ budget.amount }}</p>
+            <p class="budget-category">Category: {{ budget.category }}</p>
           </div>
         </li>
       </ul>
@@ -96,6 +99,7 @@ export default {
   color: #333; /* Dark text for contrast */
   font-weight: 500; /* Medium weight for the transaction name */
   justify-content: center;
+  align-self: center;
 }
 
 .budget-start-date {
