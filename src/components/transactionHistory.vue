@@ -1,9 +1,32 @@
 <template>
+  <div class="filter-options">
+    <select v-model="selectedFilter">
+      <option value="category">Filter by Category</option>
+      <option value="date">Filter by Date</option>
+    </select>
+
+    <!-- Dropdown for Category -->
+    <select v-model="selectedCategory" v-if="selectedFilter === 'category'">
+      <option value="">Select a Category</option>
+      <option value="transport">transport</option>
+      <option value="shopping">shopping</option>
+      <option value="food">food</option>
+      <option value="others">others</option>
+    </select>
+
+    <!-- Dropdown for Date Filtering Options -->
+    <select v-model="selectedDateFilter" v-if="selectedFilter === 'date'">
+      <option value="">Select a Date Range</option>
+      <option value="today">Today</option>
+      <option value="last7Days">Last 7 Days</option>
+      <option value="lastMonth">Last Month</option>
+    </select>
+  </div>
   <div class="transaction-history-page">
     <div class="transaction-list">
       <ul>
         <li
-          v-for="transaction in transactions"
+          v-for="transaction in filteredTransactions"
           :key="transaction.id"
           class="transaction-item"
         >
@@ -43,6 +66,9 @@ export default {
   data() {
     return {
       transactions: [],
+      selectedFilter: '',
+      selectedCategory: '',
+      selectedDateFilter: '',
     };
   },
   mounted() {
@@ -70,7 +96,42 @@ export default {
       );
     },
   },
-};
+  computed: {
+  filteredTransactions() {
+    let filtered = this.transactions;
+
+    if (this.selectedFilter === 'category' && this.selectedCategory) {
+      filtered = filtered.filter(transaction => transaction.category === this.selectedCategory);
+    } else if (this.selectedFilter === 'date') {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Set to start of today
+      
+      let startDate;
+
+      switch (this.selectedDateFilter) {
+        case 'today':
+          startDate = today;
+          break;
+        case 'last7Days':
+          startDate = new Date(new Date().setDate(today.getDate() - 7));
+          break;
+        case 'lastMonth':
+          startDate = new Date(new Date().setMonth(today.getMonth() - 1));
+          break;
+      }
+
+      if (startDate) {
+        filtered = filtered.filter(transaction => {
+          const transactionDate = new Date(transaction.date);
+          return transactionDate >= startDate && transactionDate <= today;
+        });
+      }
+    }
+
+    return filtered;
+  }
+},
+  };
 </script>
 
 <style scoped>
