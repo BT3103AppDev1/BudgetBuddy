@@ -1,18 +1,27 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Login from "@/components/login.vue";
+import loginPage from "@/views/loginPage.vue";
 // import signUpPage from "@/views/signUpPage.vue";
+import dashboardPage from "@/views/dashboardPage.vue";
 import addTransactionPage from "@/views/addTransactionPage.vue";
 import addBudgetPage from "@/views/addBudgetPage.vue";
-import addScheduledTransactionPage from "@/components/addScheduledTransaction.vue";
+import addScheduledTransactionPage from "@/views/addScheduledTransactionPage.vue";
+import transactionHistoryPage from "@/views/transactionHistoryPage.vue";
+import userProfile from "@/views/userProfile.vue";
+import editProfile from "@/views/editProfile.vue";
 
 const routes = [
   {
     path: "/",
-    name: "Login",
-    component: Login,
+    name: "loginPage",
+    component: loginPage,
+  },
+  {
+    path: "/dashboardPage",
+    name: "dashboardPage",
+    component: dashboardPage,
   },
   // {
-  //   path: "/signUpPage",
+  //   path: "/signUp",
   //   name: "signUpPage",
   //   component: signUpPage,
   // },
@@ -32,6 +41,22 @@ const routes = [
     name: "addScheduledTransactionPage",
     component: addScheduledTransactionPage,
   },
+
+  {
+    path: "/transactionHistory",
+    name: "transactionHistoryPage",
+    component: transactionHistoryPage,
+  },
+  {
+    path: '/userProfile',
+    name: "userProfile",
+    component: userProfile,
+  },
+  {
+    path: '/editProfile',
+    name: 'editProfile',
+    component: editProfile,
+  }
 ];
 
 const router = createRouter({

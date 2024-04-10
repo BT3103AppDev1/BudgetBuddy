@@ -1,7 +1,18 @@
 <template>
   <div class="add-transaction">
-    <form @submit.prevent="submitForm">
-      <h2>Add Transaction</h2>
+    <form id="transactionform" @submit.prevent="saveAddTransac">
+      <h1>Add Transaction</h1>
+
+      <div class="form-group">
+        <label for="name">Transaction Name *</label>
+        <input
+          type="text"
+          id="name"
+          v-model="transaction.name"
+          required
+          class="input-field"
+        />
+      </div>
 
       <div class="form-group">
         <label for="amount">Amount *</label>
@@ -21,8 +32,11 @@
       <div class="form-group">
         <label for="category">Category *</label>
         <select id="category" v-model="transaction.category" required>
+          <option value="NIL"></option>
+          <option value="transport">Transport</option>
           <option value="shopping">Shopping</option>
           <option value="food">Food</option>
+          <option value="food">Others</option>
           <!-- Add more categories here -->
         </select>
       </div>
@@ -30,7 +44,9 @@
       <div class="form-group">
         <label for="currency">Currency *</label>
         <select id="currency" v-model="transaction.currency" required>
+          <option value="NIL"></option>
           <option value="SGD">SGD - Singapore Dollar</option>
+          <option value="USD">USD - US Dollar</option>
           <!-- Add more currencies here -->
         </select>
       </div>
@@ -40,28 +56,66 @@
         <input type="date" id="date" v-model="transaction.date" required />
       </div>
 
-      <button type="submit">Add Transaction</button>
+      <div class="button-container">
+        <button type="submit" class="btn">Add Transaction</button>
+      </div>
     </form>
   </div>
 </template>
 
 <script>
+import firebaseApp from "../firebase.js";
+import { getFirestore } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+const db = getFirestore(firebaseApp);
 export default {
   data() {
     return {
       transaction: {
+        name: "",
         amount: null,
         description: "",
-        category: null,
-        currency: null,
-        date: null,
+        category: "",
+        currency: "",
+        date: "",
       },
     };
   },
   methods: {
-    submitForm() {
+    async saveAddTransac() {
       // Process the form data here, such as sending it to a server or updating local state
       console.log(this.transaction);
+      let name = document.getElementById("name").value;
+      let amount = +document.getElementById("amount").value;
+      let description = document.getElementById("description").value;
+      let category = document.getElementById("category").value;
+      let currency = document.getElementById("currency").value;
+      let date = document.getElementById("date").value;
+
+      alert("Saving data for Transaction : " + category + " " + amount);
+
+      try {
+        const docRef = await addDoc(collection(db, "transactions"), {
+          name: name,
+          amount: amount,
+          description: description,
+          category: category,
+          currency: currency,
+          date: date,
+        });
+        console.log("Document written with ID: ", docRef.id);
+        this.transaction = {
+          name: "",
+          amount: null,
+          description: "",
+          category: "",
+          currency: "",
+          date: "",
+        };
+        this.$emit("added");
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
     },
   },
 };
@@ -105,20 +159,26 @@ export default {
   font-size: 1rem;
 }
 
-.form-group button {
+.btn {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  font-size: 25px;
+  color: white;
+  margin-top: 20px;
   width: 100%;
-  padding: 1rem;
-  border: none;
-  background-color: #333; /* Use color from your design */
-  color: white; /* Text color */
-  font-size: 1.1rem;
-  border-radius: 5px;
+  padding: 2%;
+  background-color: #474745;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.form-group button:hover {
-  background-color: #555; /* Darken button on hover */
+.btn:hover {
+  text-decoration: underline;
+  font-weight: 900;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
 }
 
 /* Adjust this path to wherever your icons are coming from */

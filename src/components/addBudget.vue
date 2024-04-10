@@ -1,7 +1,18 @@
 <template>
   <div class="add-budget-container">
     <h1>Add Budget</h1>
-    <form @submit.prevent="submitBudget">
+    <form id="submitBudget" @submit.prevent="saveAddBudget">
+      <!-- Amount Input -->
+      <div class="input-group">
+        <label for="name">Budget Name *</label>
+        <input
+          type="text"
+          id="name"
+          v-model="budget.name"
+          required
+          class="input-field"
+        />
+      </div>
       <!-- Amount Input -->
       <div class="input-group">
         <label for="amount">Amount *</label>
@@ -13,8 +24,10 @@
         <label for="category">Category *</label>
         <select id="category" v-model="budget.category" required>
           <option disabled value="">Please select one</option>
-          <option value="food">Food</option>
           <option value="transport">Transport</option>
+          <option value="shopping">Shopping</option>
+          <option value="food">Food</option>
+          <option value="others">Others</option>
           <!-- more options -->
         </select>
       </div>
@@ -23,7 +36,9 @@
       <div class="input-group">
         <label for="currency">Currency *</label>
         <select id="currency" v-model="budget.currency" required>
+          <option disabled value="">Please select currency</option>
           <option value="SGD">SGD - Singapore Dollar</option>
+          <option value="USD">USD - US Dollar</option>
           <!-- more options -->
         </select>
       </div>
@@ -39,16 +54,23 @@
       </div>
 
       <!-- Submit Button -->
-      <button type="submit">Add Budget</button>
+      <div class="button-container">
+        <button type="submit" class="btn">Add Budget</button>
+      </div>
     </form>
   </div>
 </template>
 
 <script>
+import firebaseApp from "../firebase.js";
+import { getFirestore } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+const db = getFirestore(firebaseApp);
 export default {
   data() {
     return {
       budget: {
+        name: "",
         amount: null,
         category: "",
         currency: "",
@@ -58,11 +80,38 @@ export default {
     };
   },
   methods: {
-    async submitBudget() {
-      // Here you would interact with Firebase
-      // Example: this.$firestore.collection('budgets').add(this.budget);
-      // After successful submission, you might want to reset the form or navigate the user
-      // Example: this.$router.push({ name: 'GoalSetting' });
+    async saveAddBudget() {
+      console.log(this.budget);
+      let name = document.getElementById("name").value;
+      let amount = +document.getElementById("amount").value;
+      let category = document.getElementById("category").value;
+      let currency = document.getElementById("currency").value;
+      let startDate = document.getElementById("startDate").value;
+      let endDate = document.getElementById("endDate").value;
+
+      alert("Saving data for Budget : " + name);
+      try {
+        const docRef = await addDoc(collection(db, "budgets"), {
+          name: name,
+          amount: amount,
+          category: category,
+          currency: currency,
+          startDate: startDate,
+          endDate: endDate,
+        });
+        console.log("Document written with ID: ", docRef.id);
+        this.budget = {
+          name: "",
+          amount: null,
+          category: "",
+          currency: "",
+          startDate: "",
+          endDate: "",
+        };
+        this.$emit("added");
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
     },
   },
 };
@@ -77,33 +126,45 @@ export default {
   border-radius: 10px; /* Rounded corners */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
 }
-
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #666; /* Use color from your design */
+}
 .input-group {
   margin-bottom: 1rem;
 }
-
+.input-field,
 input[type="number"],
 input[type="date"],
 select {
   width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.75rem;
+  border: 1px solid #ddd; /* Use color from your design */
+  border-radius: 5px;
+  font-size: 1rem;
 }
 
-button {
-  width: 100%;
-  padding: 1rem;
-  background-color: #333; /* Adjust the color */
+.btn {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  font-size: 25px;
   color: white;
-  border: none;
-  border-radius: 4px;
+  margin-top: 20px;
+  width: 100%;
+  padding: 2%;
+  background-color: #474745;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #555; /* Darker shade for hover state */
+.btn:hover {
+  text-decoration: underline;
+  font-weight: 900;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
 }
 
 /* Add responsive styles as necessary */

@@ -1,22 +1,19 @@
 <template>
-  <div class="addSchedTranscPageContainer">
-    <sidebar />
-    <addScheduledTransaction></addScheduledTransaction>
-    <Logout :user="user" />
-  </div>
+  <sidebar />
+  <transactionHistory></transactionHistory>
+  <Logout :user="user" />
 </template>
 
 <script>
 import sidebar from "../components/sidebar.vue";
-import addScheduledTransaction from "../components/addScheduledTransaction.vue";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import transactionHistory from "../components/transactionHistory.vue";
 import Logout from "@/components/Logout.vue";
-
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 export default {
-  name: "addScheduledTransactionPage",
+  name: "addBudgetPage",
   components: {
+    transactionHistory,
     sidebar,
-    addScheduledTransaction,
     Logout,
   },
   data() {
@@ -36,10 +33,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.addSchedTranscPageContainer {
-  text-align: center;
-  margin-bottom: 20px;
-}
-</style>
