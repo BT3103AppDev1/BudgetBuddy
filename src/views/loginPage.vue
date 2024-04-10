@@ -7,12 +7,13 @@
       Feel free to explore our application!
     </div>
   </div>
+
 </template>
 
 <script>
 import firebase from "@/uifire.js";
 //import firebase from 'firebase/app'
-import "firebase/auth";
+import "firebase/compat/auth";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 
