@@ -8,10 +8,10 @@
     <!-- Dropdown for Category -->
     <select v-model="selectedCategory" v-if="selectedFilter === 'category'">
       <option value="">Select a Category</option>
-      <option value="transport">transport</option>
-      <option value="shopping">shopping</option>
-      <option value="food">food</option>
-      <option value="others">others</option>
+      <option value="transport">Transport</option>
+      <option value="shopping">Shopping</option>
+      <option value="food">Food</option>
+      <option value="others">Others</option>
     </select>
 
     <!-- Dropdown for Date Filtering Options -->
