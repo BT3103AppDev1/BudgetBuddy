@@ -8,6 +8,7 @@ import addScheduledTransactionPage from "@/views/addScheduledTransactionPage.vue
 import transactionHistoryPage from "@/views/transactionHistoryPage.vue";
 import userProfile from "@/views/userProfile.vue";
 import editProfile from "@/views/editProfile.vue";
+import budgetStatusPage from "@/views/budgetStatusPage.vue";
 
 const routes = [
   {
@@ -46,6 +47,11 @@ const routes = [
     path: "/transactionHistory",
     name: "transactionHistoryPage",
     component: transactionHistoryPage,
+  },
+  {
+    path: "/budgetStatus",
+    name: "budgetStatusPage",
+    component: budgetStatusPage,
   },
   {
     path: '/userProfile',

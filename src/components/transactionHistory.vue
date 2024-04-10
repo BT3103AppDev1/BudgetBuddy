@@ -135,6 +135,7 @@ export default {
 </script>
 
 <style scoped>
+
 .transaction-history-container {
   display: flex;
 }
