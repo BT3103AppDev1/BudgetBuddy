@@ -84,9 +84,7 @@
 
       <!-- Submit Button -->
       <div class="button-container">
-        <button class="btn" v-on:click="saveScheduledTransac">
-          Add Scheduled Transaction
-        </button>
+        <button type="submit" class="btn">Add Scheduled Transaction</button>
       </div>
     </form>
   </div>

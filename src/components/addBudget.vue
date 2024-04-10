@@ -55,7 +55,7 @@
 
       <!-- Submit Button -->
       <div class="button-container">
-        <button class="btn" v-on:click="saveAddBudget">Add Budget</button>
+        <button type="submit" class="btn">Add Budget</button>
       </div>
     </form>
   </div>

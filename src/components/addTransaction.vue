@@ -57,7 +57,7 @@
       </div>
 
       <div class="button-container">
-        <button class="btn" v-on:click="saveAddTransac">Add Transaction</button>
+        <button type="submit" class="btn">Add Transaction</button>
       </div>
     </form>
   </div>
