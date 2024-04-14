@@ -34,6 +34,7 @@
           <div class="transaction-details">
             <h3 class="transaction-name">{{ transaction.name }}</h3>
             <p class="transaction-date">{{ transaction.date }}</p>
+            <p class="transaction-category">{{ transaction.category }}</p>
           </div>
           <div
             class="transaction-amount"
@@ -168,7 +169,8 @@ export default {
   font-weight: 500; /* Medium weight for the transaction name */
 }
 
-.transaction-date {
+.transaction-date,
+.transaction-category {
   font-size: 0.8rem;
   color: #666; /* Lighter text for the date */
 }

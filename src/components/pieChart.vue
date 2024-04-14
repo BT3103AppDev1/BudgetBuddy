@@ -1,0 +1,97 @@
+<template>
+  <div>
+    <canvas ref="pieChart"></canvas>
+  </div>
+</template>
+
+<script>
+import { Chart, registerables } from "chart.js";
+
+export default {
+  name: "PieChart",
+  props: {
+    transactions: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      pieChart: null,
+    };
+  },
+  mounted() {
+    this.createChart();
+  },
+  methods: {
+    createChart() {
+      const chartData = this.processTransactions(this.transactions);
+      Chart.register(...registerables);
+      this.pieChart = new Chart(this.$refs.pieChart, {
+        type: "pie",
+        data: chartData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      });
+    },
+    processTransactions(transactions) {
+      const categoryTotals = transactions.reduce(
+        (totals, { category, amount }) => {
+          if (!totals[category]) {
+            totals[category] = 0;
+          }
+          totals[category] += amount;
+          return totals;
+        },
+        {}
+      );
+
+      const labels = Object.keys(categoryTotals);
+      const data = Object.values(categoryTotals);
+
+      return {
+        labels: labels,
+        datasets: [
+          {
+            data: data,
+            backgroundColor: this.generateColorArray(labels.length),
+            hoverBackgroundColor: this.generateColorArray(labels.length, true),
+          },
+        ],
+      };
+    },
+    generateColorArray(length, hover = false) {
+      const colors = [
+        "#FF6384",
+        "#36A2EB",
+        "#FFCE56",
+        "#4BC0C0",
+        "#F7464A",
+        "#8A2BE2",
+      ];
+      const hoverColors = colors.map((color) => `${color}B3`);
+      return Array.from({ length }, (_, i) =>
+        hover ? hoverColors[i % colors.length] : colors[i % colors.length]
+      );
+    },
+  },
+  beforeUnmount() {
+    if (this.pieChart) {
+      this.pieChart.destroy();
+    }
+  },
+  watch: {
+    transactions: {
+      deep: true,
+      handler() {
+        if (this.pieChart) {
+          this.pieChart.destroy();
+        }
+        this.createChart();
+      },
+    },
+  },
+};
+</script>
