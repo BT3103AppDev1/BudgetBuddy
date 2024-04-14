@@ -30,15 +30,22 @@ export default {
       rawTransactions: [], // This will hold the transactions from Firestore
     };
   },
-  async mounted() {
-    this.user = getAuth().currentUser;
-    this.userEmail = this.user ? this.user.email : "no email";
-    await this.fetchTransactions(); // Fetch transactions when the component mounts
+
+  mounted() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.user = user;
+        this.userEmail = user.email;
+        this.fetchTransactions();
+      }
+    });
   },
+
   methods: {
     async fetchTransactions() {
       const db = getFirestore();
-      const transactionsCol = collection(db, "transactions"); // Replace with your collection name
+      const transactionsCol = collection(db, "transactions");
       const querySnapshot = await getDocs(transactionsCol);
 
       // Process and store each transaction from the querySnapshot

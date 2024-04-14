@@ -205,9 +205,8 @@ Adjust this path to wherever your icons are coming from .form-group select {
 
 /* Add responsiveness if needed */
 @media (max-width: 768px) {
-  .form-group input,
-  .form-group select {
-    /* If needed, adjust padding and other styles for smaller screens */
+  .add-transaction {
+    padding: 1rem;
   }
 }
 </style>
