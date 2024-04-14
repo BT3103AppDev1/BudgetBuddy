@@ -26,15 +26,6 @@
         </li>
         <li
           class="item"
-          :class="{ active: $route.path === '/viewScheduledTransactions' }"
-        >
-          <ion-icon name="alarm"></ion-icon>
-          <router-link to="/viewScheduledTransactions"
-            >View Scheduled Transactions</router-link
-          >
-        </li>
-        <li
-          class="item"
           :class="{ active: $route.path === '/transactionHistory' }"
         >
           <ion-icon name="calendar"></ion-icon>
@@ -42,9 +33,18 @@
             >Transaction History</router-link
           >
         </li>
-        <li class="item" :class="{ active: $route.path === '/budgetStatus' }">
+        <li
+          class="item"
+          :class="{ active: $route.path === '/viewScheduledTransactions' }"
+        >
+          <ion-icon name="alarm"></ion-icon>
+          <router-link to="/viewScheduledTransactions"
+            >View Scheduled Transactions</router-link
+          >
+        </li>
+        <li class="item" :class="{ active: $route.path === '/goalSetting' }">
           <ion-icon name="chatbubble-ellipses"></ion-icon>
-          <router-link to="/budgetStatus">View Budgets</router-link>
+          <router-link to="/goalSetting">View Budgets</router-link>
         </li>
         <li class="item" :class="{ active: $route.path === '/userProfile' }">
           <ion-icon name="person-circle"></ion-icon>

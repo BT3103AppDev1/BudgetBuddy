@@ -23,6 +23,7 @@
         <input
           type="number"
           id="schedTransactionAmount"
+          step="0.01"
           v-model="scheduledTransaction.schedTransactionAmount"
           required
         />
@@ -90,11 +91,11 @@
       </div>
     </form>
     <router-link
-            to="/viewScheduledTransactions"
-            tag="button"
-            class="view-sched-transaction-btn"
-        >
-            View Scheduled Transactions
+      to="/viewScheduledTransactions"
+      tag="button"
+      class="view-sched-transaction-btn"
+    >
+      View Scheduled Transactions
     </router-link>
   </div>
 </template>

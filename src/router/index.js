@@ -8,7 +8,7 @@ import viewScheduledTransactionsPage from "@/views/viewScheduledTransactionsPage
 import transactionHistoryPage from "@/views/transactionHistoryPage.vue";
 import userProfile from "@/views/userProfile.vue";
 import editProfile from "@/views/editProfile.vue";
-import budgetStatusPage from "@/views/budgetStatusPage.vue";
+import goalSettingPage from "@/views/goalSettingPage.vue";
 
 const routes = [
   {
@@ -50,20 +50,20 @@ const routes = [
     component: transactionHistoryPage,
   },
   {
-    path: "/budgetStatus",
-    name: "budgetStatusPage",
-    component: budgetStatusPage,
+    path: "/goalSetting",
+    name: "goalSettingPage",
+    component: goalSettingPage,
   },
   {
-    path: '/userProfile',
+    path: "/userProfile",
     name: "userProfile",
     component: userProfile,
   },
   {
-    path: '/editProfile',
-    name: 'editProfile',
+    path: "/editProfile",
+    name: "editProfile",
     component: editProfile,
-  }
+  },
 ];
 
 const router = createRouter({

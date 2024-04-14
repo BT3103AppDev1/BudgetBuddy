@@ -16,7 +16,13 @@
       <!-- Amount Input -->
       <div class="input-group">
         <label for="amount">Amount *</label>
-        <input type="number" id="amount" v-model="budget.amount" required />
+        <input
+          type="number"
+          id="amount"
+          step="0.01"
+          v-model="budget.amount"
+          required
+        />
       </div>
 
       <!-- Category Select -->

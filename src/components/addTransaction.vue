@@ -19,6 +19,7 @@
         <input
           type="number"
           id="amount"
+          step="0.01"
           v-model="transaction.amount"
           required
         />
@@ -58,7 +59,7 @@
 
       <div class="form-group">
         <label for="budgetTakenFrom">Budget Taken From</label>
-        <select id="budgetTakenFrom" v-model="selectedBudget" required>
+        <select id="budgetTakenFrom" v-model="selectedBudget">
           <option disabled value="">Select a budget</option>
           <option
             v-for="budget in budgets"
@@ -110,6 +111,7 @@ export default {
       let category = document.getElementById("category").value;
       let currency = document.getElementById("currency").value;
       let date = document.getElementById("date").value;
+      let budgetTakenFrom = document.getElementById("budgetTakenFrom").value;
 
       alert("Saving data for Transaction : " + name + " " + amount);
 
@@ -121,6 +123,7 @@ export default {
           category: category,
           currency: currency,
           date: date,
+          budgetTakenFrom: budgetTakenFrom,
         });
         console.log("Document written with ID: ", docRef.id);
         this.transaction = {
@@ -130,6 +133,7 @@ export default {
           category: "",
           currency: "",
           date: "",
+          budgetTakenFrom: "",
         };
         this.$emit("added");
       } catch (error) {

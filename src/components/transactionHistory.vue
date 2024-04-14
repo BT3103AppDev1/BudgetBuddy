@@ -43,7 +43,7 @@
               positive: transaction.amount >= 0,
             }"
           >
-            {{ transaction.amount | transaction.currency }}
+            {{ transaction.amount.toFixed(2) }}
           </div>
         </li>
       </ul>
