@@ -66,9 +66,9 @@ export default {
   data() {
     return {
       transactions: [],
-      selectedFilter: '',
-      selectedCategory: '',
-      selectedDateFilter: '',
+      selectedFilter: "",
+      selectedCategory: "",
+      selectedDateFilter: "",
     };
   },
   mounted() {
@@ -80,15 +80,23 @@ export default {
       onSnapshot(
         query,
         (querySnapshot) => {
-          this.transactions = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            name: doc.data().name, // Make sure this field exists in your Firestore documents
-            amount: doc.data().amount, // Make sure this field exists in your Firestore documents
-            category: doc.data().category, // Make sure this field exists in your Firestore documents
-            currency: doc.data().currency, // Make sure this field exists in your Firestore documents
-            date: doc.data().date, // Make sure this field exists in your Firestore documents
-            description: doc.data().description, // Make sure this field exists in your Firestore documents
-          }));
+          this.transactions = querySnapshot.docs
+            .map((doc) => ({
+              id: doc.id,
+              name: doc.data().name,
+              amount: doc.data().amount,
+              category: doc.data().category,
+              currency: doc.data().currency,
+              date: doc.data().date,
+              description: doc.data().description,
+            }))
+            .sort((a, b) => {
+              // Convert date strings to Date objects
+              const dateA = new Date(a.date);
+              const dateB = new Date(b.date);
+              // Sort in descending order (latest first)
+              return dateB - dateA;
+            });
         },
         (error) => {
           console.error("Error getting documents: ", error);
@@ -97,49 +105,46 @@ export default {
     },
   },
   computed: {
-  filteredTransactions() {
-    let filtered = this.transactions;
+    filteredTransactions() {
+      let filtered = this.transactions;
 
-    if (this.selectedFilter === 'category' && this.selectedCategory) {
-      filtered = filtered.filter(transaction => transaction.category === this.selectedCategory);
-    } else if (this.selectedFilter === 'date') {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Set to start of today
-      
-      let startDate;
+      if (this.selectedFilter === "category" && this.selectedCategory) {
+        filtered = filtered.filter(
+          (transaction) => transaction.category === this.selectedCategory
+        );
+      } else if (this.selectedFilter === "date") {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set to start of today
 
-      switch (this.selectedDateFilter) {
-        case 'today':
-          startDate = today;
-          break;
-        case 'last7Days':
-          startDate = new Date(new Date().setDate(today.getDate() - 7));
-          break;
-        case 'lastMonth':
-          startDate = new Date(new Date().setMonth(today.getMonth() - 1));
-          break;
+        let startDate;
+
+        switch (this.selectedDateFilter) {
+          case "today":
+            startDate = today;
+            break;
+          case "last7Days":
+            startDate = new Date(new Date().setDate(today.getDate() - 7));
+            break;
+          case "lastMonth":
+            startDate = new Date(new Date().setMonth(today.getMonth() - 1));
+            break;
+        }
+
+        if (startDate) {
+          filtered = filtered.filter((transaction) => {
+            const transactionDate = new Date(transaction.date);
+            return transactionDate >= startDate && transactionDate <= today;
+          });
+        }
       }
 
-      if (startDate) {
-        filtered = filtered.filter(transaction => {
-          const transactionDate = new Date(transaction.date);
-          return transactionDate >= startDate && transactionDate <= today;
-        });
-      }
-    }
-
-    return filtered;
-  }
-},
-  };
+      return filtered;
+    },
+  },
+};
 </script>
 
 <style scoped>
-
-.transaction-history-container {
-  display: flex;
-}
-
 .transaction-list {
   margin: 0;
   padding: 0;

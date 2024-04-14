@@ -44,7 +44,7 @@
         </li>
         <li class="item" :class="{ active: $route.path === '/budgetStatus' }">
           <ion-icon name="chatbubble-ellipses"></ion-icon>
-          <router-link to="/budgetStatus">Vew Budgets</router-link>
+          <router-link to="/budgetStatus">View Budgets</router-link>
         </li>
         <li class="item" :class="{ active: $route.path === '/userProfile' }">
           <ion-icon name="person-circle"></ion-icon>

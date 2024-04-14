@@ -1,28 +1,22 @@
 <template>
   <h2>View Budgets</h2>
-    <div class="budget-status-page">
+  <div class="budget-status-page">
     <div class="budget-list">
       <ul>
-        <li
-          v-for="budget in budgets"
-          :key="budget.id"
-          class="budget-item"
-        >
+        <li v-for="budget in budgets" :key="budget.id" class="budget-item">
           <div class="transaction-icon"><!-- Icon based on category --></div>
           <div class="budget-details">
-            <h3 class="budget-name">{{ budget.name }} ({{ budget.currency }})</h3>
+            <h3 class="budget-name">
+              {{ budget.name }} ({{ budget.currency }})
+            </h3>
             <p class="budget-start-date">Start Date: {{ budget.startDate }}</p>
-            <p class="budget-end-date"> End Date: {{ budget.endDate }}</p>
+            <p class="budget-end-date">End Date: {{ budget.endDate }}</p>
             <p class="budget-amount">Amount: {{ budget.amount }}</p>
             <p class="budget-category">Category: {{ budget.category }}</p>
           </div>
         </li>
       </ul>
-      <router-link
-        to="/addBudget"
-        tag="button"
-        class="add-budget-btn"
-      >
+      <router-link to="/addBudget" tag="button" class="add-budget-btn">
         Add New Budget
       </router-link>
     </div>
@@ -35,48 +29,45 @@ import { getFirestore, onSnapshot, collection } from "firebase/firestore";
 const db = getFirestore(firebaseApp);
 
 export default {
-    data() {
-        return {
-            budgets: [],
-        };
-    },
-    mounted(){
-        this.fetchBudgets();
-    },
-    methods: {
-        fetchBudgets() {
-            const query = collection(db, "budgets");
-            onSnapshot(
-                query,
-                (querySnapshot) => {
-                    this.budgets = querySnapshot.docs.map((doc) => ({
-                        id: doc.id,
-                        name: doc.data().name,
-                        startDate: doc.data().startDate,
-                        endDate: doc.data().endDate,
-                        currency: doc.data().currency,
-                        amount: doc.data().amount,
-                        category: doc.data().category,
-                    }));
-                },
-                (error) => {
-                    console.error("Error getting budgets: ", error);
-                }
-            );
+  data() {
+    return {
+      budgets: [],
+    };
+  },
+  mounted() {
+    this.fetchBudgets();
+  },
+  methods: {
+    fetchBudgets() {
+      const query = collection(db, "budgets");
+      onSnapshot(
+        query,
+        (querySnapshot) => {
+          this.budgets = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            name: doc.data().name,
+            startDate: doc.data().startDate,
+            endDate: doc.data().endDate,
+            currency: doc.data().currency,
+            amount: doc.data().amount,
+            category: doc.data().category,
+          }));
         },
+        (error) => {
+          console.error("Error getting budgets: ", error);
+        }
+      );
     },
-}
+  },
+};
 </script>
 
 <style scoped>
-.budget-page-container {
-  display: flex;
-}
-
 .budget-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
+  justify-content: center;
 }
 
 .budget-details {
@@ -92,6 +83,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-direction: column;
 }
 
 .budget-name {
@@ -129,6 +121,4 @@ export default {
   width: max-content;
   margin: 10px auto; /* Centering button */
 }
-
-
 </style>
