@@ -92,7 +92,7 @@ export default {
       let currency = document.getElementById("currency").value;
       let date = document.getElementById("date").value;
 
-      alert("Saving data for Transaction : " + category + " " + amount);
+      alert("Saving data for Transaction : " + name + " " + amount);
 
       try {
         const docRef = await addDoc(collection(db, "transactions"), {
@@ -124,12 +124,16 @@ export default {
 <style scoped>
 /* You can adjust the values below to match your design exactly */
 .add-transaction {
-  max-width: 600px; /* Adjust the width as needed */
+  max-width: 650px; /* Adjust the width as needed */
   margin: 0 auto; /* This centers your form on the page */
   padding: 2rem;
   background-color: #fff; /* Use color from your design */
   border-radius: 10px; /* Rounded corners */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: auto;
 }
 
 .add-transaction h2 {
@@ -139,7 +143,10 @@ export default {
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  width: 100%;
+  margin-bottom: 1rem; /* Adjust this value to increase or decrease the space between form groups */
+  display: flex;
+  flex-direction: column;
 }
 
 .form-group label {
@@ -150,10 +157,10 @@ export default {
 
 .form-group input[type="number"],
 .form-group input[type="text"],
-.form-group select,
-.form-group input[type="date"] {
+.form-group input[type="date"],
+.form-group select {
   width: 100%;
-  padding: 0.75rem;
+  padding: 10px;
   border: 1px solid #ddd; /* Use color from your design */
   border-radius: 5px;
   font-size: 1rem;
@@ -181,8 +188,7 @@ export default {
   justify-content: center;
 }
 
-/* Adjust this path to wherever your icons are coming from */
-.form-group select {
+Adjust this path to wherever your icons are coming from .form-group select {
   background-image: url("path-to-your-icon.svg");
   background-repeat: no-repeat;
   background-position: right 1rem center;
@@ -199,8 +205,9 @@ export default {
 
 /* Add responsiveness if needed */
 @media (max-width: 768px) {
-  .add-transaction {
-    padding: 1rem;
+  .form-group input,
+  .form-group select {
+    /* If needed, adjust padding and other styles for smaller screens */
   }
 }
 </style>

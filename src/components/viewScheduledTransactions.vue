@@ -1,5 +1,5 @@
 <template>
-    <div class="filter-options">
+  <div class="filter-options">
     <select v-model="selectedFilter">
       <option value="category">Filter by Category</option>
       <option value="recurrence">Filter by Recurrence</option>
@@ -22,119 +22,135 @@
       <option value="yearly">Yearly</option>
     </select>
   </div>
-    <div class="view-scheduled-transactions-page">
-        <div class="scheduled-transactions-list">
-            <ul>
-                <li
-                    v-for="transaction in filteredTransactions"
-                    :key="transaction.id"
-                    class="transaction-item"
-                >
-            <div class="transaction-icon"><!-- Icon based on category --></div>
-            <div class="transaction-details">
-                <h3 class="transaction-name">{{ transaction.name }}</h3>
-                <p class="transaction-date">{{ transaction.date }}</p>
-                <p class="transaction-recurrence">{{ transaction.recurrence }}</p>
-                <p class="transaction-category">{{ transaction.category }}</p>
-            </div>
-            <div
-                class="transaction-amount"
-                
-            >
-                {{ transaction.amount | transaction.currency }}
-            </div>
-            </li>
-        </ul>
-        <router-link
-            to="/addScheduledTransaction"
-            tag="button"
-            class="add-sched-transaction-btn"
+  <div class="view-scheduled-transactions-page">
+    <div class="scheduled-transactions-list">
+      <ul>
+        <li
+          v-for="transaction in filteredTransactions"
+          :key="transaction.id"
+          class="transaction-item"
         >
-            Add New Scheduled Transaction
-        </router-link>
+          <div class="transaction-icon"><!-- Icon based on category --></div>
+          <div class="transaction-details">
+            <h3 class="transaction-name">{{ transaction.name }}</h3>
+            <p class="transaction-date">{{ transaction.date }}</p>
+            <p class="transaction-recurrence">{{ transaction.recurrence }}</p>
+            <p class="transaction-category">{{ transaction.category }}</p>
+          </div>
+          <div
+            class="transaction-amount"
+            :class="{
+              negative: transaction.amount < 0,
+              positive: transaction.amount >= 0,
+            }"
+          >
+            {{ transaction.amount | transaction.currency }}
+          </div>
+        </li>
+      </ul>
+      <router-link
+        to="/addScheduledTransaction"
+        tag="button"
+        class="add-sched-transaction-btn"
+      >
+        Add New Scheduled Transaction
+      </router-link>
     </div>
   </div>
+</template>
 
-  </template>
-  
-  <script>
-  import { getFirestore, collection, query, onSnapshot } from "firebase/firestore";
-  import firebaseApp from "../firebase.js";
-  
-  const db = getFirestore(firebaseApp);
-  
-  export default {
-    data() {
-      return {
-        scheduledTransactions: [],
-        selectedFilter: '',
-        selectedCategory: '',
-        selectedRecurrence: '',
-      };
+<script>
+import {
+  getFirestore,
+  collection,
+  query,
+  onSnapshot,
+} from "firebase/firestore";
+import firebaseApp from "../firebase.js";
+
+const db = getFirestore(firebaseApp);
+
+export default {
+  data() {
+    return {
+      scheduledTransactions: [],
+      selectedFilter: "",
+      selectedCategory: "",
+      selectedRecurrence: "",
+    };
+  },
+  mounted() {
+    this.fetchScheduledTransactions();
+  },
+  methods: {
+    fetchScheduledTransactions() {
+      const query = collection(db, "scheduledTransaction");
+      onSnapshot(
+        query,
+        (querySnapshot) => {
+          this.scheduledTransactions = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            name: doc.data().schedTransactionName, // Make sure this field exists in your Firestore documents
+            amount: doc.data().schedTransactionAmount, // Make sure this field exists in your Firestore documents
+            category: doc.data().schedTransactionsCategory, // Make sure this field exists in your Firestore documents
+            currency: doc.data().schedTransactionsCurrency, // Make sure this field exists in your Firestore documents
+            date: doc.data().schedTransactionsDate, // Make sure this field exists in your Firestore documents
+            recurrence: doc.data().schedTransactionsRecurrence, // Make sure this field exists in your Firestore documents
+          }));
+        },
+        (error) => {
+          console.error("Error getting documents: ", error);
+        }
+      );
     },
-    mounted() {
-      this.fetchScheduledTransactions();
-    },
-    methods: {
-      fetchScheduledTransactions() {
-        const query = collection(db, "scheduledTransaction");
-        onSnapshot(
-            query,
-            (querySnapshot) => {
-                this.scheduledTransactions = querySnapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    name: doc.data().schedTransactionName, // Make sure this field exists in your Firestore documents
-                    amount: doc.data().schedTransactionAmount, // Make sure this field exists in your Firestore documents
-                    category: doc.data().schedTransactionsCategory, // Make sure this field exists in your Firestore documents
-                    currency: doc.data().schedTransactionsCurrency, // Make sure this field exists in your Firestore documents
-                    date: doc.data().schedTransactionsDate, // Make sure this field exists in your Firestore documents
-                    recurrence: doc.data().schedTransactionsRecurrence, // Make sure this field exists in your Firestore documents
-                }));
-        }, (error) => {
-            console.error("Error getting documents: ", error);
-        });
+  },
+  computed: {
+    filteredTransactions() {
+      let filtered = this.scheduledTransactions;
+
+      if (this.selectedFilter === "category" && this.selectedCategory) {
+        filtered = filtered.filter(
+          (transaction) => transaction.category === this.selectedCategory
+        );
+      } else if (
+        this.selectedFilter === "recurrence" &&
+        this.selectedRecurrence
+      ) {
+        filtered = filtered.filter(
+          (transaction) => transaction.recurrence === this.selectedRecurrence
+        );
+        //   const today = new Date();
+        //   today.setHours(0, 0, 0, 0); // Set to start of today
+
+        //   let startDate;
+
+        //   switch (this.selectedDateFilter) {
+        //     case 'today':
+        //       startDate = today;
+        //       break;
+        //     case 'last7Days':
+        //       startDate = new Date(new Date().setDate(today.getDate() - 7));
+        //       break;
+        //     case 'lastMonth':
+        //       startDate = new Date(new Date().setMonth(today.getMonth() - 1));
+        //       break;
+        //   }
+
+        //   if (startDate) {
+        //     filtered = filtered.filter(transaction => {
+        //       const transactionDate = new Date(transaction.date);
+        //       return transactionDate >= startDate && transactionDate <= today;
+        //     });
+        //   }
       }
-    }, computed: {
-  filteredTransactions() {
-    let filtered = this.scheduledTransactions;
 
-    if (this.selectedFilter === 'category' && this.selectedCategory) {
-      filtered = filtered.filter(transaction => transaction.category === this.selectedCategory);
-    } else if (this.selectedFilter === 'recurrence' && this.selectedRecurrence) {
-        filtered = filtered.filter(transaction => transaction.recurrence === this.selectedRecurrence);
-    //   const today = new Date();
-    //   today.setHours(0, 0, 0, 0); // Set to start of today
-      
-    //   let startDate;
-
-    //   switch (this.selectedDateFilter) {
-    //     case 'today':
-    //       startDate = today;
-    //       break;
-    //     case 'last7Days':
-    //       startDate = new Date(new Date().setDate(today.getDate() - 7));
-    //       break;
-    //     case 'lastMonth':
-    //       startDate = new Date(new Date().setMonth(today.getMonth() - 1));
-    //       break;
-    //   }
-
-    //   if (startDate) {
-    //     filtered = filtered.filter(transaction => {
-    //       const transactionDate = new Date(transaction.date);
-    //       return transactionDate >= startDate && transactionDate <= today;
-    //     });
-    //   }
-    }
-
-    return filtered;
-  }
-},
-  };
-  </script>
+      return filtered;
+    },
+  },
+};
+</script>
 
 <style scoped>
-
 .scheduled-transactions-list {
   margin: 0;
   padding: 0;
@@ -192,4 +208,11 @@
   margin: 10px auto; /* Centering button */
 }
 
+.positive {
+  color: #5cb85c; /* Green color for positive amounts */
+}
+
+.negative {
+  color: #ff3860; /* Red color for negative amounts */
+}
 </style>
