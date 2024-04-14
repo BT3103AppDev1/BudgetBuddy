@@ -56,6 +56,20 @@
         <input type="date" id="date" v-model="transaction.date" required />
       </div>
 
+      <div class="form-group">
+        <label for="budgetTakenFrom">Budget Taken From</label>
+        <select id="budgetTakenFrom" v-model="selectedBudget" required>
+          <option disabled value="">Select a budget</option>
+          <option
+            v-for="budget in budgets"
+            :key="budget.id"
+            :value="budget.name"
+          >
+            {{ budget.name }}
+          </option>
+        </select>
+      </div>
+
       <div class="button-container">
         <button type="submit" class="btn">Add Transaction</button>
       </div>
@@ -66,7 +80,7 @@
 <script>
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
-import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection, getDocs } from "firebase/firestore";
 const db = getFirestore(firebaseApp);
 export default {
   data() {
@@ -79,7 +93,12 @@ export default {
         currency: "",
         date: "",
       },
+      budgets: [],
+      selectedBudget: "",
     };
+  },
+  mounted() {
+    this.fetchBudgets();
   },
   methods: {
     async saveAddTransac() {
@@ -116,6 +135,14 @@ export default {
       } catch (error) {
         console.error("Error adding document: ", error);
       }
+    },
+    async fetchBudgets() {
+      const query = collection(db, "budgets");
+      const querySnapshot = await getDocs(query);
+      this.budgets = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        name: doc.data().name,
+      }));
     },
   },
 };

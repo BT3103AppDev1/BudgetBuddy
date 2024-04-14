@@ -1,7 +1,7 @@
 <template>
   <div class="addTranscPageContainer">
     <sidebar />
-    <addTransaction></addTransaction>
+    <addTransaction />
     <Logout :user="user" />
   </div>
 </template>
