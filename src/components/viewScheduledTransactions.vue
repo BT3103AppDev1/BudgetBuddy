@@ -44,7 +44,7 @@
               positive: transaction.amount >= 0,
             }"
           >
-            {{ transaction.amount | transaction.currency }}
+            {{ transaction.amount.toFixed(2) }}
           </div>
         </li>
       </ul>
@@ -84,9 +84,9 @@ export default {
   },
   methods: {
     fetchScheduledTransactions() {
-      const query = collection(db, "scheduledTransaction");
+      const transactionQuery = collection(db, "scheduledTransaction");
       onSnapshot(
-        query,
+        transactionQuery,
         (querySnapshot) => {
           this.scheduledTransactions = querySnapshot.docs.map((doc) => ({
             id: doc.id,
@@ -119,29 +119,6 @@ export default {
         filtered = filtered.filter(
           (transaction) => transaction.recurrence === this.selectedRecurrence
         );
-        //   const today = new Date();
-        //   today.setHours(0, 0, 0, 0); // Set to start of today
-
-        //   let startDate;
-
-        //   switch (this.selectedDateFilter) {
-        //     case 'today':
-        //       startDate = today;
-        //       break;
-        //     case 'last7Days':
-        //       startDate = new Date(new Date().setDate(today.getDate() - 7));
-        //       break;
-        //     case 'lastMonth':
-        //       startDate = new Date(new Date().setMonth(today.getMonth() - 1));
-        //       break;
-        //   }
-
-        //   if (startDate) {
-        //     filtered = filtered.filter(transaction => {
-        //       const transactionDate = new Date(transaction.date);
-        //       return transactionDate >= startDate && transactionDate <= today;
-        //     });
-        //   }
       }
 
       return filtered;
