@@ -20,7 +20,18 @@
         <p v-if="budget.remaining < 0" class="over-limit-warning">
           You've exceeded the limit!
         </p>
+        <button @click="enableEditMode(budget)">Edit</button>
       </div>
+    </div>
+    <div v-if="editingBudgetId" class="overlay"></div>
+    <div v-if="editingBudgetId" class="edit-budget-form">
+      <input v-model="editedBudgetDetails.name" type="text" placeholder="Budget Name">
+      <input v-model="editedBudgetDetails.amount" type="number" placeholder="Total Amount">
+      <input v-model="editedBudgetDetails.startDate" type="date">
+      <input v-model="editedBudgetDetails.endDate" type="date">
+      <!-- ... other fields as needed ... -->
+      <button @click="updateBudget">Save Changes</button>
+      <button @click="cancelEditMode">Cancel</button>
     </div>
     <router-link to="/addBudget" tag="button" class="add-budget-btn">
       Add New Budget
@@ -34,7 +45,9 @@ import {
   getFirestore,
   where,
   query,
+  doc,
   collection,
+  updateDoc,
   getDocs,
 } from "firebase/firestore";
 
@@ -42,11 +55,22 @@ export default {
   data() {
     return {
       budgets: [], // Array to store budget data from Firestore
+      editingBudgetId: null,
+      editedBudgetDetails: {},
     };
   },
   async mounted() {
     await this.fetchBudgets();
     await this.calculateSpentAmounts();
+  },
+  computed: {
+    computedBudgets() {
+      return this.budgets.map(budget => ({
+        ...budget,
+        remaining: budget.amount - budget.spent
+      }));
+    }
+
   },
   methods: {
     progressWidth(budget) {
@@ -58,6 +82,15 @@ export default {
       const hue = 120 - percentage * 1.2;
       const color = `hsl(${hue}, 100%, 50%)`; // Ensure the HSL value is correct
       return color;
+    },
+    enableEditMode(budget) {
+      this.editingBudgetId = budget.id;
+      this.editedBudgetDetails = { ...budget }; // Make a shallow copy to edit
+    },
+
+    cancelEditMode() {
+      this.editingBudgetId = null;
+      this.editedBudgetDetails = {};
     },
     async fetchBudgets() {
       const db = getFirestore(firebaseApp);
@@ -71,14 +104,49 @@ export default {
           startDate: doc.data().startDate,
           endDate: doc.data().endDate,
           category: doc.data().category,
-          spent: 0,
+          spent: doc.data().spent || 0,
           remaining: doc.data().amount,
         }));
       } catch (error) {
         console.error("Error fetching budgets:", error);
       }
     },
-    async calculateSpentAmounts() {
+    async updateBudget() {
+    if (!this.editingBudgetId) return;
+
+    const db = getFirestore(firebaseApp);
+    const budgetDocRef = doc(db, 'budgets', this.editingBudgetId);
+
+    const currentBudget = this.budgets.find(b => b.id === this.editingBudgetId);
+    const newRemaining = this.editedBudgetDetails.amount - currentBudget.spent;
+
+    const updates = {
+      ...this.editedBudgetDetails,
+      remaining: newRemaining  // explicitly updating remaining
+    };
+    
+    try {
+
+        await updateDoc(budgetDocRef, updates);
+
+        const index = this.budgets.findIndex(budget => budget.id === this.editingBudgetId);
+        if (index !== -1) {
+            this.budgets[index] = {
+                ...this.budgets[index],
+                ...updates,
+                remaining: newRemaining
+            };
+        }
+
+        this.editingBudgetId = null;
+        this.editedBudgetDetails = {};
+    } catch (error) {
+        console.error("Error updating budget:", error);
+    }
+},
+
+    
+  async calculateSpentAmounts() {
       const db = getFirestore(firebaseApp);
       const transactionsCol = collection(db, "transactions");
 
@@ -99,9 +167,11 @@ export default {
         // Notify Vue about the change
         this.budgets[i] = { ...budget };
       }
+      this.$forceUpdate();
     },
-  },
-};
+  }
+  };
+  
 </script>
 
 <style scoped>
@@ -167,6 +237,28 @@ export default {
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s ease;
+}
+.edit-budget-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000; /* Make sure it's above other elements */
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999; /* Overlay below the form */
 }
 
 .add-budget-btn:hover {
