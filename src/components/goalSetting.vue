@@ -32,6 +32,7 @@
       <!-- ... other fields as needed ... -->
       <button @click="updateBudget">Save Changes</button>
       <button @click="cancelEditMode">Cancel</button>
+      <button @click="deleteBudget" class="delete-btn">Delete Budget</button>
     </div>
     <router-link to="/addBudget" tag="button" class="add-budget-btn">
       Add New Budget
@@ -49,6 +50,7 @@ import {
   collection,
   updateDoc,
   getDocs,
+  deleteDoc,
 } from "firebase/firestore";
 
 export default {
@@ -111,7 +113,26 @@ export default {
         console.error("Error fetching budgets:", error);
       }
     },
-    async updateBudget() {
+  async deleteBudget() {
+    if (!this.editingBudgetId) return;
+
+    const db = getFirestore(firebaseApp);
+    const budgetDocRef = doc(db, 'budgets', this.editingBudgetId);
+
+    try {
+      await deleteDoc(budgetDocRef); // Firebase function to delete a document
+
+      // Remove the budget from the local state to update UI
+      this.budgets = this.budgets.filter(budget => budget.id !== this.editingBudgetId);
+
+      this.editingBudgetId = null; // Close the edit form
+      this.editedBudgetDetails = {}; // Reset edited details
+    } catch (error) {
+      console.error("Error deleting budget:", error);
+    }
+  },
+
+  async updateBudget() {
     if (!this.editingBudgetId) return;
 
     const db = getFirestore(firebaseApp);
@@ -143,9 +164,8 @@ export default {
     } catch (error) {
         console.error("Error updating budget:", error);
     }
-},
+  },
 
-    
   async calculateSpentAmounts() {
       const db = getFirestore(firebaseApp);
       const transactionsCol = collection(db, "transactions");
@@ -274,4 +294,14 @@ export default {
 .budget-close .progress-bar {
   background-color: #ffeb3b;
 }
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
 </style>
