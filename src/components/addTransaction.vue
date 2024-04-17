@@ -43,16 +43,6 @@
       </div>
 
       <div class="form-group">
-        <label for="currency">Currency *</label>
-        <select id="currency" v-model="transaction.currency" required>
-          <option value="NIL"></option>
-          <option value="SGD">SGD - Singapore Dollar</option>
-          <option value="USD">USD - US Dollar</option>
-          <!-- Add more currencies here -->
-        </select>
-      </div>
-
-      <div class="form-group">
         <label for="date">Date *</label>
         <input type="date" id="date" v-model="transaction.date" required />
       </div>
@@ -91,7 +81,6 @@ export default {
         amount: null,
         description: "",
         category: "",
-        currency: "",
         date: "",
       },
       budgets: [],
@@ -109,7 +98,6 @@ export default {
       let amount = +document.getElementById("amount").value;
       let description = document.getElementById("description").value;
       let category = document.getElementById("category").value;
-      let currency = document.getElementById("currency").value;
       let date = document.getElementById("date").value;
       let budgetTakenFrom = document.getElementById("budgetTakenFrom").value;
 
@@ -121,7 +109,6 @@ export default {
           amount: amount,
           description: description,
           category: category,
-          currency: currency,
           date: date,
           budgetTakenFrom: budgetTakenFrom,
         });
@@ -131,7 +118,6 @@ export default {
           amount: null,
           description: "",
           category: "",
-          currency: "",
           date: "",
           budgetTakenFrom: "",
         };

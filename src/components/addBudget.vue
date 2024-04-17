@@ -38,17 +38,6 @@
         </select>
       </div>
 
-      <!-- Currency Select -->
-      <div class="input-group">
-        <label for="currency">Currency *</label>
-        <select id="currency" v-model="budget.currency" required>
-          <option disabled value="">Please select currency</option>
-          <option value="SGD">SGD - Singapore Dollar</option>
-          <option value="USD">USD - US Dollar</option>
-          <!-- more options -->
-        </select>
-      </div>
-
       <!-- Date Range Picker or Two Date Inputs -->
       <div class="input-group">
         <label for="startDate">Start Date *</label>
@@ -71,6 +60,7 @@
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
 import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { auth } from "firebaseui";
 const db = getFirestore(firebaseApp);
 export default {
   data() {
@@ -79,7 +69,6 @@ export default {
         name: "",
         amount: null,
         category: "",
-        currency: "",
         startDate: "",
         endDate: "",
       },
@@ -91,7 +80,6 @@ export default {
       let name = document.getElementById("name").value;
       let amount = +document.getElementById("amount").value;
       let category = document.getElementById("category").value;
-      let currency = document.getElementById("currency").value;
       let startDate = document.getElementById("startDate").value;
       let endDate = document.getElementById("endDate").value;
 
@@ -101,7 +89,6 @@ export default {
           name: name,
           amount: amount,
           category: category,
-          currency: currency,
           startDate: startDate,
           endDate: endDate,
         });
@@ -110,7 +97,6 @@ export default {
           name: "",
           amount: null,
           category: "",
-          currency: "",
           startDate: "",
           endDate: "",
         };

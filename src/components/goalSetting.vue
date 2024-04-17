@@ -6,7 +6,7 @@
         <span>{{ budget.startDate }} - {{ budget.endDate }}</span>
       </div>
       <div class="budget-details">
-        <span>Remaining ${{ budget.remaining }}</span>
+        <span>${{ budget.remaining }} Remaining </span>
         <div class="progress-bar-container">
           <div
             class="progress-bar"
@@ -106,8 +106,8 @@ export default {
           startDate: doc.data().startDate,
           endDate: doc.data().endDate,
           category: doc.data().category,
-          spent: doc.data().spent || 0,
-          remaining: doc.data().amount,
+          //spent: doc.data().spent || 0,
+          //remaining: doc.data().amount,
         }));
       } catch (error) {
         console.error("Error fetching budgets:", error);
@@ -139,11 +139,11 @@ export default {
     const budgetDocRef = doc(db, 'budgets', this.editingBudgetId);
 
     const currentBudget = this.budgets.find(b => b.id === this.editingBudgetId);
-    const newRemaining = this.editedBudgetDetails.amount - currentBudget.spent;
+    //const newRemaining = this.editedBudgetDetails.amount - currentBudget.spent;
 
     const updates = {
       ...this.editedBudgetDetails,
-      remaining: newRemaining  // explicitly updating remaining
+      //remaining: newRemaining  // explicitly updating remaining
     };
     
     try {
@@ -155,7 +155,7 @@ export default {
             this.budgets[index] = {
                 ...this.budgets[index],
                 ...updates,
-                remaining: newRemaining
+                //remaining: newRemaining
             };
         }
 

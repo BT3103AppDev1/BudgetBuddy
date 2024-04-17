@@ -8,11 +8,11 @@
     <!-- Dropdown for Category -->
     <select v-model="selectedCategory" v-if="selectedFilter === 'category'">
       <option value="">Select a Category</option>
-      <option value="income">income</option>
-      <option value="allowance">allowance</option>
-      <option value="expenses">expenses</option>
-      <option value="subscriptions">subscriptions</option>
-      <option value="others">others</option>
+      <option value="income">Income</option>
+      <option value="allowance">Allowance</option>
+      <option value="expenses">Expenses</option>
+      <option value="subscriptions">Subscriptions</option>
+      <option value="others">Others</option>
     </select>
 
     <!-- Dropdown for Recurrence Options -->

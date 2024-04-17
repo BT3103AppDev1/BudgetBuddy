@@ -46,20 +46,7 @@
           <!-- Correct the values for each option -->
         </select>
       </div>
-
-      <!-- Currency Select -->
-      <div class="input-group">
-        <label for="schedTransactionsCurrency">Currency *</label>
-        <select
-          id="schedTransactionsCurrency"
-          v-model="scheduledTransaction.schedTransactionsCurrency"
-          required
-        >
-          <option value="SGD">SGD - Singapore Dollar</option>
-          <!-- more options -->
-        </select>
-      </div>
-
+ 
       <!-- Start Date Picker -->
       <div class="input-group">
         <label for="schedTransactionsDate">Start Date *</label>
@@ -113,7 +100,6 @@ export default {
         schedTransactionName: "",
         schedTransactionAmount: null,
         schedTransactionsCategory: "",
-        schedTransactionsCurrency: "",
         schedTransactionsDate: "",
         schedTransactionsRecurrence: "",
       },
@@ -133,9 +119,6 @@ export default {
       let schedTransactionsCategory = document.getElementById(
         "schedTransactionsCategory"
       ).value;
-      let schedTransactionsCurrency = document.getElementById(
-        "schedTransactionsCurrency"
-      ).value;
       let schedTransactionsDate = document.getElementById(
         "schedTransactionsDate"
       ).value;
@@ -154,7 +137,6 @@ export default {
           schedTransactionName: schedTransactionName,
           schedTransactionAmount: schedTransactionAmount,
           schedTransactionsCategory: schedTransactionsCategory,
-          schedTransactionsCurrency: schedTransactionsCurrency,
           schedTransactionsDate: schedTransactionsDate,
           schedTransactionsRecurrence: schedTransactionsRecurrence,
         });
@@ -163,7 +145,6 @@ export default {
           schedTransactionName: "",
           schedTransactionAmount: null,
           schedTransactionsCategory: "",
-          schedTransactionsCurrency: "",
           schedTransactionsDate: "",
           schedTransactionsRecurrence: "",
         };
