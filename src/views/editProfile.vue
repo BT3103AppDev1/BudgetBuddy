@@ -32,7 +32,6 @@
       </div>
     </div>
 
-
     <div class="form-group">
       <label for="confirmpw">Confirm Password</label>
       <div class="input-field-container">
