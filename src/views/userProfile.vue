@@ -2,7 +2,7 @@
     <sidebar/>
     <div class="user-profile">
         <h2>User Profile</h2>
-        <img :src="userPicture || '@/assets/profile-user.png'" alr="User Profile Picture"/>
+        <img :src="userPicture || '@/assets/profile-user.png'" alt="User Profile Picture"/>
 
         <div class="form-group">
             <label for="username">Username</label>

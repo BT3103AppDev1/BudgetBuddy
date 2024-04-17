@@ -7,33 +7,46 @@
 
   <div class="user-profile">
     <h2>User Profile</h2>
-    <img
-      :src="userPicture || '@/assets/profile-user.png'"
-      alr="User Profile Picture"
-    />
+    <div>
+      <img :src="userPicture || '@/assets/profile-user.png'" alt="User Profile Picture"/>
+      <h5 @click="openFilePicker">Edit Profile Picture</h5>
+    </div>
 
     <div class="form-group">
       <label for="username">Username</label>
-      <input type="text" id="name" required class="input-field" />
+      <input type="text" id="username" v-model="username" required class="input-field" />
     </div>
 
     <div class="form-group">
       <label for="email">Email</label>
-      <input type="text" id="name" required class="input-field" />
+      <input type="text" id="email" v-model="email" required class="input-field" />
     </div>
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input type="text" id="name" required class="input-field" />
+      <div class="input-field-container">
+        <input :type="passwordInputType" v-model="password" required class="input-field"/>
+        <button class="input-group-text" @click.prevent="toggleInput">
+          <ion-icon :name="passwordIcon"></ion-icon>
+        </button>
+      </div>
     </div>
+
 
     <div class="form-group">
       <label for="confirmpw">Confirm Password</label>
-      <input type="text" id="name" required class="input-field" />
+      <div class="input-field-container">
+        <input :type="confirmPasswordInputType" v-model="confirmPassword" required class="input-field" />
+        <button class="input-group-text" @click.prevent="toggleConfirmPasswordInput">
+            <ion-icon :name="confirmPasswordIcon"></ion-icon>
+        </button>
+      </div>
+      <p v-if="password !== confirmPassword" class="error-message">Passwords do not match!</p>
     </div>
 
     <div class="button-container">
       <button class="btn" @click="editProfile()">Save</button>
+      <p v-if="message">{{ message }}</p>
     </div>
   </div>
 </template>
@@ -42,7 +55,7 @@
 import firebase from "@/uifire.js";
 import firebaseApp from "@/firebase.js";
 import sidebar from "../components/sidebar.vue";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, updateEmail, updatePassword, updateProfile } from "firebase/auth";
 
 export default {
   name: "editProfile",
@@ -52,17 +65,32 @@ export default {
   data() {
     return {
       user: null,
-      userEmail: "nothing",
+      username: "",
+      email: "nothing",
+      password: "",
+      confirmPassword: "",
+      errorMessage: "",
+      showPassword: false,
+      passwordInputType: "password",
+      confirmPasswordInputType: "password",
+      passwordIcon: 'eye',
+      confirmPasswordIcon: 'eye',
     };
+  },
+  computed: {
+    passwordFieldType() {
+      return this.showPassword ? 'text' : 'password';
+    }
   },
   mounted() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
         this.user = user;
-        this.userEmail = user.email;
         this.username = user.displayName;
+        this.email = user.email;
         this.userPicture = user.photoURL;
+        this.password = user.password;
       }
     });
   },
@@ -70,6 +98,55 @@ export default {
     navigateBack() {
       this.$router.back();
     },
+    toggleInput() {
+      this.passwordInputType = this.passwordInputType === 'password' ? 'text' : 'password';
+      this.passwordIcon = this.passwordIcon === 'eye' ? 'eye-off' : 'eye';
+    },
+    toggleConfirmPasswordInput() {
+      this.confirmPasswordInputType = this.confirmPasswordInputType === 'password' ? 'text' : 'password';
+      this.confirmPasswordIcon = this.confirmPasswordIcon === 'eye' ? 'eye-off' : 'eye';
+    },
+    async editProfile() {
+      if (this.password !== this.confirmPassword) {
+        this.errorMessage = "Passwords do not match!";
+        return;
+      }
+      try {
+        const user = this.user;
+        if (this.username !== user.displayName) {
+          await updateProfile(user, {
+            displayName: this.username
+          });
+        }
+        if (this.email !== user.email) {
+          await updateEmail(user, this.email);
+        }
+        if (this.password) {
+          await updatePassword(user, this.password);
+        }
+        this.message = "Profile updated successfully";
+        this.$router.back();
+      } catch (error) {
+        console.error(error.message);
+        this.errorMessage = error.message;
+      }
+    },
+    openFilePicker() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.addEventListener('change', (event) => {
+        const file = event.target.files[0]; // Get the first selected file
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.userPicture = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      input.click();
+    }
   },
 };
 </script>
@@ -82,7 +159,7 @@ export default {
   position: fixed; /* Position the container fixed to the viewport */
   top: 5%; /* Position it at the top */
   left: 20%;
-  width: 50%;
+  width: 15%;
   z-index: 999; /* Ensure it's above other content */
   font-size: 20px;
   cursor: pointer;
@@ -117,7 +194,8 @@ export default {
   margin-bottom: 0.5rem;
   color: #666; /* Use color from your design */
 }
-.form-group input[type="text"] {
+.form-group input[type="text"],
+.form-group input[type="password"] {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #ddd; /* Use color from your design */
@@ -145,4 +223,26 @@ export default {
   display: flex;
   justify-content: center;
 }
+h5 {
+  margin-top: -15px;
+  font-size: 15px;
+  cursor: pointer;
+  color: blue;
+}
+.error-message {
+  color: red;
+}
+.input-field-container {
+  position: relative;
+}
+.input-field {
+  padding-right: 40px; /* Adjust this value based on your button's width */
+}
+.input-group-text {
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Adjust this value based on your desired position */
+  transform: translateY(-50%);
+}
+
 </style>
