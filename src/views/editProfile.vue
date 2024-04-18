@@ -40,11 +40,10 @@
             <ion-icon :name="confirmPasswordIcon"></ion-icon>
         </button>
       </div>
-      <p v-if="password !== confirmPassword" class="error-message">Passwords do not match!</p>
     </div>
 
     <div class="button-container">
-      <button class="btn" @click="editProfile()">Save</button>
+      <button class="btn" @click="editProfile">Save</button>
       <p v-if="message">{{ message }}</p>
     </div>
   </div>
@@ -106,8 +105,20 @@ export default {
       this.confirmPasswordIcon = this.confirmPasswordIcon === 'eye' ? 'eye-off' : 'eye';
     },
     async editProfile() {
-      if (this.password !== this.confirmPassword) {
+      alert('editProfile method called')
+      //check if all required fields are filled in
+      if (!this.username || !this.email || !this.password || !this.confirmPassword) {
+        this.errorMessage = "Please fill in all fields.";
+        return;
+      }
+      if (this.password && this.confirmPassword && this.password !== this.confirmPassword) {
         this.errorMessage = "Passwords do not match!";
+        return;
+      }
+
+      // Check if either password or confirm password is empty
+      if (!this.password && !this.confirmPassword) {
+        this.errorMessage = "Please fill in both password fields.";
         return;
       }
       try {
@@ -118,15 +129,16 @@ export default {
           });
         }
         if (this.email !== user.email) {
-          await updateEmail(user, this.email);
+          await updateEmail(user, {
+            email: this.email});
         }
         if (this.password) {
-          await updatePassword(user, this.password);
+          await updatePassword(user, {
+            password: this.password});
         }
         this.message = "Profile updated successfully";
-        this.$router.back();
+        this.$router.push('/userProfile');
       } catch (error) {
-        console.error(error.message);
         this.errorMessage = error.message;
       }
     },
@@ -213,7 +225,7 @@ export default {
   cursor: pointer;
 }
 
-.btn:hover {
+.btn:hover, h5:hover {
   text-decoration: underline;
   font-weight: 900;
 }
