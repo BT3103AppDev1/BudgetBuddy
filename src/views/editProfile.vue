@@ -7,79 +7,21 @@
 
   <div class="user-profile">
     <h2>User Profile</h2>
-    <div>
-      <img
-        :src="userPicture || '@/assets/profile-user.png'"
-        alt="User Profile Picture"
-      />
-      <h5 @click="openFilePicker">Edit Profile Picture</h5>
+    <div class="input">
+      <div>
+        <img @click="openFileInput" class="profile-user-img img-circle" :src="profilePictureUrl ? profilePictureUrl : defaultProfilePicture" alt="User Profile Picture">
+      </div>
+      <input id="fileInput" @change="handleFileChange" ref="fileInput" type="file" class="d-none">
     </div>
 
     <div class="form-group">
       <label for="username">Username</label>
-      <input
-        type="text"
-        id="username"
-        v-model="username"
-        required
-        class="input-field"
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input
-        type="text"
-        id="email"
-        v-model="email"
-        required
-        class="input-field"
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="password">Password</label>
-      <div class="input-field-container">
-        <input
-          :type="passwordInputType"
-          v-model="password"
-          required
-          class="input-field"
-        />
-        <button class="input-group-text" @click.prevent="toggleInput">
-          <ion-icon :name="passwordIcon"></ion-icon>
-        </button>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="confirmpw">Confirm Password</label>
-      <div class="input-field-container">
-        <input
-          :type="confirmPasswordInputType"
-          v-model="confirmPassword"
-          required
-          class="input-field"
-        />
-        <button
-          class="input-group-text"
-          @click.prevent="toggleConfirmPasswordInput"
-        >
-          <ion-icon :name="confirmPasswordIcon"></ion-icon>
-        </button>
-      </div>
-      <p v-if="password !== confirmPassword" class="error-message">
-        Passwords do not match!
-      </p>
+      <input type="text" id="username" v-model="username" required class="input-field" />
     </div>
 
     <div class="button-container">
       <button class="btn" @click="editProfile">Save</button>
       <p v-if="message">{{ message }}</p>
-      <div class="button-container">
-        <button class="btn" @click="editProfile()">Save</button>
-        <p v-if="message">{{ message }}</p>
-      </div>
     </div>
   </div>
 </template>
@@ -88,13 +30,10 @@
 import firebase from "@/uifire.js";
 import firebaseApp from "@/firebase.js";
 import sidebar from "../components/sidebar.vue";
-import {
-  getAuth,
-  onAuthStateChanged,
-  updateEmail,
-  updatePassword,
-  updateProfile,
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { ref } from 'vue';
+import axios from 'axios';
+import { toastController } from "@ionic/core";
 
 export default {
   name: "editProfile",
@@ -107,19 +46,9 @@ export default {
       username: "",
       email: "nothing",
       errorMessage: "",
-      src: this.defaultSrc,
-      file: null,
-      showPassword: false,
-      passwordInputType: "password",
-      confirmPasswordInputType: "password",
-      passwordIcon: "eye",
-      confirmPasswordIcon: "eye",
+      defaultProfilePicture: '@/assets/profile-user.png',
+      profilePictureUrl: null,
     };
-  },
-  computed: {
-    passwordFieldType() {
-      return this.showPassword ? "text" : "password";
-    },
   },
   mounted() {
     const auth = getAuth();
@@ -128,7 +57,7 @@ export default {
         this.user = user;
         this.username = user.displayName;
         this.email = user.email;
-        this.userPicture = user.photoURL;
+        this.profilePictureUrl = user.photoURL;
       }
     });
   },
@@ -136,76 +65,68 @@ export default {
     navigateBack() {
       this.$router.back();
     },
-    toggleInput() {
-      this.passwordInputType =
-        this.passwordInputType === "password" ? "text" : "password";
-      this.passwordIcon = this.passwordIcon === "eye" ? "eye-off" : "eye";
-    },
-    toggleConfirmPasswordInput() {
-      this.confirmPasswordInputType =
-        this.confirmPasswordInputType === "password" ? "text" : "password";
-      this.confirmPasswordIcon =
-        this.confirmPasswordIcon === "eye" ? "eye-off" : "eye";
-    },
     async editProfile() {
-      if (this.password !== this.confirmPassword) {
-        this.errorMessage = "Passwords do not match!";
+      if (!this.username || !this.email) {
+        this.errorMessage = "Please fill in all fields.";
         return;
       }
       try {
-        const user = this.user;
-        if (this.username !== user.displayName) {
-          await updateProfile(user, {
-            displayName: this.username,
+        if (this.username !== this.user.displayName) {
+          console.log("Updating display name...");
+          await updateProfile(this.user, {
+            displayName: this.username
           });
+        } else {
+          console.log("Username is the same as the current display name.");
         }
-        if (this.email !== user.email) {
-          await updateEmail(user, this.email);
-        }
-        if (this.password) {
-          await updatePassword(user, this.password);
+
+        if (this.profilePictureUrl && this.profilePictureUrl !== this.user.photoURL) {
+          console.log("updating profile picture..");
+          await updateProfile(this.user, {
+            photoURL: this.profilePictureUrl
+          });
+        } else {
+          console.log("Profile picture is the same as the current one");
         }
         this.message = "Profile updated successfully";
-        this.$router.back();
+        this.$router.push('/userProfile');
       } catch (error) {
+        console.error("Error updating profile:", error);
         this.errorMessage = error.message;
       }
-    },
-    openFilePicker() {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.addEventListener("change", (event) => {
-        const file = event.target.files[0]; // Get the first selected file
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.userPicture = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-      input.click();
-    },
+    }
+
   },
+  setup() {
+    const fileInput = ref(null);
+    const openFileInput = () => {
+      fileInput.value.click();
+    };
+    const profilePictureUrl = ref(null);
+    const handleFileChange = (event) => {
+      const file = event.target.files[0];
+      profilePictureUrl.value = URL.createObjectURL(file);
+      const formData = new FormData();
+      formData.append('profile_picture', file);
+      axios.post('/api/upload-profile-image', formData)
+      .then((response) => {
+        toastController.success('Image uploaded successfully!');
+      }).catch((error) => {
+        console.error('Error uploading image:', error);
+        toastController.error('Failed to upload image');
+      })
+    };
+    return {
+      fileInput,
+      openFileInput,
+      profilePictureUrl,
+      handleFileChange,
+    };
+  }
 };
 </script>
 
 <style scoped>
-.editProfilePageContainer {
-  display: flex;
-  align-items: start;
-}
-
-.sidebar {
-  flex: 0 0 290px;
-}
-
-.maincontent {
-  margin: 0 auto;
-  flex-grow: 1;
-}
-
 .navigate-back {
   display: flex;
   align-items: center;
@@ -270,12 +191,10 @@ export default {
   background-color: #474745;
   cursor: pointer;
 }
-
-.btn:hover {
+.btn:hover, h5:hover {
   text-decoration: underline;
   font-weight: 900;
 }
-
 .button-container {
   display: flex;
   justify-content: center;
@@ -292,13 +211,8 @@ h5 {
 .profile-user-img:hover {
   cursor: pointer;
 }
-.input-field {
-  padding-right: 40px; /* Adjust this value based on your button's width */
-}
-.input-group-text {
-  position: absolute;
-  top: 50%;
-  right: 10px; /* Adjust this value based on your desired position */
-  transform: translateY(-50%);
+.input [type="file"] {
+  margin-bottom: 20px;
+  margin-left: 80px;;
 }
 </style>
