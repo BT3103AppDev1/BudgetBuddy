@@ -64,14 +64,13 @@ export default {
 </script>
 
 <style scoped>
-/* Basic sidebar styles */
 .sidebar {
-  width: 290px; /* or however wide you want it */
+  width: 290px;
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
-  background-color: #f5f5f5; /* Light grey background */
+  background-color: #f5f5f5;
   overflow: hidden;
   transition: all 0.5s linear;
   /* Additional styling */

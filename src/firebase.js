@@ -1,6 +1,11 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-//import firebase from "firebase/compat/app";
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,5 +23,15 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
+
+// Initialize Firebase Auth and set persistence
+const auth = getAuth(firebaseApp);
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    console.log("Persistence set to local");
+  })
+  .catch((error) => {
+    console.error("Error setting persistence:", error);
+  });
 
 export default firebaseApp;

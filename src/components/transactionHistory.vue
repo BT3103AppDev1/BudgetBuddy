@@ -30,7 +30,6 @@
           :key="transaction.id"
           class="transaction-item"
         >
-          <div class="transaction-icon"><!-- Icon based on category --></div>
           <div class="transaction-details">
             <h3 class="transaction-name">{{ transaction.name }}</h3>
             <p class="transaction-date">{{ transaction.date }}</p>
@@ -61,11 +60,13 @@
 <script>
 import firebaseApp from "../firebase.js";
 import { getFirestore, onSnapshot, collection } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 const db = getFirestore(firebaseApp);
 
 export default {
   data() {
     return {
+      auth: null,
       transactions: [],
       selectedFilter: "",
       selectedCategory: "",
@@ -75,9 +76,22 @@ export default {
   mounted() {
     this.fetchTransactions();
   },
+  created() {
+    this.auth = getAuth(firebaseApp); // Initialize Firebase Auth here
+  },
   methods: {
     fetchTransactions() {
-      const query = collection(db, "transactions");
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      const query = collection(db, "users", userId, "transactions");
       onSnapshot(
         query,
         (querySnapshot) => {
@@ -145,10 +159,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .transaction-history-page {
-  padding: 0px;
-  margin: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
 }
 
 .transaction-list {
@@ -165,24 +180,32 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: auto;
 }
 
-.transaction-name {
-  font-size: 1rem; /* Large font size for visibility */
-  color: #333; /* Dark text for contrast */
-  font-weight: 500; /* Medium weight for the transaction name */
-}
-
-.transaction-date,
-.transaction-category {
-  font-size: 0.8rem;
-  color: #666; /* Lighter text for the date */
+.transaction-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  height: 100px;
 }
 
 .transaction-amount {
+  align-items: flex-end;
   font-size: 1rem;
-  color: #333;
-  font-weight: bold; /* Bold weight for the amount */
+  font-weight: bold;
+}
+
+.transaction-name,
+.transaction-date,
+.transaction-category {
+  width: 100%; /* Ensures the text elements take up the full width of the .transaction-details container */
+  margin: 0; /* Removes any default margins */
+  display: block; /* Display as block elements */
+  padding: 5px;
 }
 
 .add-transaction-btn {
@@ -195,7 +218,7 @@ export default {
   font-size: 1rem;
   display: block; /* Center button in the container */
   width: max-content;
-  margin: 10px auto; /* Centering button */
+  margin: 8px auto; /* Centering button */
 }
 
 .positive {

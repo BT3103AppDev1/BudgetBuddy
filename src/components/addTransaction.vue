@@ -15,7 +15,10 @@
       </div>
 
       <div class="form-group">
-        <label for="amount">Amount *</label>
+        <label for="amount"
+          >Amount (Include negative sign if it is subtracting from account)
+          *</label
+        >
         <input
           type="number"
           id="amount"
@@ -72,10 +75,13 @@
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
 import { doc, setDoc, addDoc, collection, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
 const db = getFirestore(firebaseApp);
 export default {
   data() {
     return {
+      auth: null,
       transaction: {
         name: "",
         amount: null,
@@ -87,48 +93,66 @@ export default {
       selectedBudget: "",
     };
   },
+  created() {
+    this.auth = getAuth(firebaseApp); // Initialize Firebase Auth here
+  },
   mounted() {
     this.fetchBudgets();
   },
+
   methods: {
     async saveAddTransac() {
-      // Process the form data here, such as sending it to a server or updating local state
-      console.log(this.transaction);
-      let name = document.getElementById("name").value;
-      let amount = +document.getElementById("amount").value;
-      let description = document.getElementById("description").value;
-      let category = document.getElementById("category").value;
-      let date = document.getElementById("date").value;
-      let budgetTakenFrom = document.getElementById("budgetTakenFrom").value;
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
 
-      alert("Saving data for Transaction : " + name + " " + amount);
+      const transactionsRef = collection(db, "users", userId, "transactions");
 
       try {
-        const docRef = await addDoc(collection(db, "transactions"), {
-          name: name,
-          amount: amount,
-          description: description,
-          category: category,
-          date: date,
-          budgetTakenFrom: budgetTakenFrom,
+        const docRef = await addDoc(transactionsRef, {
+          name: this.transaction.name,
+          amount: this.transaction.amount,
+          description: this.transaction.description,
+          category: this.transaction.category,
+          date: this.transaction.date,
+          budgetTakenFrom: this.selectedBudget,
         });
-        console.log("Document written with ID: ", docRef.id);
+        console.log("Document written with ID:", docRef.id);
+        // Reset the transaction object
         this.transaction = {
           name: "",
           amount: null,
           description: "",
           category: "",
           date: "",
-          budgetTakenFrom: "",
         };
         this.$emit("added");
       } catch (error) {
-        console.error("Error adding document: ", error);
+        console.error("Error adding document:", error);
       }
     },
+
     async fetchBudgets() {
-      const query = collection(db, "budgets");
-      const querySnapshot = await getDocs(query);
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      const budgetsRef = collection(db, "users", userId, "budgets");
+
+      const querySnapshot = await getDocs(budgetsRef);
       this.budgets = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         name: doc.data().name,

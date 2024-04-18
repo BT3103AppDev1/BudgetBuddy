@@ -60,7 +60,8 @@
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
 import { doc, setDoc, addDoc, collection } from "firebase/firestore";
-import { auth } from "firebaseui";
+import { getAuth } from "firebase/auth";
+
 const db = getFirestore(firebaseApp);
 export default {
   data() {
@@ -74,8 +75,22 @@ export default {
       },
     };
   },
+  created() {
+    this.auth = getAuth(firebaseApp);
+  },
   methods: {
     async saveAddBudget() {
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid);
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      const budgetRef = collection(db, "users", userId, "budgets");
       console.log(this.budget);
       let name = document.getElementById("name").value;
       let amount = +document.getElementById("amount").value;
@@ -85,7 +100,7 @@ export default {
 
       alert("Saving data for Budget : " + name);
       try {
-        const docRef = await addDoc(collection(db, "budgets"), {
+        const docRef = await addDoc(budgetRef, {
           name: name,
           amount: amount,
           category: category,

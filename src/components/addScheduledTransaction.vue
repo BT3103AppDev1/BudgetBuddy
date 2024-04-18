@@ -19,7 +19,10 @@
 
       <!-- Amount Input -->
       <div class="input-group">
-        <label for="schedTransactionAmount">Amount *</label>
+        <label for="schedTransactionAmount"
+          >Amount (Include negative sign if it is subtracting from account)
+          *</label
+        >
         <input
           type="number"
           id="schedTransactionAmount"
@@ -46,7 +49,7 @@
           <!-- Correct the values for each option -->
         </select>
       </div>
- 
+
       <!-- Start Date Picker -->
       <div class="input-group">
         <label for="schedTransactionsDate">Start Date *</label>
@@ -67,7 +70,7 @@
           required
         >
           <option value="monthly">Monthly</option>
-          <option value="monthly">Yearly</option>
+          <option value="yearly">Yearly</option>
           <!-- more options -->
         </select>
       </div>
@@ -91,11 +94,14 @@
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
 import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
 const db = getFirestore(firebaseApp);
 
 export default {
   data() {
     return {
+      auth: null,
       scheduledTransaction: {
         schedTransactionName: "",
         schedTransactionAmount: null,
@@ -108,38 +114,45 @@ export default {
 
   methods: {
     async saveScheduledTransac() {
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      const schedTransactionsRef = collection(
+        db,
+        "users",
+        userId,
+        "scheduledTransaction"
+      );
+
       // Process the form data here, such as sending it to a server or updating local state
       console.log(this.scheduledTransaction);
-      let schedTransactionName = document.getElementById(
-        "schedTransactionName"
-      ).value;
-      let schedTransactionAmount = +document.getElementById(
-        "schedTransactionAmount"
-      ).value;
-      let schedTransactionsCategory = document.getElementById(
-        "schedTransactionsCategory"
-      ).value;
-      let schedTransactionsDate = document.getElementById(
-        "schedTransactionsDate"
-      ).value;
-      let schedTransactionsRecurrence = document.getElementById(
-        "schedTransactionsRecurrence"
-      ).value;
 
       alert(
         "Saving data for Scheduled Transaction : " +
-          schedTransactionName +
+          this.scheduledTransaction.schedTransactionName +
           " " +
-          schedTransactionAmount
+          this.scheduledTransaction.schedTransactionAmount
       );
       try {
-        const docRef = await addDoc(collection(db, "scheduledTransaction"), {
-          schedTransactionName: schedTransactionName,
-          schedTransactionAmount: schedTransactionAmount,
-          schedTransactionsCategory: schedTransactionsCategory,
-          schedTransactionsDate: schedTransactionsDate,
-          schedTransactionsRecurrence: schedTransactionsRecurrence,
+        const docRef = await addDoc(schedTransactionsRef, {
+          schedTransactionName: this.scheduledTransaction.schedTransactionName,
+          schedTransactionAmount:
+            this.scheduledTransaction.schedTransactionAmount,
+          schedTransactionsCategory:
+            this.scheduledTransaction.schedTransactionsCategory,
+          schedTransactionsDate:
+            this.scheduledTransaction.schedTransactionsDate,
+          schedTransactionsRecurrence:
+            this.scheduledTransaction.schedTransactionsRecurrence,
         });
+        console.log("Document written with ID: ", docRef.id);
         console.log("Document written with ID: ", docRef.id);
         this.scheduledTransaction = {
           schedTransactionName: "",

@@ -30,12 +30,12 @@
           :key="transaction.id"
           class="transaction-item"
         >
-          <div class="transaction-icon"><!-- Icon based on category --></div>
           <div class="transaction-details">
             <h3 class="transaction-name">{{ transaction.name }}</h3>
             <p class="transaction-date">{{ transaction.date }}</p>
-            <p class="transaction-recurrence">{{ transaction.recurrence }}</p>
-            <p class="transaction-category">{{ transaction.category }}</p>
+            <p class="transaction-recurrence">
+              {{ transaction.recurrence }} {{ transaction.category }}
+            </p>
           </div>
           <div
             class="transaction-amount"
@@ -67,12 +67,14 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import firebaseApp from "../firebase.js";
+import { getAuth } from "firebase/auth";
 
 const db = getFirestore(firebaseApp);
 
 export default {
   data() {
     return {
+      auth: null,
       scheduledTransactions: [],
       selectedFilter: "",
       selectedCategory: "",
@@ -84,7 +86,22 @@ export default {
   },
   methods: {
     fetchScheduledTransactions() {
-      const transactionQuery = collection(db, "scheduledTransaction");
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      const transactionQuery = collection(
+        db,
+        "users",
+        userId,
+        "scheduledTransaction"
+      );
       onSnapshot(
         transactionQuery,
         (querySnapshot) => {
@@ -151,33 +168,31 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: auto;
 }
 
-.transaction-name {
-  font-size: 1rem; /* Large font size for visibility */
-  color: #333; /* Dark text for contrast */
-  font-weight: 500; /* Medium weight for the transaction name */
-}
-
-.transaction-date {
-  font-size: 0.8rem;
-  color: #666; /* Lighter text for the date */
-}
-
-.transaction-recurrence {
-  font-size: 0.8rem;
-  color: #666; /* Lighter text for the date */
-}
-
-.transaction-category {
-  font-size: 0.8rem;
-  color: #666; /* Lighter text for the date */
+.transaction-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  height: 100px;
 }
 
 .transaction-amount {
+  align-items: flex-end;
   font-size: 1rem;
-  color: #333;
-  font-weight: bold; /* Bold weight for the amount */
+  font-weight: bold;
+}
+
+.transaction-name,
+.transaction-date,
+.transaction-recurrence {
+  width: 100%;
+  margin: 0;
+  padding: 5px;
 }
 
 .add-sched-transaction-btn {

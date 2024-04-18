@@ -6,7 +6,7 @@
         <span>{{ budget.startDate }} - {{ budget.endDate }}</span>
       </div>
       <div class="budget-details">
-        <span>${{ budget.remaining }} Remaining </span>
+        <span>${{ budget.remaining.toFixed(2) }} Remaining </span>
         <div class="progress-bar-container">
           <div
             class="progress-bar"
@@ -16,19 +16,34 @@
             }"
           ></div>
         </div>
-        <span>${{ budget.spent }} of ${{ budget.amount }}</span>
+        <span
+          >${{ budget.spent.toFixed(2) }} of ${{
+            budget.amount.toFixed(2)
+          }}</span
+        >
         <p v-if="budget.remaining < 0" class="over-limit-warning">
           You've exceeded the limit!
+        </p>
+        <p v-if="budget.remaining > 0" class="below-limit-warning">
+          You are left with ${{ budget.remaining.toFixed(2) }}!
         </p>
         <button @click="enableEditMode(budget)">Edit</button>
       </div>
     </div>
     <div v-if="editingBudgetId" class="overlay"></div>
     <div v-if="editingBudgetId" class="edit-budget-form">
-      <input v-model="editedBudgetDetails.name" type="text" placeholder="Budget Name">
-      <input v-model="editedBudgetDetails.amount" type="number" placeholder="Total Amount">
-      <input v-model="editedBudgetDetails.startDate" type="date">
-      <input v-model="editedBudgetDetails.endDate" type="date">
+      <input
+        v-model="editedBudgetDetails.name"
+        type="text"
+        placeholder="Budget Name"
+      />
+      <input
+        v-model="editedBudgetDetails.amount"
+        type="number"
+        placeholder="Total Amount"
+      />
+      <input v-model="editedBudgetDetails.startDate" type="date" />
+      <input v-model="editedBudgetDetails.endDate" type="date" />
       <!-- ... other fields as needed ... -->
       <button @click="updateBudget">Save Changes</button>
       <button @click="cancelEditMode">Cancel</button>
@@ -52,10 +67,12 @@ import {
   getDocs,
   deleteDoc,
 } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 export default {
   data() {
     return {
+      auth: null,
       budgets: [], // Array to store budget data from Firestore
       editingBudgetId: null,
       editedBudgetDetails: {},
@@ -67,12 +84,11 @@ export default {
   },
   computed: {
     computedBudgets() {
-      return this.budgets.map(budget => ({
+      return this.budgets.map((budget) => ({
         ...budget,
-        remaining: budget.amount - budget.spent
+        remaining: budget.amount - budget.spent,
       }));
-    }
-
+    },
   },
   methods: {
     progressWidth(budget) {
@@ -95,8 +111,18 @@ export default {
       this.editedBudgetDetails = {};
     },
     async fetchBudgets() {
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
       const db = getFirestore(firebaseApp);
-      const budgetsCol = collection(db, "budgets"); // Replace with your budgets collection name
+      const budgetsCol = collection(db, "users", userId, "budgets");
       try {
         const querySnapshot = await getDocs(budgetsCol);
         this.budgets = querySnapshot.docs.map((doc) => ({
@@ -106,75 +132,120 @@ export default {
           startDate: doc.data().startDate,
           endDate: doc.data().endDate,
           category: doc.data().category,
-          //spent: doc.data().spent || 0,
-          //remaining: doc.data().amount,
         }));
       } catch (error) {
         console.error("Error fetching budgets:", error);
       }
     },
-  async deleteBudget() {
-    if (!this.editingBudgetId) return;
+    async deleteBudget() {
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      if (!this.editingBudgetId) return;
 
-    const db = getFirestore(firebaseApp);
-    const budgetDocRef = doc(db, 'budgets', this.editingBudgetId);
+      const db = getFirestore(firebaseApp);
+      const budgetDocRef = doc(
+        db,
+        "users",
+        userId,
+        "budgets",
+        this.editingBudgetId
+      );
 
-    try {
-      await deleteDoc(budgetDocRef); // Firebase function to delete a document
+      try {
+        await deleteDoc(budgetDocRef); // Firebase function to delete a document
 
-      // Remove the budget from the local state to update UI
-      this.budgets = this.budgets.filter(budget => budget.id !== this.editingBudgetId);
+        // Remove the budget from the local state to update UI
+        this.budgets = this.budgets.filter(
+          (budget) => budget.id !== this.editingBudgetId
+        );
 
-      this.editingBudgetId = null; // Close the edit form
-      this.editedBudgetDetails = {}; // Reset edited details
-    } catch (error) {
-      console.error("Error deleting budget:", error);
-    }
-  },
+        this.editingBudgetId = null; // Close the edit form
+        this.editedBudgetDetails = {}; // Reset edited details
+      } catch (error) {
+        console.error("Error deleting budget:", error);
+      }
+    },
 
-  async updateBudget() {
-    if (!this.editingBudgetId) return;
+    async updateBudget() {
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      if (!this.editingBudgetId) return;
 
-    const db = getFirestore(firebaseApp);
-    const budgetDocRef = doc(db, 'budgets', this.editingBudgetId);
+      const db = getFirestore(firebaseApp);
+      const budgetDocRef = doc(
+        db,
+        "users",
+        userId,
+        "budgets",
+        this.editingBudgetId
+      );
 
-    const currentBudget = this.budgets.find(b => b.id === this.editingBudgetId);
-    //const newRemaining = this.editedBudgetDetails.amount - currentBudget.spent;
+      const currentBudget = this.budgets.find(
+        (b) => b.id === this.editingBudgetId
+      );
 
-    const updates = {
-      ...this.editedBudgetDetails,
-      //remaining: newRemaining  // explicitly updating remaining
-    };
-    
-    try {
+      const updates = {
+        ...this.editedBudgetDetails,
+      };
 
+      try {
         await updateDoc(budgetDocRef, updates);
 
-        const index = this.budgets.findIndex(budget => budget.id === this.editingBudgetId);
+        const index = this.budgets.findIndex(
+          (budget) => budget.id === this.editingBudgetId
+        );
         if (index !== -1) {
-            this.budgets[index] = {
-                ...this.budgets[index],
-                ...updates,
-                //remaining: newRemaining
-            };
+          this.budgets[index] = {
+            ...this.budgets[index],
+            ...updates,
+          };
         }
 
         this.editingBudgetId = null;
         this.editedBudgetDetails = {};
-    } catch (error) {
+      } catch (error) {
         console.error("Error updating budget:", error);
-    }
-  },
+      }
+    },
 
-  async calculateSpentAmounts() {
+    async calculateSpentAmounts() {
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+
       const db = getFirestore(firebaseApp);
-      const transactionsCol = collection(db, "transactions");
+      const transactionsCol = collection(db, "users", userId, "transactions");
 
       for (let i = 0; i < this.budgets.length; i++) {
         let budget = this.budgets[i];
         const q = query(
           transactionsCol,
-          where("budgetTakenFrom", "==", budget.name)
+          where("budgetTakenFrom", "==", budget.name),
+          where("date", ">=", budget.startDate),
+          where("date", "<=", budget.endDate)
         );
         const querySnapshot = await getDocs(q);
         const spentAmount = querySnapshot.docs.reduce((total, doc) => {
@@ -189,9 +260,8 @@ export default {
       }
       this.$forceUpdate();
     },
-  }
-  };
-  
+  },
+};
 </script>
 
 <style scoped>
@@ -303,5 +373,4 @@ export default {
 .delete-btn:hover {
   background-color: #d32f2f;
 }
-
 </style>

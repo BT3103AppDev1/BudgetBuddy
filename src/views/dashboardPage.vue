@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import firebaseApp from "../firebase.js";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Logout from "@/components/Logout.vue";
@@ -48,8 +49,18 @@ export default {
 
   methods: {
     async fetchTransactions() {
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
       const db = getFirestore();
-      const transactionsCol = collection(db, "transactions");
+      const transactionsCol = collection(db, "users", userId, "transactions");
       const querySnapshot = await getDocs(transactionsCol);
 
       // Process and store each transaction from the querySnapshot
