@@ -77,6 +77,9 @@
           </p>
         </div>
 
+    <div class="button-container">
+      <button class="btn" @click="editProfile">Save</button>
+      <p v-if="message">{{ message }}</p>
         <div class="button-container">
           <button class="btn" @click="editProfile()">Save</button>
           <p v-if="message">{{ message }}</p>
@@ -108,9 +111,9 @@ export default {
       user: null,
       username: "",
       email: "nothing",
-      password: "",
-      confirmPassword: "",
       errorMessage: "",
+      src: this.defaultSrc,
+      file: null,
       showPassword: false,
       passwordInputType: "password",
       confirmPasswordInputType: "password",
@@ -131,7 +134,6 @@ export default {
         this.username = user.displayName;
         this.email = user.email;
         this.userPicture = user.photoURL;
-        this.password = user.password;
       }
     });
   },
@@ -171,7 +173,6 @@ export default {
         this.message = "Profile updated successfully";
         this.$router.back();
       } catch (error) {
-        console.error(error.message);
         this.errorMessage = error.message;
       }
     },
@@ -243,6 +244,8 @@ export default {
 .user-profile img {
   margin-top: -10px;
   margin-bottom: 20px;
+  width: 150px;
+  height: 150px;
 }
 .form-group {
   margin-bottom: 1rem;
@@ -259,6 +262,7 @@ export default {
   border: 1px solid #ddd; /* Use color from your design */
   border-radius: 5px;
   font-size: 1rem;
+  margin-left: -15px;
 }
 .btn {
   font-family: "Roboto", sans-serif;
@@ -290,8 +294,8 @@ h5 {
 .error-message {
   color: red;
 }
-.input-field-container {
-  position: relative;
+.profile-user-img:hover {
+  cursor: pointer;
 }
 .input-field {
   padding-right: 40px; /* Adjust this value based on your button's width */
