@@ -9,7 +9,7 @@
     <h2>User Profile</h2>
     <div class="input">
       <div>
-        <img @click="openFileInput" class="profile-user-img img-circle" :src="profilePictureUrl ? profilePictureUrl : defaultProfilePicture" alt="User Profile Picture">
+        <img @click="openFileInput" class="profile-user-img img-circle" :src="profilePictureUrl || defaultProfilePicture" alt="User Profile Picture">
       </div>
       <input id="fileInput" @change="handleFileChange" ref="fileInput" type="file" class="d-none">
     </div>
@@ -46,7 +46,7 @@ export default {
       username: "",
       email: "nothing",
       errorMessage: "",
-      defaultProfilePicture: '@/assets/profile-user.png',
+      defaultProfilePicture: 'assets/profile-user.png',
       profilePictureUrl: null,
     };
   },
@@ -57,7 +57,8 @@ export default {
         this.user = user;
         this.username = user.displayName;
         this.email = user.email;
-        this.profilePictureUrl = user.photoURL;
+        this.profilePictureUrl = user.photoURL || this.defaultProfilePicture;
+        console.log("Profile Picture URL:", this.profilePictureUrl);
       }
     });
   },
