@@ -209,7 +209,10 @@ export default {
 
       const updates = {
         ...this.editedBudgetDetails,
+        amount: Number(this.editedBudgetDetails.amount),
       };
+
+      updates.remaining = updates.amount + (currentBudget.spent ?? 0);
 
       try {
         await updateDoc(budgetDocRef, updates);
@@ -221,8 +224,10 @@ export default {
           this.budgets[index] = {
             ...this.budgets[index],
             ...updates,
+            remaining: updates.remaining,
           };
         }
+        await this.calculateSpentAmounts();
 
         this.editingBudgetId = null;
         this.editedBudgetDetails = {};
@@ -265,7 +270,7 @@ export default {
         // Notify Vue about the change
         this.budgets[i] = { ...budget };
       }
-      this.$forceUpdate();
+      //this.$forceUpdate();
     },
   },
 };
