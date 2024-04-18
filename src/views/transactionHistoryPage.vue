@@ -1,7 +1,13 @@
 <template>
-  <sidebar />
-  <transactionHistory></transactionHistory>
-  <Logout :user="user" />
+  <div class="container">
+    <div class="sidebar">
+      <sidebar />
+    </div>
+    <div class="maincontent">
+      <transactionHistory></transactionHistory>
+      <Logout :user="user" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -33,3 +39,15 @@ export default {
   },
 };
 </script>
+
+<style>
+.container {
+  display: flex;
+  align-items: start;
+}
+
+.maincontent {
+  margin: 0 auto;
+  flex-grow: 1;
+}
+</style>
