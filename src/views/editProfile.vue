@@ -1,89 +1,84 @@
 <template>
-  <div class="editProfilePageContainer">
-    <div class="sidebar">
-      <sidebar />
+  <sidebar />
+  <div class="navigate-back" @click="navigateBack()">
+    <ion-icon name="arrow-back"></ion-icon>
+    <span>Edit User Profile</span>
+  </div>
+
+  <div class="user-profile">
+    <h2>User Profile</h2>
+    <div>
+      <img
+        :src="userPicture || '@/assets/profile-user.png'"
+        alt="User Profile Picture"
+      />
+      <h5 @click="openFilePicker">Edit Profile Picture</h5>
     </div>
-    <div class="maincontent">
-      <div class="navigate-back" @click="navigateBack()">
-        <ion-icon name="arrow-back"></ion-icon>
-        <span>Edit User Profile</span>
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        v-model="username"
+        required
+        class="input-field"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="text"
+        id="email"
+        v-model="email"
+        required
+        class="input-field"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <div class="input-field-container">
+        <input
+          :type="passwordInputType"
+          v-model="password"
+          required
+          class="input-field"
+        />
+        <button class="input-group-text" @click.prevent="toggleInput">
+          <ion-icon :name="passwordIcon"></ion-icon>
+        </button>
       </div>
+    </div>
 
-      <div class="user-profile">
-        <h2>User Profile</h2>
-        <div>
-          <img
-            :src="userPicture || '@/assets/profile-user.png'"
-            alt="User Profile Picture"
-          />
-          <h5 @click="openFilePicker">Edit Profile Picture</h5>
-        </div>
-
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            v-model="username"
-            required
-            class="input-field"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="text"
-            id="email"
-            v-model="email"
-            required
-            class="input-field"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <div class="input-field-container">
-            <input
-              :type="passwordInputType"
-              v-model="password"
-              required
-              class="input-field"
-            />
-            <button class="input-group-text" @click.prevent="toggleInput">
-              <ion-icon :name="passwordIcon"></ion-icon>
-            </button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="confirmpw">Confirm Password</label>
-          <div class="input-field-container">
-            <input
-              :type="confirmPasswordInputType"
-              v-model="confirmPassword"
-              required
-              class="input-field"
-            />
-            <button
-              class="input-group-text"
-              @click.prevent="toggleConfirmPasswordInput"
-            >
-              <ion-icon :name="confirmPasswordIcon"></ion-icon>
-            </button>
-          </div>
-          <p v-if="password !== confirmPassword" class="error-message">
-            Passwords do not match!
-          </p>
-        </div>
+    <div class="form-group">
+      <label for="confirmpw">Confirm Password</label>
+      <div class="input-field-container">
+        <input
+          :type="confirmPasswordInputType"
+          v-model="confirmPassword"
+          required
+          class="input-field"
+        />
+        <button
+          class="input-group-text"
+          @click.prevent="toggleConfirmPasswordInput"
+        >
+          <ion-icon :name="confirmPasswordIcon"></ion-icon>
+        </button>
+      </div>
+      <p v-if="password !== confirmPassword" class="error-message">
+        Passwords do not match!
+      </p>
+    </div>
 
     <div class="button-container">
       <button class="btn" @click="editProfile">Save</button>
       <p v-if="message">{{ message }}</p>
-        <div class="button-container">
-          <button class="btn" @click="editProfile()">Save</button>
-          <p v-if="message">{{ message }}</p>
-        </div>
+      <div class="button-container">
+        <button class="btn" @click="editProfile()">Save</button>
+        <p v-if="message">{{ message }}</p>
       </div>
     </div>
   </div>
