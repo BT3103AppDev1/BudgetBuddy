@@ -32,6 +32,7 @@
     </div>
     <div v-if="editingBudgetId" class="overlay"></div>
     <div v-if="editingBudgetId" class="edit-budget-form">
+      <h2>Edit your budget</h2>
       <input
         v-model="editedBudgetDetails.name"
         type="text"
@@ -45,8 +46,8 @@
       <input v-model="editedBudgetDetails.startDate" type="date" />
       <input v-model="editedBudgetDetails.endDate" type="date" />
       <!-- ... other fields as needed ... -->
-      <button @click="updateBudget">Save Changes</button>
-      <button @click="cancelEditMode">Cancel</button>
+      <button @click="updateBudget" class="save-btn">Save Changes</button>
+      <span @click="cancelEditMode" class="cancel-btn">x</span>
       <button @click="deleteBudget" class="delete-btn">Delete Budget</button>
     </div>
     <router-link to="/addBudget" tag="button" class="add-budget-btn">
@@ -385,4 +386,49 @@ export default {
 .delete-btn:hover {
   background-color: #d32f2f;
 }
+
+.save-btn:hover {
+  background-color: green;
+}
+
+.edit-budget-form input[type="text"],
+.edit-budget-form input[type="number"],
+.edit-budget-form input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.cancel-btn {
+  position: absolute;
+  top: 10px;   /* Adjust as necessary to fit within the form */
+  right: 10px; /* Adjust as necessary for proper alignment */
+  padding: 5px 8px; /* Small padding around the 'X' */
+  font-size: 20px; /* Larger font size for clear visibility */
+  cursor: pointer; /* Cursor changes to pointer to indicate clickable */
+  color: #333; /* Color for the 'X' can be adjusted based on theme */
+  border: none;
+  background: transparent; /* Transparent background */
+  border-radius: 50%; /* Optional: Makes it circular, remove if not desired */
+}
+
+.cancel-btn:hover {
+  background-color: gray; /* Red background on hover */
+  color: white; /* White text on hover */
+}
+
+.edit-budget-form button {
+  padding: 0.8rem 2rem;
+  background-color: lightgray;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+
 </style>
