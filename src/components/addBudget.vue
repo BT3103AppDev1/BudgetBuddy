@@ -53,6 +53,7 @@
         <button type="submit" class="btn">Add Budget</button>
       </div>
     </form>
+    <router-link to="/goalSetting" class="view-budgets-btn">View All Budgets</router-link>
   </div>
 </template>
 
@@ -172,6 +173,30 @@ select {
 .button-container {
   display: flex;
   justify-content: center;
+}
+.view-budgets-btn {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  font-size: 16px; /* Adjusted for better fit */
+  color: white;
+  margin-top: 20px;
+  padding: 10px 20px; /* Adjust padding as needed */
+  background-color: #474745;
+  cursor: pointer;
+  text-decoration: none; /* Removes underline from links */
+  display: inline-block; /* Helps with alignment */
+  border: none;
+  border-radius: 5px;
+}
+
+.view-budgets-btn {
+  background-color: #5cb85c; /* Different color to distinguish */
+}
+
+.view-budgets-btn:hover {
+  background-color: #4cae4c; /* Darker shade for hover */
+  text-decoration: underline;
+  font-weight: 700;
 }
 
 /* Add responsive styles as necessary */
