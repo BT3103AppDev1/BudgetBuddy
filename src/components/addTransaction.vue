@@ -141,7 +141,7 @@ export default {
 <style scoped>
 /* You can adjust the values below to match your design exactly */
 .add-transaction {
-  max-width: 650px; /* Adjust the width as needed */
+  max-width: 600px; /* Adjust the width as needed */
   margin: 0 auto; /* This centers your form on the page */
   padding: 2rem;
   background-color: #fff; /* Use color from your design */

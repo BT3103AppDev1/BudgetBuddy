@@ -1,11 +1,14 @@
 <template>
-  <sidebar />
-  <div class="dashpage">
-    <h1>Welcome to Your Dashboard</h1>
-    <p>Email: {{ userEmail }}</p>
-    <!-- Pass the transactions to the pieChart component -->
-    <pieChart :transactions="rawTransactions" />
-    <Logout :user="user" />
+  <div class="dashboardPageContainer">
+    <div class="sidebar">
+      <sidebar />
+    </div>
+    <div class="maincontent">
+      <h1>Welcome to Your Dashboard</h1>
+      <p>Email: {{ userEmail }}</p>
+      <pieChart :transactions="rawTransactions" />
+      <Logout :user="user" />
+    </div>
   </div>
 </template>
 
@@ -56,9 +59,18 @@ export default {
 </script>
 
 <style scoped>
-.dashpage {
-  text-align: center;
-  margin-bottom: 20px;
+.dashboardPageContainer {
+  display: flex;
+  align-items: start;
+}
+
+.sidebar {
+  flex: 0 0 290px;
+}
+
+.maincontent {
+  margin: 0 auto;
+  flex-grow: 1;
 }
 
 button {

@@ -1,8 +1,12 @@
 <template>
   <div class="addBudgetPageContainer">
-    <sidebar />
-    <addBudget />
-    <Logout :user="user" />
+    <div class="sidebar">
+      <sidebar />
+    </div>
+    <div class="maincontent">
+      <addBudget />
+      <Logout :user="user" />
+    </div>
   </div>
 </template>
 
@@ -39,7 +43,16 @@ export default {
 
 <style>
 .addBudgetPageContainer {
-  text-align: center;
-  margin-bottom: 20px;
+  display: flex;
+  align-items: start;
+}
+
+.sidebar {
+  flex: 0 0 290px;
+}
+
+.maincontent {
+  margin: 0 auto;
+  flex-grow: 1;
 }
 </style>

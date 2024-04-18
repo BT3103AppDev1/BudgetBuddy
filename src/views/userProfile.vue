@@ -1,24 +1,33 @@
 <template>
-    <sidebar/>
-    <div class="user-profile">
+  <div class="userProfilePageContainer">
+    <div class="sidebar">
+      <sidebar />
+    </div>
+    <div class="maincontent">
+      <div class="user-profile">
         <h2>User Profile</h2>
-        <img :src="userPicture || '@/assets/profile-user.png'" alt="User Profile Picture"/>
+        <img
+          :src="userPicture || '@/assets/profile-user.png'"
+          alt="User Profile Picture"
+        />
 
         <div class="form-group">
-            <label for="username">Username</label>
-            <p>{{ username }}</p>
+          <label for="username">Username</label>
+          <p>{{ username }}</p>
         </div>
 
         <div class="form-group">
-            <label for="email">Email</label>
-            <p>{{ userEmail }}</p>
+          <label for="email">Email</label>
+          <p>{{ userEmail }}</p>
         </div>
 
         <div class="button-container">
-            <button class="btn" @click="editProfile()">Edit Profile</button>
+          <button class="btn" @click="editProfile()">Edit Profile</button>
         </div>
+      </div>
+      <Logout :user="user" />
     </div>
-    <Logout :user="user" />
+  </div>
 </template>
 
 <script>
@@ -55,20 +64,34 @@ export default {
   },
   methods: {
     editProfile() {
-      window.location.href = '/editProfile'
-    }
-  }
+      window.location.href = "/editProfile";
+    },
+  },
 };
 </script>
-  
+
 <style scoped>
+.userProfilePageContainer {
+  display: flex;
+  align-items: start;
+}
+
+.sidebar {
+  flex: 0 0 290px;
+}
+
+.maincontent {
+  margin: 0 auto;
+  flex-grow: 1;
+}
+
 .user-profile {
-    max-width: 600px; /* Adjust the width as needed */
-    margin: 0 auto; /* This centers your form on the page */
-    padding: 2rem;
-    background-color: #fff; /* Use color from your design */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
+  max-width: 600px; /* Adjust the width as needed */
+  margin: 0 auto; /* This centers your form on the page */
+  padding: 2rem;
+  background-color: #fff; /* Use color from your design */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
 }
 .user-profile h2 {
   margin-bottom: 1.5rem;
@@ -76,8 +99,8 @@ export default {
   text-align: center;
 }
 .user-profile img {
-    margin-top: -10px;
-    margin-bottom: 20px;
+  margin-top: -10px;
+  margin-bottom: 20px;
 }
 .form-group {
   margin-bottom: 1rem;

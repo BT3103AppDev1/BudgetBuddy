@@ -66,7 +66,7 @@ export default {
 <style scoped>
 /* Basic sidebar styles */
 .sidebar {
-  width: 280px; /* or however wide you want it */
+  width: 290px; /* or however wide you want it */
   position: fixed;
   top: 0;
   bottom: 0;

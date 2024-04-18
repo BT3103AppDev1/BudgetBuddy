@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="transacHistPageContainer">
     <div class="sidebar">
       <sidebar />
     </div>
@@ -41,9 +41,16 @@ export default {
 </script>
 
 <style>
-.container {
+.transacHistPageContainer {
   display: flex;
   align-items: start;
+  justify-content: flex-start;
+}
+
+.sidebar {
+  flex: 0 0 290px;
+  padding: 0;
+  margin: 0;
 }
 
 .maincontent {

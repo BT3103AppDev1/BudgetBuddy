@@ -88,15 +88,23 @@ export default {
       onSnapshot(
         transactionQuery,
         (querySnapshot) => {
-          this.scheduledTransactions = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            name: doc.data().schedTransactionName, // Make sure this field exists in your Firestore documents
-            amount: doc.data().schedTransactionAmount, // Make sure this field exists in your Firestore documents
-            category: doc.data().schedTransactionsCategory, // Make sure this field exists in your Firestore documents
-            currency: doc.data().schedTransactionsCurrency, // Make sure this field exists in your Firestore documents
-            date: doc.data().schedTransactionsDate, // Make sure this field exists in your Firestore documents
-            recurrence: doc.data().schedTransactionsRecurrence, // Make sure this field exists in your Firestore documents
-          }));
+          this.scheduledTransactions = querySnapshot.docs
+            .map((doc) => ({
+              id: doc.id,
+              name: doc.data().schedTransactionName, // Make sure this field exists in your Firestore documents
+              amount: doc.data().schedTransactionAmount, // Make sure this field exists in your Firestore documents
+              category: doc.data().schedTransactionsCategory, // Make sure this field exists in your Firestore documents
+              currency: doc.data().schedTransactionsCurrency, // Make sure this field exists in your Firestore documents
+              date: doc.data().schedTransactionsDate, // Make sure this field exists in your Firestore documents
+              recurrence: doc.data().schedTransactionsRecurrence, // Make sure this field exists in your Firestore documents
+            }))
+            .sort((a, b) => {
+              // Convert date strings to Date objects
+              const dateA = new Date(a.date);
+              const dateB = new Date(b.date);
+              // Sort in descending order (latest first)
+              return dateB - dateA;
+            });
         },
         (error) => {
           console.error("Error getting documents: ", error);

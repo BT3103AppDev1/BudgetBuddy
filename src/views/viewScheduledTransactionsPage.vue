@@ -1,7 +1,13 @@
 <template>
-    <sidebar />
-    <viewScheduledTransactions></viewScheduledTransactions>
-    <Logout :user="user" />
+  <div class="viewSchedTransacPageContainer">
+    <div class="sidebar">
+      <sidebar />
+    </div>
+    <div class="maincontent">
+      <viewScheduledTransactions></viewScheduledTransactions>
+      <Logout :user="user" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -33,3 +39,19 @@ export default {
   },
 };
 </script>
+
+<style>
+.viewSchedTransacPageContainer {
+  display: flex;
+  align-items: start;
+}
+
+.sidebar {
+  flex: 0 0 290px;
+}
+
+.maincontent {
+  margin: 0 auto;
+  flex-grow: 1;
+}
+</style>

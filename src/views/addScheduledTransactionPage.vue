@@ -1,8 +1,12 @@
 <template>
-  <div class="addSchedTranscPageContainer">
-    <sidebar />
-    <addScheduledTransaction></addScheduledTransaction>
-    <Logout :user="user" />
+  <div class="addSchedTransacPageContainer">
+    <div class="sidebar">
+      <sidebar />
+    </div>
+    <div class="maincontent">
+      <addScheduledTransaction></addScheduledTransaction>
+      <Logout :user="user" />
+    </div>
   </div>
 </template>
 
@@ -38,8 +42,17 @@ export default {
 </script>
 
 <style>
-.addSchedTranscPageContainer {
-  text-align: center;
-  margin-bottom: 20px;
+.addSchedTransacPageContainer {
+  display: flex;
+  align-items: start;
+}
+
+.sidebar {
+  flex: 0 0 290px;
+}
+
+.maincontent {
+  margin: 0 auto;
+  flex-grow: 1;
 }
 </style>

@@ -1,28 +1,28 @@
 <template>
-  <div class="filter-options">
-    <select v-model="selectedFilter">
-      <option value="category">Filter by Category</option>
-      <option value="date">Filter by Date</option>
-    </select>
-
-    <!-- Dropdown for Category -->
-    <select v-model="selectedCategory" v-if="selectedFilter === 'category'">
-      <option value="">Select a Category</option>
-      <option value="transport">Transport</option>
-      <option value="shopping">Shopping</option>
-      <option value="food">Food</option>
-      <option value="others">Others</option>
-    </select>
-
-    <!-- Dropdown for Date Filtering Options -->
-    <select v-model="selectedDateFilter" v-if="selectedFilter === 'date'">
-      <option value="">Select a Date Range</option>
-      <option value="today">Today</option>
-      <option value="last7Days">Last 7 Days</option>
-      <option value="lastMonth">Last Month</option>
-    </select>
-  </div>
   <div class="transaction-history-page">
+    <div class="filter-options">
+      <select v-model="selectedFilter">
+        <option value="category">Filter by Category</option>
+        <option value="date">Filter by Date</option>
+      </select>
+
+      <!-- Dropdown for Category -->
+      <select v-model="selectedCategory" v-if="selectedFilter === 'category'">
+        <option value="">Select a Category</option>
+        <option value="transport">Transport</option>
+        <option value="shopping">Shopping</option>
+        <option value="food">Food</option>
+        <option value="others">Others</option>
+      </select>
+
+      <!-- Dropdown for Date Filtering Options -->
+      <select v-model="selectedDateFilter" v-if="selectedFilter === 'date'">
+        <option value="">Select a Date Range</option>
+        <option value="today">Today</option>
+        <option value="last7Days">Last 7 Days</option>
+        <option value="lastMonth">Last Month</option>
+      </select>
+    </div>
     <div class="transaction-list">
       <ul>
         <li
@@ -146,10 +146,14 @@ export default {
 </script>
 
 <style scoped>
+.transaction-history-page {
+  padding: 0px;
+  margin: 0px;
+}
+
 .transaction-list {
   margin: 0;
   padding: 0;
-  list-style-type: none;
 }
 
 .transaction-item {

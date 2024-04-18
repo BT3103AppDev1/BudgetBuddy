@@ -1,51 +1,87 @@
 <template>
-  <sidebar />
-  <div class="navigate-back" @click="navigateBack()">
-    <ion-icon name="arrow-back"></ion-icon>
-    <span>Edit User Profile</span>
-  </div>
-
-  <div class="user-profile">
-    <h2>User Profile</h2>
-    <div>
-      <img :src="userPicture || '@/assets/profile-user.png'" alt="User Profile Picture"/>
-      <h5 @click="openFilePicker">Edit Profile Picture</h5>
+  <div class="editProfilePageContainer">
+    <div class="sidebar">
+      <sidebar />
     </div>
-
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input type="text" id="username" v-model="username" required class="input-field" />
-    </div>
-
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input type="text" id="email" v-model="email" required class="input-field" />
-    </div>
-
-    <div class="form-group">
-      <label for="password">Password</label>
-      <div class="input-field-container">
-        <input :type="passwordInputType" v-model="password" required class="input-field"/>
-        <button class="input-group-text" @click.prevent="toggleInput">
-          <ion-icon :name="passwordIcon"></ion-icon>
-        </button>
+    <div class="maincontent">
+      <div class="navigate-back" @click="navigateBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+        <span>Edit User Profile</span>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label for="confirmpw">Confirm Password</label>
-      <div class="input-field-container">
-        <input :type="confirmPasswordInputType" v-model="confirmPassword" required class="input-field" />
-        <button class="input-group-text" @click.prevent="toggleConfirmPasswordInput">
-            <ion-icon :name="confirmPasswordIcon"></ion-icon>
-        </button>
+      <div class="user-profile">
+        <h2>User Profile</h2>
+        <div>
+          <img
+            :src="userPicture || '@/assets/profile-user.png'"
+            alt="User Profile Picture"
+          />
+          <h5 @click="openFilePicker">Edit Profile Picture</h5>
+        </div>
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            v-model="username"
+            required
+            class="input-field"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="text"
+            id="email"
+            v-model="email"
+            required
+            class="input-field"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-field-container">
+            <input
+              :type="passwordInputType"
+              v-model="password"
+              required
+              class="input-field"
+            />
+            <button class="input-group-text" @click.prevent="toggleInput">
+              <ion-icon :name="passwordIcon"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmpw">Confirm Password</label>
+          <div class="input-field-container">
+            <input
+              :type="confirmPasswordInputType"
+              v-model="confirmPassword"
+              required
+              class="input-field"
+            />
+            <button
+              class="input-group-text"
+              @click.prevent="toggleConfirmPasswordInput"
+            >
+              <ion-icon :name="confirmPasswordIcon"></ion-icon>
+            </button>
+          </div>
+          <p v-if="password !== confirmPassword" class="error-message">
+            Passwords do not match!
+          </p>
+        </div>
+
+        <div class="button-container">
+          <button class="btn" @click="editProfile()">Save</button>
+          <p v-if="message">{{ message }}</p>
+        </div>
       </div>
-      <p v-if="password !== confirmPassword" class="error-message">Passwords do not match!</p>
-    </div>
-
-    <div class="button-container">
-      <button class="btn" @click="editProfile()">Save</button>
-      <p v-if="message">{{ message }}</p>
     </div>
   </div>
 </template>
@@ -54,7 +90,13 @@
 import firebase from "@/uifire.js";
 import firebaseApp from "@/firebase.js";
 import sidebar from "../components/sidebar.vue";
-import { getAuth, onAuthStateChanged, updateEmail, updatePassword, updateProfile } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  updateEmail,
+  updatePassword,
+  updateProfile,
+} from "firebase/auth";
 
 export default {
   name: "editProfile",
@@ -72,14 +114,14 @@ export default {
       showPassword: false,
       passwordInputType: "password",
       confirmPasswordInputType: "password",
-      passwordIcon: 'eye',
-      confirmPasswordIcon: 'eye',
+      passwordIcon: "eye",
+      confirmPasswordIcon: "eye",
     };
   },
   computed: {
     passwordFieldType() {
-      return this.showPassword ? 'text' : 'password';
-    }
+      return this.showPassword ? "text" : "password";
+    },
   },
   mounted() {
     const auth = getAuth();
@@ -98,12 +140,15 @@ export default {
       this.$router.back();
     },
     toggleInput() {
-      this.passwordInputType = this.passwordInputType === 'password' ? 'text' : 'password';
-      this.passwordIcon = this.passwordIcon === 'eye' ? 'eye-off' : 'eye';
+      this.passwordInputType =
+        this.passwordInputType === "password" ? "text" : "password";
+      this.passwordIcon = this.passwordIcon === "eye" ? "eye-off" : "eye";
     },
     toggleConfirmPasswordInput() {
-      this.confirmPasswordInputType = this.confirmPasswordInputType === 'password' ? 'text' : 'password';
-      this.confirmPasswordIcon = this.confirmPasswordIcon === 'eye' ? 'eye-off' : 'eye';
+      this.confirmPasswordInputType =
+        this.confirmPasswordInputType === "password" ? "text" : "password";
+      this.confirmPasswordIcon =
+        this.confirmPasswordIcon === "eye" ? "eye-off" : "eye";
     },
     async editProfile() {
       if (this.password !== this.confirmPassword) {
@@ -114,7 +159,7 @@ export default {
         const user = this.user;
         if (this.username !== user.displayName) {
           await updateProfile(user, {
-            displayName: this.username
+            displayName: this.username,
           });
         }
         if (this.email !== user.email) {
@@ -131,10 +176,10 @@ export default {
       }
     },
     openFilePicker() {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.addEventListener('change', (event) => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.addEventListener("change", (event) => {
         const file = event.target.files[0]; // Get the first selected file
         if (file) {
           const reader = new FileReader();
@@ -145,12 +190,26 @@ export default {
         }
       });
       input.click();
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
+.editProfilePageContainer {
+  display: flex;
+  align-items: start;
+}
+
+.sidebar {
+  flex: 0 0 290px;
+}
+
+.maincontent {
+  margin: 0 auto;
+  flex-grow: 1;
+}
+
 .navigate-back {
   display: flex;
   align-items: center;
@@ -243,5 +302,4 @@ h5 {
   right: 10px; /* Adjust this value based on your desired position */
   transform: translateY(-50%);
 }
-
 </style>
