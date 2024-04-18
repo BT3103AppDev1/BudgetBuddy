@@ -1,8 +1,9 @@
 <template>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <div class="budget-tracker">
     <div class="budget" v-for="budget in budgets" :key="budget.id">
       <div class="budget-header">
-        <h3>{{ budget.name }}</h3>
+        <h3>{{ budget.name}} <i class="fas fa-pencil-alt edit-icon" @click="enableEditMode(budget)"></i></h3>
         <span>{{ budget.startDate }} - {{ budget.endDate }}</span>
       </div>
       <div class="budget-details">
@@ -27,7 +28,6 @@
         <p v-if="budget.remaining > 0" class="below-limit-warning">
           You are left with ${{ budget.remaining.toFixed(2) }}!
         </p>
-        <button @click="enableEditMode(budget)">Edit</button>
       </div>
     </div>
     <div v-if="editingBudgetId" class="overlay"></div>
@@ -354,6 +354,18 @@ export default {
   z-index: 1000; /* Make sure it's above other elements */
 }
 
+
+.edit-icon {
+  cursor: pointer;
+  color: gray; /* Adjust the color to match your design */
+  margin-left: 10px; /* Space out the icon from the budget name */
+  margin-bottom: 8px;
+  vertical-align: middle; /* Aligns the icon with the middle of the text */
+}
+
+.edit-icon:hover {
+  color: darkgray; /* Darker shade for hover effect */
+}
 .overlay {
   position: fixed;
   top: 0;
@@ -403,15 +415,15 @@ export default {
 
 .cancel-btn {
   position: absolute;
-  top: 10px;   /* Adjust as necessary to fit within the form */
-  right: 10px; /* Adjust as necessary for proper alignment */
-  padding: 5px 8px; /* Small padding around the 'X' */
-  font-size: 20px; /* Larger font size for clear visibility */
-  cursor: pointer; /* Cursor changes to pointer to indicate clickable */
-  color: #333; /* Color for the 'X' can be adjusted based on theme */
+  top: 10px;  
+  right: 10px; 
+  padding: 5px 8px; 
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
   border: none;
-  background: transparent; /* Transparent background */
-  border-radius: 50%; /* Optional: Makes it circular, remove if not desired */
+  background: transparent;
+  border-radius: 50%; 
 }
 
 .cancel-btn:hover {
@@ -429,6 +441,19 @@ export default {
   font-weight: bold;
   transition: background-color 0.3s ease;
 }
+/* .edit-btn {
+  padding: 10px 20px; 
+  background-color: gray;
+  color: white; 
+  border: none; 
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px; 
+  transition: background-color 0.3s; 
+}  */
 
+/* .edit-btn:hover {
+  background-color: darkgray;
+} */
 
 </style>
