@@ -1,10 +1,12 @@
 <template>
-  <div style="text-align: center">
-    <h1 id="mainHead">Welcome to BudgetBuddy</h1>
-    <div id="firebaseui-auth-container"></div>
-    <div id="pagecontent">
-      BudgetBuddy is an app to track your budgets and expenditures. <br />
-      Feel free to explore our application!
+  <div class="login-container" style="text-align: center">
+    <div class="word-container">
+      <h1 id="mainHead">Welcome to BudgetBuddy</h1>
+      <div id="firebaseui-auth-container"></div>
+      <div id="pagecontent">
+        BudgetBuddy is an app to track your budgets and expenditures. <br />
+        Feel free to explore our application!
+      </div>
     </div>
   </div>
 
@@ -67,5 +69,35 @@ export default {
 h5 {
   text-align: center;
   background-color: rgb(194, 202, 188);
+}
+.word-container {
+  position: relative;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+.login-container {
+  background-image: url(../assets/background.jpeg);
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+}
+.login-container::before {
+  content: ''; /* Required for pseudo-elements */
+  position: absolute; /* Position the pseudo-element */
+  top: 0;
+  left: 0;
+  width: 100%; /* Cover the entire container */
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Grey color with opacity */
+  z-index: 1; /* Ensure the overlay is behind other content */
 }
 </style>
