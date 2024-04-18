@@ -101,6 +101,8 @@ export default {
 .user-profile img {
   margin-top: -10px;
   margin-bottom: 20px;
+  height: 200px;
+  width: 200px;
 }
 .form-group {
   margin-bottom: 1rem;

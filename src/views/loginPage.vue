@@ -109,6 +109,7 @@ export default {
   font-size: larger;
   font-weight: bolder;
   text-align: center;
+  padding: 10px;
 }
 
 #mainHead {
