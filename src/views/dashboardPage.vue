@@ -4,8 +4,7 @@
       <sidebar />
     </div>
     <div class="maincontent">
-      <h1>Welcome to Your Dashboard</h1>
-      <p>Email: {{ userEmail }}</p>
+      <h1>Welcome to your dashboard, {{ this.username }}!</h1>
       <pieChart :transactions="rawTransactions" />
       <Logout :user="user" />
     </div>
