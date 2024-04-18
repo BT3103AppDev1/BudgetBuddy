@@ -6,7 +6,7 @@
         <span>{{ budget.startDate }} - {{ budget.endDate }}</span>
       </div>
       <div class="budget-details">
-        <span>${{ budget.remaining.toFixed(2) }} Remaining </span>
+        <span>${{ (budget.remaining ?? 0).toFixed(2) }} Remaining </span>
         <div class="progress-bar-container">
           <div
             class="progress-bar"
@@ -17,8 +17,8 @@
           ></div>
         </div>
         <span
-          >${{ budget.spent.toFixed(2) }} of ${{
-            budget.amount.toFixed(2)
+          >${{ (budget.spent ?? 0).toFixed(2) }} of ${{
+            (budget.amount ?? 0).toFixed(2)
           }}</span
         >
         <p v-if="budget.remaining < 0" class="over-limit-warning">
@@ -84,12 +84,19 @@ export default {
   },
   computed: {
     computedBudgets() {
-      return this.budgets.map((budget) => ({
-        ...budget,
-        remaining: budget.amount - budget.spent,
-      }));
+      return this.budgets.map((budget) => {
+        const amount = Number(budget.amount) || 0;
+        const spent = Number(budget.spent) || 0;
+        const remaining = amount - spent;
+        return {
+          ...budget,
+          remaining: remaining,
+          spent: spent,
+        };
+      });
     },
   },
+
   methods: {
     progressWidth(budget) {
       const percentage = (budget.spent / budget.amount) * 100;
@@ -128,7 +135,7 @@ export default {
         this.budgets = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           name: doc.data().name,
-          amount: doc.data().amount,
+          amount: Number(doc.data().amount),
           startDate: doc.data().startDate,
           endDate: doc.data().endDate,
           category: doc.data().category,
