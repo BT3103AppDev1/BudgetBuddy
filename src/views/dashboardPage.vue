@@ -2,7 +2,7 @@
   <sidebar />
   <div class="dashpage">
     <h1>Welcome to Your Dashboard</h1>
-    <p>Email: {{ userEmail }}</p>
+    <p>Username: {{ username }}</p>
     <!-- Pass the transactions to the pieChart component -->
     <pieChart :transactions="rawTransactions" />
     <Logout :user="user" />
@@ -37,6 +37,7 @@ export default {
       if (user) {
         this.user = user;
         this.userEmail = user.email;
+        this.username = user.displayName;
         this.fetchTransactions();
       }
     });
