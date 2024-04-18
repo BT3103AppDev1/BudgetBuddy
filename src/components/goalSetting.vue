@@ -1,8 +1,9 @@
 <template>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <div class="budget-tracker">
     <div class="budget" v-for="budget in budgets" :key="budget.id">
       <div class="budget-header">
-        <h3>{{ budget.name }}</h3>
+        <h3>{{ budget.name}} <i class="fas fa-pencil-alt edit-icon" @click="enableEditMode(budget)"></i></h3>
         <span>{{ budget.startDate }} - {{ budget.endDate }}</span>
       </div>
       <div class="budget-details">
@@ -27,11 +28,11 @@
         <p v-if="budget.remaining > 0" class="below-limit-warning">
           You are left with ${{ budget.remaining.toFixed(2) }}!
         </p>
-        <button @click="enableEditMode(budget)">Edit</button>
       </div>
     </div>
     <div v-if="editingBudgetId" class="overlay"></div>
     <div v-if="editingBudgetId" class="edit-budget-form">
+      <h2>Edit your budget</h2>
       <input
         v-model="editedBudgetDetails.name"
         type="text"
@@ -45,8 +46,8 @@
       <input v-model="editedBudgetDetails.startDate" type="date" />
       <input v-model="editedBudgetDetails.endDate" type="date" />
       <!-- ... other fields as needed ... -->
-      <button @click="updateBudget">Save Changes</button>
-      <button @click="cancelEditMode">Cancel</button>
+      <button @click="updateBudget" class="save-btn">Save Changes</button>
+      <span @click="cancelEditMode" class="cancel-btn">x</span>
       <button @click="deleteBudget" class="delete-btn">Delete Budget</button>
     </div>
     <router-link to="/addBudget" tag="button" class="add-budget-btn">
@@ -353,6 +354,18 @@ export default {
   z-index: 1000; /* Make sure it's above other elements */
 }
 
+
+.edit-icon {
+  cursor: pointer;
+  color: gray; /* Adjust the color to match your design */
+  margin-left: 10px; /* Space out the icon from the budget name */
+  margin-bottom: 8px;
+  vertical-align: middle; /* Aligns the icon with the middle of the text */
+}
+
+.edit-icon:hover {
+  color: darkgray; /* Darker shade for hover effect */
+}
 .overlay {
   position: fixed;
   top: 0;
@@ -385,4 +398,62 @@ export default {
 .delete-btn:hover {
   background-color: #d32f2f;
 }
+
+.save-btn:hover {
+  background-color: green;
+}
+
+.edit-budget-form input[type="text"],
+.edit-budget-form input[type="number"],
+.edit-budget-form input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.cancel-btn {
+  position: absolute;
+  top: 10px;  
+  right: 10px; 
+  padding: 5px 8px; 
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+  border: none;
+  background: transparent;
+  border-radius: 50%; 
+}
+
+.cancel-btn:hover {
+  background-color: gray; /* Red background on hover */
+  color: white; /* White text on hover */
+}
+
+.edit-budget-form button {
+  padding: 0.8rem 2rem;
+  background-color: lightgray;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+/* .edit-btn {
+  padding: 10px 20px; 
+  background-color: gray;
+  color: white; 
+  border: none; 
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px; 
+  transition: background-color 0.3s; 
+}  */
+
+/* .edit-btn:hover {
+  background-color: darkgray;
+} */
+
 </style>
