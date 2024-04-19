@@ -5,7 +5,13 @@
     </div>
     <div class="maincontent">
       <h1>Welcome to your dashboard, {{ this.username }}!</h1>
-      <pieChart :transactions="rawTransactions" />
+      <!-- Filter Section -->
+      <div>
+        <input type="date" v-model="startDate" />
+        <input type="date" v-model="endDate" />
+        <button @click="applyFilters">Apply Filters</button>
+      </div>
+      <pieChart :transactions="filteredTransactions" />
       <div class="recent-transactions">
         <h2>Recent Transactions</h2>
         <ul>
@@ -56,10 +62,13 @@ export default {
   data() {
     return {
       user: null,
+      username: "",
       userEmail: "nothing",
       rawTransactions: [], // This will hold the transactions from Firestore
       recentTransactions: [],
-
+      filteredTransactions: [],
+      startDate: null,
+      endDate: null,
     };
   },
 
@@ -112,6 +121,7 @@ export default {
           category: doc.data().category,
           date: doc.data().date
         }));
+        this.applyFilters();
       } catch (error) {
           console.error("Error fetching transactions:", error);
       }
