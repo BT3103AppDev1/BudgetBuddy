@@ -1,4 +1,5 @@
 <template>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <div class="transaction-history-page">
     <div class="filter-options">
       <select v-model="selectedFilter">
@@ -35,6 +36,10 @@
             <p class="transaction-date">{{ transaction.date }}</p>
             <p class="transaction-category">{{ transaction.category }}</p>
           </div>
+          <div class="transaction-actions">
+            <i class="fas fa-pencil-alt" @click="enableTransactionEdit(transaction)"></i>
+            <i class="fas fa-trash" @click="deleteTransaction(transaction.id)"></i>
+          </div>
           <div
             class="transaction-amount"
             :class="{
@@ -46,6 +51,22 @@
           </div>
         </li>
       </ul>
+      <div v-if="editingTransactionId" class="overlay">
+          <div class="edit-transaction-form">
+            <h2>Edit Transaction</h2>
+            <input v-model="editedTransactionDetails.name" placeholder="Transaction Name" />
+            <input v-model="editedTransactionDetails.amount" type="number" placeholder="Amount" />
+            <select v-model="editedTransactionDetails.category">
+              <option value="transport">Transport</option>
+              <option value="shopping">Shopping</option>
+              <option value="food">Food</option>
+              <option value="others">Others</option>
+            </select>
+            <input v-model="editedTransactionDetails.date" type="date" />
+            <button @click="updateTransaction" class="save-btn">Save Changes</button>
+            <button @click="cancelTransactionEdit" class="cancel-btn">Cancel</button>
+          </div>
+        </div>
       <router-link
         to="/addTransaction"
         tag="button"
@@ -59,7 +80,15 @@
 
 <script>
 import firebaseApp from "../firebase.js";
-import { getFirestore, onSnapshot, collection } from "firebase/firestore";
+import { onSnapshot, collection } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  updateDoc,
+  deleteDoc,
+  FieldValue,
+  deleteField,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 const db = getFirestore(firebaseApp);
 
@@ -67,6 +96,8 @@ export default {
   data() {
     return {
       auth: null,
+      editingTransactionId: null,
+      editedTransactionDetails: {},
       transactions: [],
       selectedFilter: "",
       selectedCategory: "",
@@ -118,6 +149,63 @@ export default {
         }
       );
     },
+    enableTransactionEdit(transaction) {
+      this.editingTransactionId = transaction.id;
+      this.editedTransactionDetails = { ...transaction };
+    },
+    cancelTransactionEdit() {
+      this.editingTransactionId = null;
+    },
+    async deleteTransaction(transactionId) {
+      const auth = getAuth(firebaseApp);
+      const db = getFirestore(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      const transactionDocRef = doc(db, 'users', userId, 'transactions', transactionId);
+
+      try {
+        await deleteDoc(transactionDocRef);
+        this.fetchTransactions(); // Refresh the list
+      } catch (error) {
+        console.error("Error deleting transaction:", error);
+      }
+    },
+    async updateTransaction() {
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      if (!this.editingTransactionId) return;
+
+      const db = getFirestore(firebaseApp);
+      const transactionDocRef = doc(db, 'users', userId, 'transactions', this.editingTransactionId);
+
+      const updates = {
+        ...this.editedTransactionDetails,
+        currency: deleteField(), // This line will remove the 'currency' field from the document
+      };
+      try {
+        await updateDoc(transactionDocRef, updates);
+        this.editingTransactionId = null; // Reset editing mode
+        this.fetchTransactions(); // Refresh the list
+        this.editedTransactionDetails = {}; // Clear the form
+      } catch (error) {
+        console.error("Error updating transaction:", error);
+      }
+    },
   },
   computed: {
     filteredTransactions() {
@@ -159,12 +247,63 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-transaction-form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.edit-transaction-form input, .edit-transaction-form select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.edit-transaction-form button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: lightgrey;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-transaction-form button {
+  background-color: grey;
+}
+
+
+.edit-transaction-form button.save-btn:hover {
+  background-color: #45a049;
+}
+
+.edit-transaction-form button.cancel-btn:hover {
+  background-color: #f44336;
+}
 .transaction-history-page {
   display: flex;
   flex-direction: column;
   justify-content: start;
 }
+
+
 
 .transaction-list {
   margin: 0;
@@ -198,6 +337,23 @@ export default {
   font-size: 1rem;
   font-weight: bold;
 }
+.transaction-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.2rem;
+}
+
+.transaction-actions i {
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.transaction-actions i:hover {
+  color: darkred; /* For delete icon */
+  color: darkblue; /* For edit icon */
+}
+
 
 .transaction-name,
 .transaction-date,
