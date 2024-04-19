@@ -33,6 +33,18 @@ export default {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                let label = data.labels[tooltipItem.index] || '';
+                if (label) {
+                  label += ': ';
+                }
+                label += data.datasets[0].data[tooltipItem.index];
+                return label;
+              }
+            }
+          }
         },
       });
     },
@@ -48,7 +60,10 @@ export default {
         {}
       );
 
-      const labels = Object.keys(categoryTotals);
+      const totalAmount = Object.values(categoryTotals).reduce((sum, current) => sum + current, 0);
+      const labels = Object.keys(categoryTotals).map(
+        category => `${category} (${((categoryTotals[category] / totalAmount) * 100).toFixed(2)}%)`
+      );
       const data = Object.values(categoryTotals);
 
       return {
