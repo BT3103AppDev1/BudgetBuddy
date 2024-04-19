@@ -34,6 +34,8 @@
       <Logout :user="user" />
     </div>
   </div>
+
+  
 </template>
 
 <script>
@@ -57,6 +59,7 @@ export default {
       userEmail: "nothing",
       rawTransactions: [], // This will hold the transactions from Firestore
       recentTransactions: [],
+
     };
   },
 
@@ -100,6 +103,7 @@ export default {
         console.log("All Transactions:", this.rawTransactions);
 
 
+
         const recentSnapshot = await getDocs(transQueryRecent);
         this.recentTransactions = recentSnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -112,7 +116,21 @@ export default {
           console.error("Error fetching transactions:", error);
       }
     },
+  
+    applyFilters() {
+    let filtered = this.rawTransactions;
+
+    if (this.startDate && this.endDate) {
+      const start = new Date(this.startDate).getTime();
+      const end = new Date(this.endDate).getTime();
+      filtered = filtered.filter(tx => {
+        const txDate = new Date(tx.date).getTime();
+        return txDate >= start && txDate <= end;
+      });
+    }
+    this.filteredTransactions = filtered;
   },
+},
 };
 </script>
 
@@ -129,6 +147,18 @@ export default {
 .maincontent {
   margin: 0 auto;
   flex-grow: 1;
+}
+
+.maincontent input[type="date"], .maincontent select {
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+}
+
+.maincontent button {
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: white;
 }
 
 button {
