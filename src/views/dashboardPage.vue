@@ -5,10 +5,26 @@
     </div>
     <div class="maincontent">
       <h1>Welcome to your dashboard, {{ this.username }}!</h1>
-      <pieChart :transactions="rawTransactions" />
-      <Logout :user="user" />
+      <!-- Filter Section -->
+      <div>
+        <input type="date" v-model="startDate" />
+        <input type="date" v-model="endDate" />
+        <select v-model="selectedCategory">
+          <option value="">All Categories</option>
+          <option value="transport">Transport</option>
+          <option value="shopping">Shopping</option>
+          <option value="food">Food</option>
+          <option value="others">Others</option>
+        </select>
+        <button @click="applyFilters">Apply Filters</button>
+      </div>
+      
+      <pie-chart :transactions="filteredTransactions" />
+      <logout :user="user" />
     </div>
   </div>
+
+  
 </template>
 
 <script>
@@ -31,6 +47,11 @@ export default {
       user: null,
       userEmail: "nothing",
       rawTransactions: [], // This will hold the transactions from Firestore
+      filteredTransactions: [], // This will hold the transactions after applying filters
+      startDate: null,
+      endDate: null,
+      selectedCategory: "",
+      username: "",
     };
   },
 
@@ -64,8 +85,28 @@ export default {
 
       // Process and store each transaction from the querySnapshot
       this.rawTransactions = querySnapshot.docs.map((doc) => doc.data());
+      this.applyFilters(); // Apply filters immediately after fetching to init the view
     },
+  
+    applyFilters() {
+    let filtered = this.rawTransactions;
+
+    if (this.startDate && this.endDate) {
+      const start = new Date(this.startDate).getTime();
+      const end = new Date(this.endDate).getTime();
+      filtered = filtered.filter(tx => {
+        const txDate = new Date(tx.date).getTime();
+        return txDate >= start && txDate <= end;
+      });
+    }
+
+    if (this.selectedCategory) {
+      filtered = filtered.filter(tx => tx.category === this.selectedCategory);
+    }
+
+    this.filteredTransactions = filtered;
   },
+},
 };
 </script>
 
@@ -82,6 +123,18 @@ export default {
 .maincontent {
   margin: 0 auto;
   flex-grow: 1;
+}
+
+.maincontent input[type="date"], .maincontent select {
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+}
+
+.maincontent button {
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: white;
 }
 
 button {
