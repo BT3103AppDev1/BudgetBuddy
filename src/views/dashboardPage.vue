@@ -183,4 +183,16 @@ button {
 button:hover {
   background-color: #d32f2f;
 }
+
+.transaction-item {
+  background-color: #f0f0f0; /* Light grey background */
+  border-radius: 10px; /* Rounded corners */
+  padding: 15px; /* Padding inside the bubble */
+  margin-bottom: 10px; /* Space between items */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 </style>

@@ -247,7 +247,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .overlay {
   position: fixed;
   top: 0;
