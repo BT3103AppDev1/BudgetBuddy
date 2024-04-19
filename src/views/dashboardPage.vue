@@ -6,6 +6,31 @@
     <div class="maincontent">
       <h1>Welcome to your dashboard, {{ this.username }}!</h1>
       <pieChart :transactions="rawTransactions" />
+      <div class="recent-transactions">
+        <h2>Recent Transactions</h2>
+        <ul>
+          <li
+            v-for="transaction in recentTransactions"
+            :key="transaction.id"
+            class="transaction-item"
+          >
+            <div class="transaction-details">
+              <h3 class="transaction-name">{{ transaction.name }}</h3>
+              <p class="transaction-date">{{ transaction.date }}</p>
+              <p class="transaction-category">{{ transaction.category }}</p>
+            </div>
+            <div
+              class="transaction-amount"
+              :class="{
+                negative: transaction.amount < 0,
+                positive: transaction.amount >= 0,
+              }"
+            >
+              {{ transaction.amount.toFixed(2) }}
+            </div>
+          </li>
+        </ul>
+      </div>
       <Logout :user="user" />
     </div>
   </div>
@@ -13,7 +38,7 @@
 
 <script>
 import firebaseApp from "../firebase.js";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Logout from "@/components/Logout.vue";
 import Sidebar from "@/components/sidebar.vue";
@@ -31,6 +56,7 @@ export default {
       user: null,
       userEmail: "nothing",
       rawTransactions: [], // This will hold the transactions from Firestore
+      recentTransactions: [],
     };
   },
 
@@ -60,10 +86,31 @@ export default {
       const userId = user.uid;
       const db = getFirestore();
       const transactionsCol = collection(db, "users", userId, "transactions");
-      const querySnapshot = await getDocs(transactionsCol);
+      const transQueryAll = query(transactionsCol, orderBy("date", "desc"));
+      const transQueryRecent = query(transactionsCol, orderBy("date", "desc"), limit(5));
+      try {
+        const allSnapshot = await getDocs(transQueryAll);
+        this.rawTransactions = allSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+          amount: doc.data().amount,
+          category: doc.data().category,
+          date: doc.data().date
+        }));
+        console.log("All Transactions:", this.rawTransactions);
 
-      // Process and store each transaction from the querySnapshot
-      this.rawTransactions = querySnapshot.docs.map((doc) => doc.data());
+
+        const recentSnapshot = await getDocs(transQueryRecent);
+        this.recentTransactions = recentSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+          amount: doc.data().amount,
+          category: doc.data().category,
+          date: doc.data().date
+        }));
+      } catch (error) {
+          console.error("Error fetching transactions:", error);
+      }
     },
   },
 };
