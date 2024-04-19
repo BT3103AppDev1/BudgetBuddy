@@ -9,13 +9,6 @@
       <div>
         <input type="date" v-model="startDate" />
         <input type="date" v-model="endDate" />
-        <select v-model="selectedCategory">
-          <option value="">All Categories</option>
-          <option value="transport">Transport</option>
-          <option value="shopping">Shopping</option>
-          <option value="food">Food</option>
-          <option value="others">Others</option>
-        </select>
         <button @click="applyFilters">Apply Filters</button>
       </div>
       
@@ -99,11 +92,6 @@ export default {
         return txDate >= start && txDate <= end;
       });
     }
-
-    if (this.selectedCategory) {
-      filtered = filtered.filter(tx => tx.category === this.selectedCategory);
-    }
-
     this.filteredTransactions = filtered;
   },
 },
