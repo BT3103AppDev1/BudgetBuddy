@@ -37,6 +37,11 @@
           </li>
         </ul>
       </div>
+
+      <div class="recent-goals">
+        <h2>Recent Goals</h2>
+        <goal-setting :goals="displayedGoals" />
+      </div>
       <Logout :user="user" />
     </div>
   </div>
@@ -51,6 +56,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Logout from "@/components/Logout.vue";
 import Sidebar from "@/components/sidebar.vue";
 import PieChart from "@/components/pieChart.vue";
+import goalSetting from "@/components/goalSetting.vue"; 
+
 
 export default {
   name: "DashboardPage",
@@ -58,6 +65,7 @@ export default {
     Logout,
     Sidebar,
     PieChart,
+    goalSetting,
   },
   data() {
     return {
@@ -66,6 +74,7 @@ export default {
       userEmail: "nothing",
       rawTransactions: [], // This will hold the transactions from Firestore
       recentTransactions: [],
+      recentGoals: [],
       filteredTransactions: [],
       startDate: null,
       endDate: null,
@@ -99,10 +108,14 @@ export default {
       const userId = user.uid;
       const db = getFirestore();
       const transactionsCol = collection(db, "users", userId, "transactions");
+      const goalsCol = collection(db, "users", userId, "goals");
       const transQueryAll = query(transactionsCol, orderBy("date", "desc"));
       const transQueryRecent = query(transactionsCol, orderBy("date", "desc"), limit(5));
+      const goalsQueryRecent = query(goalsCol, orderBy("endDate", "desc"), limit(2));
+
       try {
         const allSnapshot = await getDocs(transQueryAll);
+
         this.rawTransactions = allSnapshot.docs.map((doc) => ({
           id: doc.id,
           name: doc.data().name,
@@ -122,6 +135,17 @@ export default {
           category: doc.data().category,
           date: doc.data().date
         }));
+        
+        const recentGoalSnapshot = await getDocs(goalsQueryRecent);
+        this.recentGoals = recentGoalSnapshot.docs.map(doc => ({
+          id: doc.id,
+          name: doc.data().name,
+          amount: doc.data().amount,
+          category: doc.data().category,
+          startDate: doc.data().startDate,
+          endDate: doc.data().endDate
+        }));
+
         this.applyFilters();
       } catch (error) {
           console.error("Error fetching transactions:", error);
@@ -157,7 +181,13 @@ export default {
         this.createChart();
       }
     }
+  },
+
+  computed: {
+  displayedGoals() {
+    return this.recentGoals.slice(0, 2);  // This ensures only two goals are displayed, regardless of the length of recentGoals
   }
+},
 };
 </script>
 
