@@ -69,6 +69,7 @@ export default {
       filteredTransactions: [],
       startDate: null,
       endDate: null,
+      loadingChart: false,
     };
   },
 
@@ -128,19 +129,35 @@ export default {
     },
   
     applyFilters() {
-    let filtered = this.rawTransactions;
+      let filtered = this.rawTransactions;
 
-    if (this.startDate && this.endDate) {
-      const start = new Date(this.startDate).getTime();
-      const end = new Date(this.endDate).getTime();
-      filtered = filtered.filter(tx => {
-        const txDate = new Date(tx.date).getTime();
-        return txDate >= start && txDate <= end;
-      });
-    }
-    this.filteredTransactions = filtered;
+      if (this.startDate && this.endDate) {
+        const start = new Date(this.startDate).getTime();
+        const end = new Date(this.endDate).getTime();
+        filtered = filtered.filter(tx => {
+          const txDate = new Date(tx.date).getTime();
+          return txDate >= start && txDate <= end;
+        });
+      }
+      this.filteredTransactions = filtered;
+    },
+    
+    beforeRouteLeave(to, from, next) {
+      if (this.loadingChart) {
+        this.destroyChart();
+      }
+      next();
+    },
   },
-},
+
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'dashboardPage' && from.name !== to.name) {
+        this.fetchTransactions();
+        this.createChart();
+      }
+    }
+  }
 };
 </script>
 

@@ -18,15 +18,36 @@ export default {
   data() {
     return {
       pieChart: null,
+      loadingChart: false,
     };
   },
   mounted() {
-    this.createChart();
+    Chart.register(...registerables);
+    this.initChart();
+  },
+  beforeUnmount() {
+    this.destroyChart();
   },
   methods: {
+    initChart() {
+      if (this.pieChart) {
+        this.destroyChart();
+      }
+      this.createChart();
+    },
+
+    destroyChart() {
+    if (this.pieChart) {
+      this.pieChart.destroy();
+      this.pieChart = null;
+    }
+    this.loadingChart = false;
+  },
+
     createChart() {
+      this.loadingChart = true;
+      this.destroyChart();
       const chartData = this.processTransactions(this.transactions);
-      Chart.register(...registerables);
       this.pieChart = new Chart(this.$refs.pieChart, {
         type: "pie",
         data: chartData,
@@ -47,6 +68,7 @@ export default {
           }
         },
       });
+      this.loadingChart = false;
     },
     processTransactions(transactions) {
       const categoryTotals = transactions.reduce(
@@ -100,9 +122,10 @@ export default {
   watch: {
     transactions: {
       deep: true,
-      handler() {
-        if (this.pieChart) {
-          this.pieChart.destroy();
+      immediate: true,
+      handler(newVal) {
+        if (this.loadingChart) {
+          this.destroyChart();
         }
         this.createChart();
       },
