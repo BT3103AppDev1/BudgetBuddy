@@ -76,7 +76,7 @@ export default {
       type: Boolean,
       default: true  // By default, show the button
     },
-    goals: {
+    budgets: {
       type: Array,
       default: () => []
     },
@@ -102,7 +102,7 @@ export default {
   },
   computed: {
     displayedGoals() {
-      return this.goals.slice(0, this.limit);
+      return this.budgets.slice(0, this.limit);
     },
 
     computedBudgets() {

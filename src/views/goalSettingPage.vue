@@ -4,7 +4,7 @@
       <sidebar />
     </div>
     <div class="maincontent">
-      <goal-setting :goals="allGoals" />
+      <goalSetting />
       <Logout :user="user" />
     </div>
   </div>
@@ -37,11 +37,11 @@ export default {
       if (user) {
         this.user = user;
         this.userEmail = user.email;
-        this.fetchAllBudgets();
+        //this.fetchAllBudgets();
       }
     });
   },
-
+/*
   methods: {
     async fetchAllBudgets() {
       const db = getFirestore(firebaseApp);
@@ -58,7 +58,16 @@ export default {
         console.error("Error fetching budgets:", error);
       }
     }
-  }
+  },
+  */
+
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'goalSettingPage' && from.name !== to.name) {
+        this.fetchGoals();
+      }
+    }
+  },
 };
 </script>
 

@@ -199,6 +199,7 @@ export default {
       if (to.name === 'dashboardPage' && from.name !== to.name) {
         this.fetchTransactions();
         this.createChart();
+        this.fetchGoals();
       }
     }
   },
