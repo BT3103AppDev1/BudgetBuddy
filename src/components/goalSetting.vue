@@ -3,7 +3,7 @@
   <div class="budget-tracker">
     <div class="budget" v-for="budget in displayedGoals" :key="budget.id">
       <div class="budget-header">
-        <h3>{{ budget.name}} <i class="fas fa-pencil-alt edit-icon" @click="enableEditMode(budget)"></i></h3>
+        <h3 @click="toggleTransactions(budget)" class="budget-name">{{ budget.name}} <i class="fas fa-pencil-alt edit-icon" @click.stop="enableEditMode(budget)"></i></h3>
         <span>{{ budget.startDate }} - {{ budget.endDate }}</span>
       </div>
       <div class="budget-details">
@@ -29,7 +29,20 @@
           You are left with ${{ budget.remaining.toFixed(2) }}!
         </p>
       </div>
+      <div class="transactions-overlay" v-if="budget.showTransactions">
+        <div class="transactions-content">
+          <h3>Transactions for {{ budget.name }}</h3>
+          <ul v-if="budget.transactions.length > 0" class="transaction-list">
+            <li v-for="transaction in budget.transactions" :key="transaction.id">
+            {{ transaction.name }} {{ transaction.date }}  ${{ -transaction.amount }} {{ transaction.description }}
+            </li>
+          </ul>
+          <p v-else>No transactions found for this budget!</p>
+          <button @click="budget.showTransactions = false">Close</button>
+        </div>
+      </div>
     </div>
+
     <div v-if="editingBudgetId" class="overlay"></div>
     <div v-if="editingBudgetId" class="edit-budget-form">
       <h2>Edit your budget</h2>
@@ -92,6 +105,8 @@ export default {
       budgets: [], // Array to store budget data from Firestore
       editingBudgetId: null,
       editedBudgetDetails: {},
+      transactions: [],
+      showTransactions: false
     };
   },
   
@@ -99,6 +114,7 @@ export default {
   async mounted() {
     await this.fetchBudgets();
     await this.calculateSpentAmounts();
+    
   },
   computed: {
     displayedGoals() {
@@ -294,6 +310,56 @@ export default {
       }
       //this.$forceUpdate();
     },
+    toggleTransactions(budget) {
+      if (!budget.transactions) {
+        this.fetchTransactions(budget).then(transactions => {
+          console.log(transactions); // Check what is actually being set here
+          if (this.transactions) {
+            this.transactions = Array.isArray(transactions) ? transactions : [];
+            budget.showTransactions = true;
+          } else {
+            console.error('Error', transactions);
+          }
+        });
+      } else {
+        budget.showTransactions = !budget.showTransactions;
+      }
+    },
+    async fetchTransactions(budget) {
+      const auth = getAuth(firebaseApp);
+      let transactions = [];
+      if (!auth.currentUser) {
+        console.error("No user logged in!");
+        // Optionally, you could handle user redirection to the login page here
+        return;
+      }
+
+      const userId = auth.currentUser.uid;
+      const db = getFirestore(firebaseApp);
+      const transactionsCol = collection(db, "users", userId, "transactions");
+      const budgetQuery = query(transactionsCol, where("budgetTakenFrom", "==", budget.name));
+
+      try {
+        const querySnapshot = await getDocs(budgetQuery);
+        transactions = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          name: doc.data().name,
+          date: doc.data().date,
+          amount: doc.data().amount,
+          description: doc.data().description
+        }));
+        console.log(transactions); // Verify the transactions
+
+        // Assign the transactions directly since it should be reactive
+        budget.transactions = transactions;
+        budget.showTransactions = true; // Toggle visibility of transactions section
+      } catch (error) {
+        console.error("Failed to fetch transactions for budget:", error);
+        return [];
+        // Handle error by notifying user or through other means
+      }
+    },
+
   },
 };
 </script>
@@ -462,19 +528,85 @@ export default {
   font-weight: bold;
   transition: background-color 0.3s ease;
 }
-/* .edit-btn {
-  padding: 10px 20px; 
-  background-color: gray;
-  color: white; 
-  border: none; 
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 16px; 
-  transition: background-color 0.3s; 
-}  */
+.transactions-overlay {
+  position: fixed; /* Position overlay relative to the viewport */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* Ensure it's above other content */
+}
 
-/* .edit-btn:hover {
-  background-color: darkgray;
-} */
+.transactions-content {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 11; /* Ensure content is above the overlay background */
+  width: 80%; /* Or any desired width */
+  max-height: 80vh; /* Or any desired height */
+  overflow-y: auto; /* Allow scrolling if content is too long */
+}
+
+.transactions-content {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
+  width: 40%;
+  max-height: 80vh; /* Limit height to 80% of viewport height */
+  overflow-y: auto; /* Enable vertical scrolling if needed */
+}
+
+.transaction-list {
+  list-style-type: none; /* Remove default list styles */
+  padding: 0; /* Remove default list padding */
+  text-align: center; /* Center text within list items */
+}
+
+.transaction-list li {
+  margin-bottom: 10px; /* Add some spacing between each transaction */
+}
+
+
+.transactions-overlay h3 {
+  margin-bottom: 15px;
+}
+
+/* Style for the close button */
+.transactions-overlay button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #d9534f;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.transactions-overlay button:hover {
+  background-color: #c9302c;
+}
+
+.budget-header h3 {
+  font-size: 1.2rem;
+  color: #181819; /* Similar to traditional link color */
+  text-decoration: underline;
+  cursor: pointer;
+  margin-right: 10px; /* Adjust spacing if needed */
+  transition: color 0.3s ease; /* Smooth transition for color change */
+}
+
+.budget-header h3:hover {
+  color: #4e2a8e; /* Darker shade on hover */
+}
+
 
 </style>
