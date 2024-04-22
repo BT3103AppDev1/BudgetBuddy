@@ -38,9 +38,9 @@
         </ul>
       </div>
 
-      <div class="recent-goals">
-        <h2>Recent Goals</h2>
-        <goal-setting :goals="displayedGoals" />
+      <div class="recent-budgets">
+        <h2>Recent Budgets</h2>
+        <goalSetting :goals="recentBudgets" :limit="2" :showAddButton="false" />
       </div>
       <Logout :user="user" />
     </div>
@@ -74,7 +74,7 @@ export default {
       userEmail: "nothing",
       rawTransactions: [], // This will hold the transactions from Firestore
       recentTransactions: [],
-      recentGoals: [],
+      recentBudgets: [],
       filteredTransactions: [],
       startDate: null,
       endDate: null,
@@ -90,6 +90,9 @@ export default {
         this.userEmail = user.email;
         this.username = user.displayName;
         this.fetchTransactions();
+        this.fetchGoals().then(() => {
+            console.log("Recent Budgets in Dashboard:", this.recentBudgets);
+          });
       }
     });
   },
@@ -108,10 +111,8 @@ export default {
       const userId = user.uid;
       const db = getFirestore();
       const transactionsCol = collection(db, "users", userId, "transactions");
-      const goalsCol = collection(db, "users", userId, "goals");
       const transQueryAll = query(transactionsCol, orderBy("date", "desc"));
       const transQueryRecent = query(transactionsCol, orderBy("date", "desc"), limit(5));
-      const goalsQueryRecent = query(goalsCol, orderBy("endDate", "desc"), limit(2));
 
       try {
         const allSnapshot = await getDocs(transQueryAll);
@@ -136,21 +137,38 @@ export default {
           date: doc.data().date
         }));
         
-        const recentGoalSnapshot = await getDocs(goalsQueryRecent);
-        this.recentGoals = recentGoalSnapshot.docs.map(doc => ({
-          id: doc.id,
-          name: doc.data().name,
-          amount: doc.data().amount,
-          category: doc.data().category,
-          startDate: doc.data().startDate,
-          endDate: doc.data().endDate
-        }));
+
 
         this.applyFilters();
       } catch (error) {
           console.error("Error fetching transactions:", error);
       }
     },
+
+    async fetchGoals() {
+      const db = getFirestore(firebaseApp);
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      const budgetsCol = collection(db, "users", userId, "budgets");
+      const budgetsQuery = query(budgetsCol, orderBy("endDate", "asc"), limit(2));
+
+      try {
+        const snapshot = await getDocs(budgetsQuery);
+        this.recentBudgets = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log("Fetched Recent Budgets:", this.recentBudgets);
+      } catch (error) {
+        console.error("Error fetching budgets:", error);
+      }
+    },
+
   
     applyFilters() {
       let filtered = this.rawTransactions;

@@ -1,7 +1,7 @@
 <template>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <div class="budget-tracker">
-    <div class="budget" v-for="budget in budgets" :key="budget.id">
+    <div class="budget" v-for="budget in displayedGoals" :key="budget.id">
       <div class="budget-header">
         <h3>{{ budget.name}} <i class="fas fa-pencil-alt edit-icon" @click="enableEditMode(budget)"></i></h3>
         <span>{{ budget.startDate }} - {{ budget.endDate }}</span>
@@ -50,7 +50,7 @@
       <span @click="cancelEditMode" class="cancel-btn">x</span>
       <button @click="deleteBudget" class="delete-btn">Delete Budget</button>
     </div>
-    <router-link to="/addBudget" tag="button" class="add-budget-btn">
+    <router-link v-if="showAddButton" to="/addBudget" tag="button" class="add-budget-btn">
       Add New Budget
     </router-link>
   </div>
@@ -71,6 +71,21 @@ import {
 import { getAuth } from "firebase/auth";
 
 export default {
+  props: {
+    showAddButton: {
+      type: Boolean,
+      default: true  // By default, show the button
+    },
+    goals: {
+      type: Array,
+      default: () => []
+    },
+    limit: {
+      type: Number,
+      default: Infinity
+    }
+  },
+  
   data() {
     return {
       auth: null,
@@ -79,11 +94,17 @@ export default {
       editedBudgetDetails: {},
     };
   },
+  
+
   async mounted() {
     await this.fetchBudgets();
     await this.calculateSpentAmounts();
   },
   computed: {
+    displayedGoals() {
+      return this.goals.slice(0, this.limit);
+    },
+
     computedBudgets() {
       return this.budgets.map((budget) => {
         const amount = Number(budget.amount) || 0;

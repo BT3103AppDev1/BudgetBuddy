@@ -4,7 +4,7 @@
       <sidebar />
     </div>
     <div class="maincontent">
-      <goalSetting />
+      <goal-setting :goals="allGoals" />
       <Logout :user="user" />
     </div>
   </div>
@@ -13,6 +13,8 @@
 <script>
 import sidebar from "../components/sidebar.vue";
 import Logout from "@/components/Logout.vue";
+import firebaseApp from "../firebase.js";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import goalSetting from "../components/goalSetting.vue";
 export default {
@@ -26,6 +28,7 @@ export default {
     return {
       user: null,
       userEmail: "nothing",
+      allGoals: [],
     };
   },
   mounted() {
@@ -34,9 +37,28 @@ export default {
       if (user) {
         this.user = user;
         this.userEmail = user.email;
+        this.fetchAllBudgets();
       }
     });
   },
+
+  methods: {
+    async fetchAllBudgets() {
+      const db = getFirestore(firebaseApp);
+      const userId = this.user.uid;
+      const budgetsCol = collection(db, "users", userId, "budgets");
+      try {
+        const querySnapshot = await getDocs(budgetsCol);
+        this.allGoals = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        console.log("All Goals/Budgets:", this.allGoals);
+      } catch (error) {
+        console.error("Error fetching budgets:", error);
+      }
+    }
+  }
 };
 </script>
 
