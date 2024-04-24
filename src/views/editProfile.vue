@@ -9,14 +9,31 @@
     <h2>User Profile</h2>
     <div class="input">
       <div>
-        <img @click="openFileInput" class="profile-user-img img-circle" :src="profilePictureUrl || defaultProfilePicture" alt="User Profile Picture">
+        <img
+          @click="openFileInput"
+          class="profile-user-img img-circle"
+          :src="profilePictureUrl || defaultProfilePicture"
+          alt="User Profile Picture"
+        />
       </div>
-      <input id="fileInput" @change="handleFileChange" ref="fileInput" type="file" class="d-none">
+      <input
+        id="fileInput"
+        @change="handleFileChange"
+        ref="fileInput"
+        type="file"
+        class="d-none"
+      />
     </div>
 
     <div class="form-group">
       <label for="username">Username</label>
-      <input type="text" id="username" v-model="username" required class="input-field" />
+      <input
+        type="text"
+        id="username"
+        v-model="username"
+        required
+        class="input-field"
+      />
     </div>
 
     <div class="button-container">
@@ -27,13 +44,16 @@
 </template>
 
 <script>
-import firebase from "@/uifire.js";
-import firebaseApp from "@/firebase.js";
-import sidebar from "../components/sidebar.vue";
+import { ref } from "vue";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
-import { ref } from 'vue';
-import axios from 'axios';
-import { toastController } from "@ionic/core";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import sidebar from "../components/sidebar.vue";
+import firebaseApp from "../firebase.js";
 
 export default {
   name: "editProfile",
@@ -46,8 +66,9 @@ export default {
       username: "",
       email: "nothing",
       errorMessage: "",
-      defaultProfilePicture: 'assets/profile-user.png',
+      defaultProfilePicture: "assets/profile-user.png",
       profilePictureUrl: null,
+      storage: getStorage(firebaseApp),
     };
   },
   mounted() {
@@ -75,28 +96,55 @@ export default {
         if (this.username !== this.user.displayName) {
           console.log("Updating display name...");
           await updateProfile(this.user, {
-            displayName: this.username
+            displayName: this.username,
           });
         } else {
           console.log("Username is the same as the current display name.");
         }
 
-        if (this.profilePictureUrl && this.profilePictureUrl !== this.user.photoURL) {
-          console.log("updating profile picture..");
+        if (
+          this.profilePictureUrl &&
+          this.profilePictureUrl !== this.user.photoURL
+        ) {
+          console.log("Updating profile picture...");
+          // Upload the image to Firebase Storage
+          const imageRef = storageRef(
+            this.storage,
+            `profile_pictures/${this.user.uid}`
+          );
+          await uploadBytes(imageRef, this.image);
+
+          // Get the download URL of the uploaded image
+          const downloadURL = await getDownloadURL(imageRef);
+
+          // Update user profile with new profile picture URL
           await updateProfile(this.user, {
-            photoURL: this.profilePictureUrl
+            photoURL: downloadURL,
           });
+
+          console.log("Profile picture updated successfully");
         } else {
           console.log("Profile picture is the same as the current one");
         }
         this.message = "Profile updated successfully";
-        this.$router.push('/userProfile');
+        this.$router.push("/userProfile");
       } catch (error) {
         console.error("Error updating profile:", error);
         this.errorMessage = error.message;
       }
-    }
-
+    },
+    // Method to handle file input change
+    handleFileChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.image = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.profilePictureUrl = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
   },
   setup() {
     const fileInput = ref(null);
@@ -104,26 +152,12 @@ export default {
       fileInput.value.click();
     };
     const profilePictureUrl = ref(null);
-    const handleFileChange = (event) => {
-      const file = event.target.files[0];
-      profilePictureUrl.value = URL.createObjectURL(file);
-      const formData = new FormData();
-      formData.append('profile_picture', file);
-      axios.post('/api/upload-profile-image', formData)
-      .then((response) => {
-        toastController.success('Image uploaded successfully!');
-      }).catch((error) => {
-        console.error('Error uploading image:', error);
-        toastController.error('Failed to upload image');
-      })
-    };
     return {
       fileInput,
       openFileInput,
       profilePictureUrl,
-      handleFileChange,
     };
-  }
+  },
 };
 </script>
 
@@ -192,7 +226,8 @@ export default {
   background-color: #474745;
   cursor: pointer;
 }
-.btn:hover, h5:hover {
+.btn:hover,
+h5:hover {
   text-decoration: underline;
   font-weight: 900;
 }
@@ -214,6 +249,6 @@ h5 {
 }
 .input [type="file"] {
   margin-bottom: 20px;
-  margin-left: 80px;;
+  margin-left: 80px;
 }
 </style>

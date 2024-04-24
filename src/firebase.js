@@ -5,6 +5,7 @@ import {
   setPersistence,
   browserLocalPersistence,
 } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -35,3 +36,4 @@ setPersistence(auth, browserLocalPersistence)
   });
 
 export default firebaseApp;
+export const storage = getStorage(firebaseApp);
