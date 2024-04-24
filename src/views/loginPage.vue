@@ -124,6 +124,8 @@ export default {
   width: 40%;
 }
 
+
+
 h5 {
   text-align: center;
   background-color: rgb(194, 202, 188);
@@ -136,6 +138,16 @@ h5 {
   box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
   z-index: 2;
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* This ensures they take the full height of the viewport */
+  width: 100%; /* This ensures they take the full width of the viewport */
+  overflow: hidden; /* Prevents scrollbars from affecting the layout */
+}
+
+/* Ensure that the .login-container covers the entire screen */
 .login-container {
   background-image: url(../assets/background.jpeg);
   background-size: cover;
@@ -146,7 +158,9 @@ h5 {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed; /* Changed from 'absolute' to 'fixed' to ensure it's relative to the viewport */
+  top: 0; /* Aligns the container to the top edge of the viewport */
+  left: 0; /* Aligns the container to the left edge of the viewport */
 }
 .login-container::before {
   content: ''; /* Required for pseudo-elements */
