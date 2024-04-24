@@ -14,6 +14,7 @@
     "@ionic/vue-router": "^7.8.3",
     "axios": "^1.6.8",
     "chart.js": "^4.4.2",
+    "date-fns": "^3.6.0",
     "firebase": "^10.10.0",
     "firebaseui": "^6.1.0",
     "vue": "^3.4.21",
