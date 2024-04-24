@@ -66,7 +66,7 @@
         <label for="schedTransactionsRecurrence">Recurrence *</label>
         <select
           id="schedTransactionsRecurrence"
-          v-model="scheduledTransaction.recurrence"
+          v-model="scheduledTransaction.schedTransactionsRecurrence"
           required
         >
           <option value="monthly">Monthly</option>
