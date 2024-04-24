@@ -3,13 +3,32 @@
     <div class="spendings-container">
       <h2>Top Spendings</h2>
       <div class="filter-buttons">
-        <button @click="setFilter('week')" :class="{ active: currentFilter === 'week' }">Week</button>
-        <button @click="setFilter('month')" :class="{ active: currentFilter === 'month' }">Month</button>
-        <button @click="setFilter('year')" :class="{ active: currentFilter === 'year' }">Year</button>
+        <button
+          @click="setFilter('week')"
+          :class="{ active: currentFilter === 'week' }"
+        >
+          Week
+        </button>
+        <button
+          @click="setFilter('month')"
+          :class="{ active: currentFilter === 'month' }"
+        >
+          Month
+        </button>
+        <button
+          @click="setFilter('year')"
+          :class="{ active: currentFilter === 'year' }"
+        >
+          Year
+        </button>
       </div>
       <div v-if="filteredTransactions.length > 0" class="top-spendings-list">
         <ul>
-          <li v-for="(transaction, index) in filteredTransactions" :key="index" class="spending-item">
+          <li
+            v-for="(transaction, index) in filteredTransactions"
+            :key="index"
+            class="spending-item"
+          >
             <div class="spending-details">
               <h3 class="spending-name">{{ transaction.name }}</h3>
               <p class="spending-date">{{ transaction.date }}</p>
@@ -24,17 +43,33 @@
 </template>
 
 <script>
-import { startOfWeek, startOfMonth, startOfYear, endOfWeek, endOfMonth, endOfYear, parseISO } from 'date-fns';
-import { getFirestore, collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
-import firebaseApp from '../firebase.js';
-import { getAuth } from 'firebase/auth';
+import {
+  startOfWeek,
+  startOfMonth,
+  startOfYear,
+  endOfWeek,
+  endOfMonth,
+  endOfYear,
+  parseISO,
+} from "date-fns";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  orderBy,
+  limit,
+  getDocs,
+} from "firebase/firestore";
+import firebaseApp from "../firebase.js";
+import { getAuth } from "firebase/auth";
 
 export default {
   data() {
     return {
       transactions: [],
       filteredTransactions: [],
-      currentFilter: 'week',
+      currentFilter: "week",
     };
   },
   async mounted() {
@@ -58,7 +93,7 @@ export default {
 
       try {
         const querySnapshot = await getDocs(q);
-        this.transactions = querySnapshot.docs.map(doc => doc.data());
+        this.transactions = querySnapshot.docs.map((doc) => doc.data());
         console.log("Fetched transactions:", this.transactions);
       } catch (error) {
         console.error("Error fetching transactions:", error);
@@ -71,30 +106,31 @@ export default {
     filterTransactions() {
       const now = new Date();
       const startOfPeriod = {
-        'week': startOfWeek(now),
-        'month': startOfMonth(now),
-        'year': startOfYear(now)
+        week: startOfWeek(now),
+        month: startOfMonth(now),
+        year: startOfYear(now),
       };
       const endOfPeriod = {
-        'week': endOfWeek(now),
-        'month': endOfMonth(now),
-        'year': endOfYear(now)
+        week: endOfWeek(now),
+        month: endOfMonth(now),
+        year: endOfYear(now),
       };
       const start = startOfPeriod[this.currentFilter];
       const end = endOfPeriod[this.currentFilter];
 
-      this.filteredTransactions = this.transactions.filter(t => {
-        const date = parseISO(t.date);
-        return date >= start && date <= end;
-      }).sort((a, b) => a.amount - b.amount).slice(0, 3);
-    }
+      this.filteredTransactions = this.transactions
+        .filter((t) => {
+          const date = parseISO(t.date);
+          return date >= start && date <= end;
+        })
+        .sort((a, b) => a.amount - b.amount)
+        .slice(0, 3);
+    },
   },
 };
 </script>
 
-
 <style scoped>
-
 .filter-buttons {
   justify-content: space-between;
   margin-bottom: 20px;
@@ -103,13 +139,13 @@ export default {
 .filter-buttons button {
   padding: 10px 20px;
   border: none;
-  background-color: #332f2f;
+  background-color: #d0d0d0;
   cursor: pointer;
   border-radius: 5px; /* Rounded corners for buttons */
 }
 
 .filter-buttons button.active {
-  background-color: #d0d0d0; /* Slightly darker background for active button */
+  background-color: #332f2f;
 }
 .spendings-container {
   max-width: 600px;
@@ -125,7 +161,6 @@ export default {
   list-style: none;
   padding: 0;
 }
-
 
 .spending-item {
   background-color: #f9f9f9;
