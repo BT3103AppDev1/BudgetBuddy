@@ -138,7 +138,6 @@ h5 {
   box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
   z-index: 2;
 }
-
 html, body {
   margin: 0;
   padding: 0;
