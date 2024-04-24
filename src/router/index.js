@@ -9,6 +9,7 @@ import transactionHistoryPage from "@/views/transactionHistoryPage.vue";
 import userProfile from "@/views/userProfile.vue";
 import editProfile from "@/views/editProfile.vue";
 import goalSettingPage from "@/views/goalSettingPage.vue";
+import analyticsPage from "@/views/analyticsPage.vue";
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     path: "/dashboardPage",
     name: "dashboardPage",
     component: dashboardPage,
+  },
+  {
+    path: "/analyticsPage",
+    name: "analyticsPage",
+    component: analyticsPage,
   },
   {
     path: "/addTransaction",

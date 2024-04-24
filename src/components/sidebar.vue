@@ -7,6 +7,10 @@
           <ion-icon name="list-circle"></ion-icon>
           <router-link to="/dashboardPage">Dashboard</router-link>
         </li>
+        <li class="item" :class="{ active: $route.path === '/analyticsPage' }">
+          <ion-icon name="analytics-outline"></ion-icon>
+          <router-link to="/analyticsPage">Analytics</router-link>
+        </li>
         <li class="item" :class="{ active: $route.path === '/addTransaction' }">
           <ion-icon name="card"></ion-icon>
           <router-link to="/addTransaction">Add Transaction</router-link>
@@ -50,7 +54,6 @@
           <ion-icon name="person-circle"></ion-icon>
           <router-link to="/userProfile">User Profile</router-link>
         </li>
-        <!-- Other sidebar items -->
       </ul>
     </nav>
   </div>
@@ -59,7 +62,6 @@
 <script>
 export default {
   name: "sidebar",
-  // You can include props or data here if needed
 };
 </script>
 
@@ -99,7 +101,7 @@ export default {
   background: #c5c4c458;
 }
 .menu .item.active {
-  background-color: #c5c4c458; /* Slightly darker grey */
+  background-color: #c5c4c458;
 }
 ion-icon {
   color: #959ba2;
