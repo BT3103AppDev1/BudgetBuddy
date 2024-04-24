@@ -25,7 +25,6 @@ import {
   getFirestore,
   collection,
   query,
-  where,
   getDocs,
   orderBy,
 } from "firebase/firestore";
@@ -78,6 +77,14 @@ export default {
   },
   async mounted() {
     await this.fetchAndProcessTransactions();
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.user = user;
+        this.userEmail = user.email;
+        //this.fetchAllBudgets();
+      }
+    });
   },
   methods: {
     async fetchAndProcessTransactions() {

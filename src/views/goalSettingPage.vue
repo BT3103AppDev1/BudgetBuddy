@@ -13,8 +13,6 @@
 <script>
 import sidebar from "../components/sidebar.vue";
 import Logout from "@/components/Logout.vue";
-import firebaseApp from "../firebase.js";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import goalSetting from "../components/goalSetting.vue";
 export default {
@@ -41,7 +39,7 @@ export default {
       }
     });
   },
-/*
+  /*
   methods: {
     async fetchAllBudgets() {
       const db = getFirestore(firebaseApp);
@@ -62,11 +60,11 @@ export default {
   */
 
   watch: {
-    '$route' (to, from) {
-      if (to.name === 'goalSettingPage' && from.name !== to.name) {
+    $route(to, from) {
+      if (to.name === "goalSettingPage" && from.name !== to.name) {
         this.fetchGoals();
       }
-    }
+    },
   },
 };
 </script>
