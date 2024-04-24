@@ -1,44 +1,50 @@
 <template>
-  <sidebar />
-  <div class="navigate-back" @click="navigateBack()">
-    <ion-icon name="arrow-back"></ion-icon>
-    <span>Edit User Profile</span>
-  </div>
-
-  <div class="user-profile">
-    <h2>User Profile</h2>
-    <div class="input">
-      <div>
-        <img
-          @click="openFileInput"
-          class="profile-user-img img-circle"
-          :src="profilePictureUrl || defaultProfilePicture"
-          alt="User Profile Picture"
-        />
+  <div class="editProfilePageContainer">
+    <div class="sidebar">
+      <sidebar />
+    </div>
+    <div class="maincontent">
+      <div class="navigate-back" @click="navigateBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+        <span>Edit User Profile</span>
       </div>
-      <input
-        id="fileInput"
-        @change="handleFileChange"
-        ref="fileInput"
-        type="file"
-        class="d-none"
-      />
-    </div>
 
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input
-        type="text"
-        id="username"
-        v-model="username"
-        required
-        class="input-field"
-      />
-    </div>
+      <div class="user-profile">
+        <h2>User Profile</h2>
+        <div class="input">
+          <div>
+            <img
+              @click="openFileInput"
+              class="profile-user-img img-circle"
+              :src="profilePictureUrl || defaultProfilePicture"
+              alt="User Profile Picture"
+            />
+          </div>
+          <input
+            id="fileInput"
+            @change="handleFileChange"
+            ref="fileInput"
+            type="file"
+            class="d-none"
+          />
+        </div>
 
-    <div class="button-container">
-      <button class="btn" @click="editProfile">Save</button>
-      <p v-if="message">{{ message }}</p>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            v-model="username"
+            required
+            class="input-field"
+          />
+        </div>
+
+        <div class="button-container">
+          <button class="btn" @click="editProfile">Save</button>
+          <p v-if="message">{{ message }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -162,15 +168,29 @@ export default {
 </script>
 
 <style scoped>
+.editProfilePageContainer {
+  display: flex;
+  align-items: start;
+}
+
+.sidebar {
+  flex: 0 0 290px;
+}
+
+.maincontent {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  padding: 20px; /* Add some padding */
+}
+
 .navigate-back {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  position: fixed; /* Position the container fixed to the viewport */
+  position: fixed;
   top: 5%; /* Position it at the top */
-  left: 20%;
-  width: 15%;
-  z-index: 999; /* Ensure it's above other content */
+  left: 300px;
   font-size: 20px;
   cursor: pointer;
 }
@@ -183,6 +203,7 @@ export default {
   max-width: 600px; /* Adjust the width as needed */
   margin: 100px auto 0; /* This centers your form on the page */
   padding: 2rem;
+  width: 80%;
   background-color: #fff; /* Use color from your design */
   border-radius: 10px; /* Rounded corners */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
