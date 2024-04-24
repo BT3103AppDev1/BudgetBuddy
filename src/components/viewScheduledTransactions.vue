@@ -1,4 +1,6 @@
 <template>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <div class="scheduled-transaction-history-page">
   <div class="filter-options">
     <select v-model="selectedFilter">
       <option value="category">Filter by Category</option>
@@ -37,6 +39,10 @@
               {{ transaction.recurrence }} {{ transaction.category }}
             </p>
           </div>
+          <div class="transaction-actions">
+            <i class="fas fa-pencil-alt" @click="enableScheduledTransactionEdit(transaction)"></i>
+            <i class="fas fa-trash" @click="deleteScheduledTransaction(transaction.id)"></i>
+          </div>
           <div
             class="transaction-amount"
             :class="{
@@ -48,6 +54,23 @@
           </div>
         </li>
       </ul>
+      <div v-if="editingScheduledTransactionId" class="overlay">
+          <div class="edit-transaction-form">
+            <h2>Edit Scheduled Transaction</h2>
+            <input v-model="editedScheduledTransactionDetails.name" placeholder="Scheduled Transaction Name" />
+            <input v-model="editedScheduledTransactionDetails.amount" type="number" placeholder="Amount" />
+            <select v-model="editedTransactionDetails.category">
+              <option value="income">Income</option>
+              <option value="allowance">Allowance</option>
+              <option value="expenses">Expenses</option>
+              <option value="subscriptions">Subscriptions</option>
+              <option value="others">Others</option>
+            </select>
+            <input v-model="editedTransactionDetails.date" type="date" />
+            <button @click="updateScheduledTransaction" class="save-btn">Save Changes</button>
+            <button @click="cancelScheduledTransactionEdit" class="cancel-btn">Cancel</button>
+          </div>
+        </div>
       <router-link
         to="/addScheduledTransaction"
         tag="button"
@@ -57,6 +80,7 @@
       </router-link>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -65,6 +89,11 @@ import {
   collection,
   query,
   onSnapshot,
+  doc,
+  updateDoc,
+  deleteDoc,
+  FieldValue,
+  deleteField,
 } from "firebase/firestore";
 import firebaseApp from "../firebase.js";
 import { getAuth } from "firebase/auth";
@@ -75,6 +104,8 @@ export default {
   data() {
     return {
       auth: null,
+      editingScheduledTransactionId: null,
+      editedScheduledTransactionDetails: {},
       scheduledTransactions: [],
       selectedFilter: "",
       selectedCategory: "",
@@ -83,6 +114,9 @@ export default {
   },
   mounted() {
     this.fetchScheduledTransactions();
+  },
+  created() {
+    this.auth = getAuth(firebaseApp); // Initialize Firebase Auth here
   },
   methods: {
     fetchScheduledTransactions() {
@@ -128,6 +162,63 @@ export default {
         }
       );
     },
+    enableScheduledTransactionEdit(scheduledTransaction) {
+      this.editingScheduledTransactionId = scheduledTransaction.id;
+      this.editedScheduledTransactionDetails = { ...scheduledTransaction };
+    },
+    cancelScheduledTransactionEdit() {
+      this.editingScheduledTransactionId = null;
+    },
+    async deleteScheduledTransaction(scheduledTransactionId) {
+      const auth = getAuth(firebaseApp);
+      const db = getFirestore(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      const scheduledTransactionDocRef = doc(db, 'users', userId, 'scheduledTransaction', scheduledTransactionId);
+
+      try {
+        await deleteDoc(scheduledTransactionDocRef);
+        this.fetchScheduledTransactions(); // Refresh the list
+      } catch (error) {
+        console.error("Error deleting scheduled transaction:", error);
+      }
+    },
+    async updateScheduledTransaction() {
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+      }
+      if (!user) {
+        console.error("No user logged in!");
+        return;
+      }
+      const userId = user.uid;
+      if (!this.editingScheduledTransactionId) return;
+
+      const db = getFirestore(firebaseApp);
+      const scheduledTransactionDocRef = doc(db, 'users', userId, 'scheduledTransaction', this.editingScheduledTransactionId);
+
+      const updates = {
+        ...this.editedScheduledTransactionDetails,
+        currency: deleteField(), // This line will remove the 'currency' field from the document
+      };
+      try {
+        await updateDoc(scheduledTransactionDocRef, updates);
+        this.editingScheduledTransactionId = null; // Reset editing mode
+        this.fetchScheduledTransactions(); // Refresh the list
+        this.editedScheduledTransactionDetails = {}; // Clear the form
+      } catch (error) {
+        console.error("Error updating scheduled transaction:", error);
+      }
+    },
   },
   computed: {
     filteredTransactions() {
@@ -153,6 +244,61 @@ export default {
 </script>
 
 <style scoped>
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-transaction-form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.edit-transaction-form input, .edit-transaction-form select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.edit-transaction-form button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: lightgrey;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-transaction-form button {
+  background-color: grey;
+}
+
+
+.edit-transaction-form button.save-btn:hover {
+  background-color: #45a049;
+}
+
+.edit-transaction-form button.cancel-btn:hover {
+  background-color: #f44336;
+}
+
+.scheduled-transaction-history-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
 .scheduled-transactions-list {
   margin: 0;
   padding: 0;
