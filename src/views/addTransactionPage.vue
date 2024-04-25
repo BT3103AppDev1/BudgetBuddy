@@ -30,6 +30,9 @@ export default {
     };
   },
   mounted() {
+    document.body.style.backgroundColor = "#bbc8ea"; // Sets the entire page background to green
+
+  
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -55,4 +58,5 @@ export default {
   margin: 0 auto;
   flex-grow: 1;
 }
+
 </style>

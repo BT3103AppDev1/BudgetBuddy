@@ -186,7 +186,7 @@ select {
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color: #afafaf; /* A green shade */
+  background-color: #7b7b7b; /* A green shade */
   color: white;
   text-decoration: none; /* Removes underline */
 
@@ -194,7 +194,7 @@ select {
 
 .view-budgets-btn:hover {
   box-shadow: 3px 3px grey;
-  background-color:rgb(109, 109, 109); /* Darker shade on hover */
+  background-color:rgb(69, 69, 69); /* Darker shade on hover */
 }
 
 /* Add responsive styles as necessary */
