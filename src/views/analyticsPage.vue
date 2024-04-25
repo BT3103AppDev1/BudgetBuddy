@@ -82,7 +82,6 @@ export default {
       if (user) {
         this.user = user;
         this.userEmail = user.email;
-        //this.fetchAllBudgets();
       }
     });
   },
