@@ -20,7 +20,7 @@
           <label for="email">Email</label>
           <p>{{ userEmail }}</p>
         </div>
-        <br>
+        <br />
         <div class="button-container">
           <button class="btn" @click="editProfile()">Edit Profile</button>
         </div>
@@ -83,16 +83,16 @@ export default {
 }
 
 .user-profile {
-  max-width: 600px; /* Adjust the width as needed */
-  margin: 0 auto; /* This centers your form on the page */
+  max-width: 600px;
+  margin: 0 auto;
   padding: 2rem;
-  background-color: #fff; /* Use color from your design */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .user-profile h2 {
   margin-bottom: 1.5rem;
-  color: #333; /* Use color from your design */
+  color: #333;
   text-align: center;
 }
 .user-profile img {
@@ -107,12 +107,12 @@ export default {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #666; /* Use color from your design */
+  color: #666;
 }
 p {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd; /* Use color from your design */
+  border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
 }
@@ -124,8 +124,9 @@ p {
   font-size: 20px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color:rgb(176, 176, 176);
+  transition: background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease-in-out;
+  background-color: rgb(176, 176, 176);
   color: white;
   text-decoration: none;
 }

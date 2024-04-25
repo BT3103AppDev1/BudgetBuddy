@@ -2,7 +2,6 @@
   <div class="add-budget-container">
     <h1>Add Budget</h1>
     <form id="submitBudget" @submit.prevent="saveAddBudget">
-      <!-- Amount Input -->
       <div class="input-group">
         <label for="name">Budget Name *</label>
         <input
@@ -13,7 +12,7 @@
           class="input-field"
         />
       </div>
-      <!-- Amount Input -->
+
       <div class="input-group">
         <label for="amount">Amount *</label>
         <input
@@ -25,7 +24,6 @@
         />
       </div>
 
-      <!-- Category Select -->
       <div class="input-group">
         <label for="category">Category *</label>
         <select id="category" v-model="budget.category" required>
@@ -34,11 +32,9 @@
           <option value="shopping">Shopping</option>
           <option value="food">Food</option>
           <option value="others">Others</option>
-          <!-- more options -->
         </select>
       </div>
 
-      <!-- Date Range Picker or Two Date Inputs -->
       <div class="input-group">
         <label for="startDate">Start Date *</label>
         <input type="date" id="startDate" v-model="budget.startDate" required />
@@ -48,23 +44,23 @@
         <input type="date" id="endDate" v-model="budget.endDate" required />
       </div>
 
-      <!-- Submit Button -->
-      <br>
+      <br />
       <div class="button-container">
         <button type="submit" class="btn">Add Budget</button>
       </div>
-      <br> 
+      <br />
     </form>
-    
   </div>
-  <br><br>
-  <router-link to="/goalSetting" class="view-budgets-btn">View All Budgets</router-link>
+  <br /><br />
+  <router-link to="/goalSetting" class="view-budgets-btn"
+    >View All Budgets</router-link
+  >
 </template>
 
 <script>
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
-import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const db = getFirestore(firebaseApp);
@@ -131,17 +127,17 @@ export default {
 
 <style scoped>
 .add-budget-container {
-  max-width: 600px; /* Adjust the width as needed */
-  margin: 0 auto; /* This centers your form on the page */
+  max-width: 600px;
+  margin: 0 auto;
   padding: 2rem;
-  background-color: #fff; /* Use color from your design */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .input-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #666; /* Use color from your design */
+  color: #666;
 }
 .input-group {
   margin-bottom: 1rem;
@@ -152,7 +148,7 @@ input[type="date"],
 select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd; /* Use color from your design */
+  border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
 }
@@ -164,14 +160,15 @@ select {
   font-size: 20px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color: #4CAF50; /* A green shade */
+  transition: background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease-in-out;
+  background-color: #4caf50;
   color: white;
 }
 
 .btn:hover {
   box-shadow: 3px 3px grey;
-  background-color:rgb(0, 119, 0); /* Darker shade on hover */
+  background-color: rgb(0, 119, 0);
 }
 
 .button-container {
@@ -185,17 +182,15 @@ select {
   font-size: 15px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color: #7b7b7b; /* A green shade */
+  transition: background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease-in-out;
+  background-color: #7b7b7b;
   color: white;
-  text-decoration: none; /* Removes underline */
-
+  text-decoration: none;
 }
 
 .view-budgets-btn:hover {
   box-shadow: 3px 3px grey;
-  background-color:rgb(69, 69, 69); /* Darker shade on hover */
+  background-color: rgb(69, 69, 69);
 }
-
-/* Add responsive styles as necessary */
 </style>
