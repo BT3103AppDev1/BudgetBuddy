@@ -74,7 +74,7 @@ export default {
       user: null,
       username: "",
       userEmail: "nothing",
-      rawTransactions: [], // This will hold the transactions from Firestore
+      rawTransactions: [],
       recentTransactions: [],
       recentBudgets: [],
       filteredTransactions: [],
@@ -104,7 +104,7 @@ export default {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -206,7 +206,7 @@ export default {
 
   computed: {
   displayedGoals() {
-    return this.recentGoals.slice(0, 2);  // This ensures only two goals are displayed, regardless of the length of recentGoals
+    return this.recentGoals.slice(0, 2);
   }
 },
 };
@@ -247,7 +247,7 @@ button {
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color: #4CAF50; /* A green shade */
+  background-color: #4CAF50;
   color: white;
   text-decoration: none;
 }
@@ -258,11 +258,11 @@ button:hover {
 }
 
 .transaction-item {
-  background-color: #f0f0f0; /* Light grey background */
-  border-radius: 10px; /* Rounded corners */
-  padding: 15px; /* Padding inside the bubble */
-  margin-bottom: 10px; /* Space between items */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #f0f0f0;
+  border-radius: 10px; 
+  padding: 15px;
+  margin-bottom: 10px; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -270,19 +270,19 @@ button:hover {
 
 .dashboard-columns {
   display: flex;
-  justify-content: space-between; /* Adjusts the space distribution */
-  width: 100%; /* Ensures the flex container spans the full width of its parent */
+  justify-content: space-between;
+  width: 100%; 
 }
 
 .recent-transactions, .recent-budgets {
-  flex: 1; /* Each takes half of the available space */
-  margin: 0 10px; /* Adds spacing between the columns */
-  box-sizing: border-box; /* Includes padding and border in the element's total width and height */
-  min-width: 0; /* Prevents flex items from growing beyond their flex basis when content is too wide */
+  flex: 1;
+  margin: 0 10px;
+  box-sizing: border-box; 
+  min-width: 0; 
 }
 
 .transaction-item, .budget-item {
-  box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+  box-sizing: border-box; 
 }
 
 </style>

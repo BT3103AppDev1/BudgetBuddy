@@ -141,12 +141,11 @@ h5 {
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%; /* This ensures they take the full height of the viewport */
-  width: 100%; /* This ensures they take the full width of the viewport */
-  overflow: hidden; /* Prevents scrollbars from affecting the layout */
+  height: 100%;
+  width: 100%;
+  overflow: hidden; 
 }
 
-/* Ensure that the .login-container covers the entire screen */
 .login-container {
   background-image: url(../assets/background.jpeg);
   background-size: cover;
@@ -157,18 +156,18 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed; /* Changed from 'absolute' to 'fixed' to ensure it's relative to the viewport */
-  top: 0; /* Aligns the container to the top edge of the viewport */
-  left: 0; /* Aligns the container to the left edge of the viewport */
+  position: fixed; 
+  top: 0; 
+  left: 0;
 }
 .login-container::before {
-  content: ''; /* Required for pseudo-elements */
-  position: absolute; /* Position the pseudo-element */
+  content: '';
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100%; /* Cover the entire container */
+  width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Grey color with opacity */
-  z-index: 1; /* Ensure the overlay is behind other content */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1; 
 }
 </style>
