@@ -30,9 +30,6 @@ export default {
     };
   },
   mounted() {
-    document.body.style.backgroundColor = "#bbc8ea"; // Sets the entire page background to green
-
-  
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
