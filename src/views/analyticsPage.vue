@@ -92,7 +92,7 @@ export default {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -109,7 +109,6 @@ export default {
 
         querySnapshot.forEach((doc) => {
           const transaction = doc.data();
-          // Extract the year and month part from the date string
           const month = transaction.date.substring(0, 7);
 
           if (!transactionsByMonth[month]) {
@@ -171,7 +170,7 @@ export default {
 }
 
 .linechart {
-  width: 80%; /* Adjust percentage to control relative size */
-  margin: 0 auto; /* Center the chart if desired */
+  width: 80%;
+  margin: 0 auto;
 }
 </style>

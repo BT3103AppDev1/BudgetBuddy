@@ -35,29 +35,9 @@ export default {
       if (user) {
         this.user = user;
         this.userEmail = user.email;
-        //this.fetchAllBudgets();
       }
     });
   },
-  /*
-  methods: {
-    async fetchAllBudgets() {
-      const db = getFirestore(firebaseApp);
-      const userId = this.user.uid;
-      const budgetsCol = collection(db, "users", userId, "budgets");
-      try {
-        const querySnapshot = await getDocs(budgetsCol);
-        this.allGoals = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        console.log("All Goals/Budgets:", this.allGoals);
-      } catch (error) {
-        console.error("Error fetching budgets:", error);
-      }
-    }
-  },
-  */
 
   watch: {
     $route(to, from) {

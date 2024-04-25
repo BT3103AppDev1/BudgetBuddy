@@ -113,17 +113,15 @@ export default {
           this.profilePictureUrl !== this.user.photoURL
         ) {
           console.log("Updating profile picture...");
-          // Upload the image to Firebase Storage
+
           const imageRef = storageRef(
             this.storage,
             `profile_pictures/${this.user.uid}`
           );
           await uploadBytes(imageRef, this.image);
 
-          // Get the download URL of the uploaded image
           const downloadURL = await getDownloadURL(imageRef);
 
-          // Update user profile with new profile picture URL
           await updateProfile(this.user, {
             photoURL: downloadURL,
           });
@@ -139,7 +137,6 @@ export default {
         this.errorMessage = error.message;
       }
     },
-    // Method to handle file input change
     handleFileChange(event) {
       const file = event.target.files[0];
       if (file) {
@@ -180,16 +177,16 @@ export default {
 .maincontent {
   flex-grow: 1;
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  padding: 20px; /* Add some padding */
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
 .navigate-back {
   display: flex;
   align-items: center;
   position: fixed;
-  top: 5%; /* Position it at the top */
+  top: 5%; 
   left: 300px;
   font-size: 20px;
   cursor: pointer;
@@ -200,17 +197,17 @@ export default {
   height: 30px;
 }
 .user-profile {
-  max-width: 600px; /* Adjust the width as needed */
-  margin: 100px auto 0; /* This centers your form on the page */
+  max-width: 600px;
+  margin: 100px auto 0; 
   padding: 2rem;
   width: 80%;
-  background-color: #fff; /* Use color from your design */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
+  background-color: #fff; 
+  border-radius: 10px; 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .user-profile h2 {
   margin-bottom: 1.5rem;
-  color: #333; /* Use color from your design */
+  color: #333; 
   text-align: center;
 }
 .user-profile img {
@@ -225,13 +222,13 @@ export default {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #666; /* Use color from your design */
+  color: #666;
 }
 .form-group input[type="text"],
 .form-group input[type="password"] {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd; /* Use color from your design */
+  border: 1px solid #ddd; 
   border-radius: 5px;
   font-size: 1rem;
   margin-left: -15px;
@@ -244,7 +241,7 @@ export default {
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color: #a5a5a5; /* A green shade */
+  background-color: #a5a5a5; 
   color: white;
   text-decoration: none;
 }
