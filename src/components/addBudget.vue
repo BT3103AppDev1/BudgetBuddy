@@ -49,12 +49,16 @@
       </div>
 
       <!-- Submit Button -->
+      <br>
       <div class="button-container">
         <button type="submit" class="btn">Add Budget</button>
       </div>
+      <br> 
     </form>
-    <router-link to="/goalSetting" class="view-budgets-btn">View All Budgets</router-link>
+    
   </div>
+  <br><br>
+  <router-link to="/goalSetting" class="view-budgets-btn">View All Budgets</router-link>
 </template>
 
 <script>
@@ -154,20 +158,20 @@ select {
 }
 
 .btn {
-  font-family: "Roboto", sans-serif;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
   text-transform: uppercase;
-  font-size: 25px;
-  color: white;
-  margin-top: 20px;
-  width: 100%;
-  padding: 2%;
-  background-color: #474745;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+  background-color: #4CAF50; /* A green shade */
+  color: white;
 }
 
 .btn:hover {
-  text-decoration: underline;
-  font-weight: 900;
+  box-shadow: 3px 3px grey;
+  background-color:rgb(0, 119, 0); /* Darker shade on hover */
 }
 
 .button-container {
@@ -175,28 +179,22 @@ select {
   justify-content: center;
 }
 .view-budgets-btn {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  font-size: 16px; /* Adjusted for better fit */
-  color: white;
-  margin-top: 20px;
-  padding: 10px 20px; /* Adjust padding as needed */
-  background-color: #474745;
-  cursor: pointer;
-  text-decoration: none; /* Removes underline from links */
-  display: inline-block; /* Helps with alignment */
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
-}
+  font-size: 15px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+  background-color: #afafaf; /* A green shade */
+  color: white;
+  text-decoration: none; /* Removes underline */
 
-.view-budgets-btn {
-  background-color: #5cb85c; /* Different color to distinguish */
 }
 
 .view-budgets-btn:hover {
-  background-color: #4cae4c; /* Darker shade for hover */
-  text-decoration: underline;
-  font-weight: 700;
+  box-shadow: 3px 3px grey;
+  background-color:rgb(109, 109, 109); /* Darker shade on hover */
 }
 
 /* Add responsive styles as necessary */

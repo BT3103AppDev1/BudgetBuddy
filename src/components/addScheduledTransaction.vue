@@ -74,20 +74,22 @@
           <!-- more options -->
         </select>
       </div>
-
+      <br>
       <!-- Submit Button -->
       <div class="button-container">
         <button type="submit" class="btn">Add Scheduled Transaction</button>
       </div>
     </form>
-    <router-link
+    
+  </div>
+  <br><br>
+  <router-link
       to="/viewScheduledTransactions"
       tag="button"
       class="view-sched-transaction-btn"
     >
       View Scheduled Transactions
     </router-link>
-  </div>
 </template>
 
 <script>
@@ -199,20 +201,20 @@ export default {
   font-size: 1rem;
 }
 .btn {
-  font-family: "Roboto", sans-serif;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
   text-transform: uppercase;
-  font-size: 25px;
-  color: white;
-  margin-top: 20px;
-  width: 100%;
-  padding: 2%;
-  background-color: #474745;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+  background-color: #4CAF50; /* A green shade */
+  color: white;
 }
 
 .btn:hover {
-  text-decoration: underline;
-  font-weight: 900;
+  box-shadow: 3px 3px grey;
+  background-color:rgb(0, 119, 0); /* Darker shade on hover */
 }
 
 .button-container {
@@ -221,23 +223,21 @@ export default {
 }
 
 .view-sched-transaction-btn {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  font-size: 16px; /* Adjusted for better fit */
-  color: white;
-  margin-top: 20px;
-  padding: 10px 20px; /* Adjust padding as needed */
-  cursor: pointer;
-  text-decoration: none; /* Removes underline from links */
-  display: inline-block; /* Helps with alignment */
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  background-color: #5cb85c; /* Different color to distinguish */
+  font-size: 15px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+  background-color: #b6b6b6; /* A green shade */
+  color: white;
+  text-decoration: none; /* Removes underline */
+
 }
 .view-sched-transaction-btn:hover {
-  background-color: #4cae4c; /* Darker shade for hover */
-  text-decoration: underline;
-  font-weight: 700;
+  box-shadow: 3px 3px grey;
+  background-color:rgb(97, 97, 97); /* Darker shade on hover */
 }
 
 /* Add responsive styles as necessary */

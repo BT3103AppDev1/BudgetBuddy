@@ -5,6 +5,7 @@
     </div>
     <div class="maincontent">
       <viewScheduledTransactions></viewScheduledTransactions>
+      <br>
       <Logout :user="user" />
     </div>
   </div>

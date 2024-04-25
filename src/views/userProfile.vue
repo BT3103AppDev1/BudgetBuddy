@@ -20,7 +20,7 @@
           <label for="email">Email</label>
           <p>{{ userEmail }}</p>
         </div>
-
+        <br>
         <div class="button-container">
           <button class="btn" @click="editProfile()">Edit Profile</button>
         </div>
@@ -116,21 +116,23 @@ p {
   border-radius: 5px;
   font-size: 1rem;
 }
+
 .btn {
-  font-family: "Roboto", sans-serif;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
   text-transform: uppercase;
-  font-size: 25px;
-  color: white;
-  margin-top: 20px;
-  width: 100%;
-  padding: 2%;
-  background-color: #474745;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+  background-color:rgb(176, 176, 176);
+  color: white;
+  text-decoration: none;
 }
 
 .btn:hover {
-  text-decoration: underline;
-  font-weight: 900;
+  box-shadow: 3px 3px grey;
+  background-color: rgb(97, 97, 97);
 }
 
 .button-container {

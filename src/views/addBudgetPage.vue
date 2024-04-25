@@ -5,6 +5,7 @@
     </div>
     <div class="maincontent">
       <addBudget />
+      <br>
       <Logout :user="user" />
     </div>
   </div>
