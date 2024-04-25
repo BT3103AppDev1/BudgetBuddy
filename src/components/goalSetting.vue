@@ -419,15 +419,24 @@ export default {
 }
 
 .add-budget-btn {
-  padding: 0.8rem 2rem;
-  background-color: #5cb85c;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+padding: 10px 20px;
+ border: none;
+ border-radius: 5px;
+ font-size: 20px;
+ text-transform: uppercase;
+ cursor: pointer;
+ transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+ background-color: #4CAF50; /* A green shade */
+ color: white;
+ text-decoration: none;
 }
+
+.add-budget-btn:hover {
+ box-shadow: 3px 3px grey;
+ background-color:rgb(0, 119, 0); /* Darker shade on hover */
+}
+
+
 .edit-budget-form {
   position: fixed;
   top: 50%;

@@ -240,16 +240,21 @@ export default {
 }
 
 button {
-  background-color: #f44336; /* Red */
-  color: white;
-  border: none;
-  cursor: pointer;
   padding: 10px 20px;
-  margin-top: 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+  background-color: #4CAF50; /* A green shade */
+  color: white;
+  text-decoration: none;
 }
 
 button:hover {
-  background-color: #d32f2f;
+  box-shadow: 3px 3px grey;
+  background-color:rgb(0, 119, 0);
 }
 
 .transaction-item {

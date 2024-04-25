@@ -237,21 +237,22 @@ export default {
   margin-left: -15px;
 }
 .btn {
-  font-family: "Roboto", sans-serif;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
   text-transform: uppercase;
-  font-size: 25px;
-  color: white;
-  margin-top: 20px;
-  width: 100%;
-  padding: 2%;
-  background-color: #474745;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+  background-color: #a5a5a5; /* A green shade */
+  color: white;
+  text-decoration: none;
 }
-.btn:hover,
-h5:hover {
-  text-decoration: underline;
-  font-weight: 900;
+.btn:hover {
+  box-shadow: 3px 3px grey;
+  background-color:rgb(88, 88, 88);
 }
+
 .button-container {
   display: flex;
   justify-content: center;

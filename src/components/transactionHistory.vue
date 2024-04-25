@@ -67,6 +67,7 @@
             <button @click="cancelTransactionEdit" class="cancel-btn">Cancel</button>
           </div>
         </div>
+        <br>
       <router-link
         to="/addTransaction"
         tag="button"
@@ -365,17 +366,23 @@ export default {
 }
 
 .add-transaction-btn {
-  background-color: #5cb85c; /* Example: a green button */
-  color: white;
   padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  display: block; /* Center button in the container */
-  width: max-content;
-  margin: 8px auto; /* Centering button */
+ border: none;
+ border-radius: 5px;
+ font-size: 20px;
+ text-transform: uppercase;
+ cursor: pointer;
+ transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+ background-color: #4CAF50;
+ color: white;
+ text-decoration: none;
 }
+
+.add-transaction-btn:hover {
+ box-shadow: 3px 3px grey;
+ background-color:rgb(0, 119, 0); /* Darker shade on hover */
+}
+
 
 .positive {
   color: #5cb85c; /* Green color for positive amounts */

@@ -206,7 +206,7 @@ export default {
   border-radius: 5px;
   font-size: 1rem;
 }
-
+/*
 .btn {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
@@ -223,10 +223,22 @@ export default {
   text-decoration: underline;
   font-weight: 900;
 }
+*/
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+  background-color: #4CAF50; /* A green shade */
+  color: white;
+}
 
-.button-container {
-  display: flex;
-  justify-content: center;
+.btn:hover {
+  box-shadow: 3px 3px grey;
+  background-color:rgb(0, 119, 0); /* Darker shade on hover */
 }
 
 Adjust this path to wherever your icons are coming from .form-group select {
