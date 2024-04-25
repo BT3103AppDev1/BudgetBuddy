@@ -75,7 +75,6 @@ export default {
   background-color: #ffffff;
   overflow: hidden;
   transition: all 0.5s linear;
-  /* Additional styling */
 }
 .menu {
   position: relative;

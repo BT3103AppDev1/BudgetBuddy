@@ -1,5 +1,8 @@
 <template>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
   <div class="transaction-history-page">
     <div class="filter-options">
       <select v-model="selectedFilter">
@@ -7,7 +10,6 @@
         <option value="date">Filter by Date</option>
       </select>
 
-      <!-- Dropdown for Category -->
       <select v-model="selectedCategory" v-if="selectedFilter === 'category'">
         <option value="">Select a Category</option>
         <option value="transport">Transport</option>
@@ -16,7 +18,6 @@
         <option value="others">Others</option>
       </select>
 
-      <!-- Dropdown for Date Filtering Options -->
       <select v-model="selectedDateFilter" v-if="selectedFilter === 'date'">
         <option value="">Select a Date Range</option>
         <option value="today">Today</option>
@@ -37,8 +38,14 @@
             <p class="transaction-category">{{ transaction.category }}</p>
           </div>
           <div class="transaction-actions">
-            <i class="fas fa-pencil-alt" @click="enableTransactionEdit(transaction)"></i>
-            <i class="fas fa-trash" @click="deleteTransaction(transaction.id)"></i>
+            <i
+              class="fas fa-pencil-alt"
+              @click="enableTransactionEdit(transaction)"
+            ></i>
+            <i
+              class="fas fa-trash"
+              @click="deleteTransaction(transaction.id)"
+            ></i>
           </div>
           <div
             class="transaction-amount"
@@ -52,22 +59,33 @@
         </li>
       </ul>
       <div v-if="editingTransactionId" class="overlay">
-          <div class="edit-transaction-form">
-            <h2>Edit Transaction</h2>
-            <input v-model="editedTransactionDetails.name" placeholder="Transaction Name" />
-            <input v-model="editedTransactionDetails.amount" type="number" placeholder="Amount" />
-            <select v-model="editedTransactionDetails.category">
-              <option value="transport">Transport</option>
-              <option value="shopping">Shopping</option>
-              <option value="food">Food</option>
-              <option value="others">Others</option>
-            </select>
-            <input v-model="editedTransactionDetails.date" type="date" />
-            <button @click="updateTransaction" class="save-btn">Save Changes</button>
-            <button @click="cancelTransactionEdit" class="cancel-btn">Cancel</button>
-          </div>
+        <div class="edit-transaction-form">
+          <h2>Edit Transaction</h2>
+          <input
+            v-model="editedTransactionDetails.name"
+            placeholder="Transaction Name"
+          />
+          <input
+            v-model="editedTransactionDetails.amount"
+            type="number"
+            placeholder="Amount"
+          />
+          <select v-model="editedTransactionDetails.category">
+            <option value="transport">Transport</option>
+            <option value="shopping">Shopping</option>
+            <option value="food">Food</option>
+            <option value="others">Others</option>
+          </select>
+          <input v-model="editedTransactionDetails.date" type="date" />
+          <button @click="updateTransaction" class="save-btn">
+            Save Changes
+          </button>
+          <button @click="cancelTransactionEdit" class="cancel-btn">
+            Cancel
+          </button>
         </div>
-        <br>
+      </div>
+      <br />
       <router-link
         to="/addTransaction"
         tag="button"
@@ -87,7 +105,6 @@ import {
   doc,
   updateDoc,
   deleteDoc,
-  FieldValue,
   deleteField,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
@@ -109,14 +126,14 @@ export default {
     this.fetchTransactions();
   },
   created() {
-    this.auth = getAuth(firebaseApp); // Initialize Firebase Auth here
+    this.auth = getAuth(firebaseApp);
   },
   methods: {
     fetchTransactions() {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -133,12 +150,10 @@ export default {
               name: doc.data().name,
               amount: doc.data().amount,
               category: doc.data().category,
-              currency: doc.data().currency,
               date: doc.data().date,
               description: doc.data().description,
             }))
             .sort((a, b) => {
-              // Convert date strings to Date objects
               const dateA = new Date(a.date);
               const dateB = new Date(b.date);
               // Sort in descending order (latest first)
@@ -162,18 +177,24 @@ export default {
       const db = getFirestore(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
         return;
       }
       const userId = user.uid;
-      const transactionDocRef = doc(db, 'users', userId, 'transactions', transactionId);
+      const transactionDocRef = doc(
+        db,
+        "users",
+        userId,
+        "transactions",
+        transactionId
+      );
 
       try {
         await deleteDoc(transactionDocRef);
-        this.fetchTransactions(); // Refresh the list
+        this.fetchTransactions();
       } catch (error) {
         console.error("Error deleting transaction:", error);
       }
@@ -182,7 +203,7 @@ export default {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -192,17 +213,22 @@ export default {
       if (!this.editingTransactionId) return;
 
       const db = getFirestore(firebaseApp);
-      const transactionDocRef = doc(db, 'users', userId, 'transactions', this.editingTransactionId);
+      const transactionDocRef = doc(
+        db,
+        "users",
+        userId,
+        "transactions",
+        this.editingTransactionId
+      );
 
       const updates = {
         ...this.editedTransactionDetails,
-        currency: deleteField(), // This line will remove the 'currency' field from the document
       };
       try {
         await updateDoc(transactionDocRef, updates);
-        this.editingTransactionId = null; // Reset editing mode
-        this.fetchTransactions(); // Refresh the list
-        this.editedTransactionDetails = {}; // Clear the form
+        this.editingTransactionId = null;
+        this.fetchTransactions();
+        this.editedTransactionDetails = {};
       } catch (error) {
         console.error("Error updating transaction:", error);
       }
@@ -218,7 +244,7 @@ export default {
         );
       } else if (this.selectedFilter === "date") {
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Set to start of today
+        today.setHours(0, 0, 0, 0);
 
         let startDate;
 
@@ -268,7 +294,8 @@ export default {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.edit-transaction-form input, .edit-transaction-form select {
+.edit-transaction-form input,
+.edit-transaction-form select {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -290,7 +317,6 @@ export default {
   background-color: grey;
 }
 
-
 .edit-transaction-form button.save-btn:hover {
   background-color: #45a049;
 }
@@ -304,19 +330,17 @@ export default {
   justify-content: start;
 }
 
-
-
 .transaction-list {
   margin: 0;
   padding: 0;
 }
 
 .transaction-item {
-  background-color: #f9f9f9; /* Light grey background */
+  background-color: #f9f9f9;
   border-radius: 8px;
   padding: 15px;
-  margin-bottom: 10px; /* Space between items */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -351,44 +375,43 @@ export default {
 }
 
 .transaction-actions i:hover {
-  color: darkred; /* For delete icon */
-  color: darkblue; /* For edit icon */
+  color: darkred;
+  color: darkblue;
 }
-
 
 .transaction-name,
 .transaction-date,
 .transaction-category {
-  width: 100%; /* Ensures the text elements take up the full width of the .transaction-details container */
-  margin: 0; /* Removes any default margins */
-  display: block; /* Display as block elements */
+  width: 100%;
+  margin: 0;
+  display: block;
   padding: 5px;
 }
 
 .add-transaction-btn {
   padding: 10px 20px;
- border: none;
- border-radius: 5px;
- font-size: 20px;
- text-transform: uppercase;
- cursor: pointer;
- transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
- background-color: #4CAF50;
- color: white;
- text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease-in-out;
+  background-color: #4caf50;
+  color: white;
+  text-decoration: none;
 }
 
 .add-transaction-btn:hover {
- box-shadow: 3px 3px grey;
- background-color:rgb(0, 119, 0); /* Darker shade on hover */
+  box-shadow: 3px 3px grey;
+  background-color: rgb(0, 119, 0);
 }
 
-
 .positive {
-  color: #5cb85c; /* Green color for positive amounts */
+  color: #5cb85c;
 }
 
 .negative {
-  color: #ff3860; /* Red color for negative amounts */
+  color: #ff3860;
 }
 </style>

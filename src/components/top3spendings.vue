@@ -89,7 +89,7 @@ export default {
 
       const userId = user.uid;
       const transactionsCol = collection(db, "users", userId, "transactions");
-      const q = query(transactionsCol, orderBy("date", "desc"), limit(50)); // Adjust limit as needed
+      const q = query(transactionsCol, orderBy("date", "desc"), limit(50));
 
       try {
         const querySnapshot = await getDocs(q);
@@ -141,12 +141,12 @@ export default {
   border: none;
   background-color: #8e8e8e;
   cursor: pointer;
-  border-radius: 5px; /* Rounded corners for buttons */
+  border-radius: 5px;
 }
 
 .filter-buttons button:hover {
- box-shadow: 3px 3px grey;
- background-color:rgb(148, 148, 148); /* Darker shade on hover */
+  box-shadow: 3px 3px grey;
+  background-color: rgb(148, 148, 148);
 }
 
 .filter-buttons button.active {

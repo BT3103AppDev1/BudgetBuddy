@@ -1,9 +1,18 @@
 <template>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
   <div class="budget-tracker">
     <div class="budget" v-for="budget in displayedGoals" :key="budget.id">
       <div class="budget-header">
-        <h3 @click="toggleTransactions(budget)" class="budget-name">{{ budget.name}} <i class="fas fa-pencil-alt edit-icon" @click.stop="enableEditMode(budget)"></i></h3>
+        <h3 @click="toggleTransactions(budget)" class="budget-name">
+          {{ budget.name }}
+          <i
+            class="fas fa-pencil-alt edit-icon"
+            @click.stop="enableEditMode(budget)"
+          ></i>
+        </h3>
         <span>{{ budget.startDate }} - {{ budget.endDate }}</span>
       </div>
       <div class="budget-details">
@@ -33,8 +42,14 @@
         <div class="transactions-content">
           <h3>Transactions for {{ budget.name }}</h3>
           <ul v-if="budget.transactions.length > 0" class="transaction-list">
-            <li v-for="transaction in budget.transactions" :key="transaction.id">
-            {{ transaction.name }} {{ transaction.date }}  ${{ -transaction.amount }} {{ transaction.description }}
+            <li
+              v-for="transaction in budget.transactions"
+              :key="transaction.id"
+            >
+              {{ transaction.name }} {{ transaction.date }} ${{
+                -transaction.amount
+              }}
+              {{ transaction.description }}
             </li>
           </ul>
           <p v-else>No transactions found for this budget!</p>
@@ -58,12 +73,16 @@
       />
       <input v-model="editedBudgetDetails.startDate" type="date" />
       <input v-model="editedBudgetDetails.endDate" type="date" />
-      <!-- ... other fields as needed ... -->
       <button @click="updateBudget" class="save-btn">Save Changes</button>
       <span @click="cancelEditMode" class="cancel-btn">x</span>
       <button @click="deleteBudget" class="delete-btn">Delete Budget</button>
     </div>
-    <router-link v-if="showAddButton" to="/addBudget" tag="button" class="add-budget-btn">
+    <router-link
+      v-if="showAddButton"
+      to="/addBudget"
+      tag="button"
+      class="add-budget-btn"
+    >
       Add New Budget
     </router-link>
   </div>
@@ -87,34 +106,32 @@ export default {
   props: {
     showAddButton: {
       type: Boolean,
-      default: true  // By default, show the button
+      default: true,
     },
     budgets: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     limit: {
       type: Number,
-      default: Infinity
-    }
+      default: Infinity,
+    },
   },
-  
+
   data() {
     return {
       auth: null,
-      budgets: [], // Array to store budget data from Firestore
+      budgets: [],
       editingBudgetId: null,
       editedBudgetDetails: {},
       transactions: [],
-      showTransactions: false
+      showTransactions: false,
     };
   },
-  
 
   async mounted() {
     await this.fetchBudgets();
     await this.calculateSpentAmounts();
-    
   },
   computed: {
     displayedGoals() {
@@ -143,12 +160,12 @@ export default {
     progressBarColor(budget) {
       const percentage = (budget.spent / budget.amount) * 100;
       const hue = 120 - percentage * 1.2;
-      const color = `hsl(${hue}, 100%, 50%)`; // Ensure the HSL value is correct
+      const color = `hsl(${hue}, 100%, 50%)`;
       return color;
     },
     enableEditMode(budget) {
       this.editingBudgetId = budget.id;
-      this.editedBudgetDetails = { ...budget }; // Make a shallow copy to edit
+      this.editedBudgetDetails = { ...budget };
     },
 
     cancelEditMode() {
@@ -159,7 +176,7 @@ export default {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -186,7 +203,7 @@ export default {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -205,15 +222,14 @@ export default {
       );
 
       try {
-        await deleteDoc(budgetDocRef); // Firebase function to delete a document
+        await deleteDoc(budgetDocRef);
 
-        // Remove the budget from the local state to update UI
         this.budgets = this.budgets.filter(
           (budget) => budget.id !== this.editingBudgetId
         );
 
-        this.editingBudgetId = null; // Close the edit form
-        this.editedBudgetDetails = {}; // Reset edited details
+        this.editingBudgetId = null;
+        this.editedBudgetDetails = {};
       } catch (error) {
         console.error("Error deleting budget:", error);
       }
@@ -223,7 +239,7 @@ export default {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -278,7 +294,7 @@ export default {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -299,26 +315,24 @@ export default {
         );
         const querySnapshot = await getDocs(q);
         const spentAmount = querySnapshot.docs.reduce((total, doc) => {
-          return total + Number(doc.data().amount); // Ensure amount is a number
+          return total + Number(doc.data().amount);
         }, 0);
 
-        // Directly assign updated values
-        budget.spent = -spentAmount; // Set the spent amount for the budget
-        budget.remaining = budget.amount + spentAmount; // Calculate the remaining amount
-        // Notify Vue about the change
+        budget.spent = -spentAmount;
+        budget.remaining = budget.amount + spentAmount;
+
         this.budgets[i] = { ...budget };
       }
-      //this.$forceUpdate();
     },
     toggleTransactions(budget) {
       if (!budget.transactions) {
-        this.fetchTransactions(budget).then(transactions => {
-          console.log(transactions); // Check what is actually being set here
+        this.fetchTransactions(budget).then((transactions) => {
+          console.log(transactions);
           if (this.transactions) {
             this.transactions = Array.isArray(transactions) ? transactions : [];
             budget.showTransactions = true;
           } else {
-            console.error('Error', transactions);
+            console.error("Error", transactions);
           }
         });
       } else {
@@ -330,36 +344,35 @@ export default {
       let transactions = [];
       if (!auth.currentUser) {
         console.error("No user logged in!");
-        // Optionally, you could handle user redirection to the login page here
         return;
       }
 
       const userId = auth.currentUser.uid;
       const db = getFirestore(firebaseApp);
       const transactionsCol = collection(db, "users", userId, "transactions");
-      const budgetQuery = query(transactionsCol, where("budgetTakenFrom", "==", budget.name));
+      const budgetQuery = query(
+        transactionsCol,
+        where("budgetTakenFrom", "==", budget.name)
+      );
 
       try {
         const querySnapshot = await getDocs(budgetQuery);
-        transactions = querySnapshot.docs.map(doc => ({
+        transactions = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           name: doc.data().name,
           date: doc.data().date,
           amount: doc.data().amount,
-          description: doc.data().description
+          description: doc.data().description,
         }));
-        console.log(transactions); // Verify the transactions
+        console.log(transactions);
 
-        // Assign the transactions directly since it should be reactive
         budget.transactions = transactions;
-        budget.showTransactions = true; // Toggle visibility of transactions section
+        budget.showTransactions = true;
       } catch (error) {
         console.error("Failed to fetch transactions for budget:", error);
         return [];
-        // Handle error by notifying user or through other means
       }
     },
-
   },
 };
 </script>
@@ -419,23 +432,23 @@ export default {
 }
 
 .add-budget-btn {
-padding: 10px 20px;
- border: none;
- border-radius: 5px;
- font-size: 20px;
- text-transform: uppercase;
- cursor: pointer;
- transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
- background-color: #4CAF50; /* A green shade */
- color: white;
- text-decoration: none;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease-in-out;
+  background-color: #4caf50;
+  color: white;
+  text-decoration: none;
 }
 
 .add-budget-btn:hover {
- box-shadow: 3px 3px grey;
- background-color:rgb(0, 119, 0); /* Darker shade on hover */
+  box-shadow: 3px 3px grey;
+  background-color: rgb(0, 119, 0);
 }
-
 
 .edit-budget-form {
   position: fixed;
@@ -447,20 +460,19 @@ padding: 10px 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-in-out;
-  z-index: 1000; /* Make sure it's above other elements */
+  z-index: 1000;
 }
-
 
 .edit-icon {
   cursor: pointer;
-  color: gray; /* Adjust the color to match your design */
-  margin-left: 10px; /* Space out the icon from the budget name */
+  color: gray;
+  margin-left: 10px;
   margin-bottom: 8px;
-  vertical-align: middle; /* Aligns the icon with the middle of the text */
+  vertical-align: middle;
 }
 
 .edit-icon:hover {
-  color: darkgray; /* Darker shade for hover effect */
+  color: darkgray;
 }
 .overlay {
   position: fixed;
@@ -469,19 +481,17 @@ padding: 10px 20px;
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  z-index: 999; /* Overlay below the form */
+  z-index: 999;
 }
 
 .add-budget-btn:hover {
   background-color: #4cae4c;
 }
 
-/* Utility class for overspending */
 .budget-overspent .progress-bar {
   background-color: #f44336;
 }
 
-/* Utility class for budget close to limit */
 .budget-close .progress-bar {
   background-color: #ffeb3b;
 }
@@ -511,20 +521,20 @@ padding: 10px 20px;
 
 .cancel-btn {
   position: absolute;
-  top: 10px;  
-  right: 10px; 
-  padding: 5px 8px; 
+  top: 10px;
+  right: 10px;
+  padding: 5px 8px;
   font-size: 20px;
   cursor: pointer;
   color: #333;
   border: none;
   background: transparent;
-  border-radius: 50%; 
+  border-radius: 50%;
 }
 
 .cancel-btn:hover {
-  background-color: gray; /* Red background on hover */
-  color: white; /* White text on hover */
+  background-color: gray;
+  color: white;
 }
 
 .edit-budget-form button {
@@ -538,16 +548,16 @@ padding: 10px 20px;
   transition: background-color 0.3s ease;
 }
 .transactions-overlay {
-  position: fixed; /* Position overlay relative to the viewport */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10; /* Ensure it's above other content */
+  z-index: 10;
 }
 
 .transactions-content {
@@ -559,37 +569,35 @@ padding: 10px 20px;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  z-index: 11; /* Ensure content is above the overlay background */
-  width: 80%; /* Or any desired width */
-  max-height: 80vh; /* Or any desired height */
-  overflow-y: auto; /* Allow scrolling if content is too long */
+  z-index: 11;
+  width: 80%;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .transactions-content {
   display: flex;
-  flex-direction: column; /* Stack items vertically */
-  align-items: center; /* Center items horizontally */
+  flex-direction: column;
+  align-items: center;
   width: 40%;
-  max-height: 80vh; /* Limit height to 80% of viewport height */
-  overflow-y: auto; /* Enable vertical scrolling if needed */
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .transaction-list {
-  list-style-type: none; /* Remove default list styles */
-  padding: 0; /* Remove default list padding */
-  text-align: center; /* Center text within list items */
+  list-style-type: none;
+  padding: 0;
+  text-align: center;
 }
 
 .transaction-list li {
-  margin-bottom: 10px; /* Add some spacing between each transaction */
+  margin-bottom: 10px;
 }
-
 
 .transactions-overlay h3 {
   margin-bottom: 15px;
 }
 
-/* Style for the close button */
 .transactions-overlay button {
   margin-top: 10px;
   padding: 10px 20px;
@@ -606,16 +614,14 @@ padding: 10px 20px;
 
 .budget-header h3 {
   font-size: 1.2rem;
-  color: #181819; /* Similar to traditional link color */
+  color: #181819;
   text-decoration: underline;
   cursor: pointer;
-  margin-right: 10px; /* Adjust spacing if needed */
-  transition: color 0.3s ease; /* Smooth transition for color change */
+  margin-right: 10px;
+  transition: color 0.3s ease;
 }
 
 .budget-header h3:hover {
-  color: #4e2a8e; /* Darker shade on hover */
+  color: #4e2a8e;
 }
-
-
 </style>

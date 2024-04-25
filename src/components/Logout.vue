@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 
 export default {
   name: "Logout",
@@ -25,13 +25,14 @@ export default {
 
 <style scoped>
 #btn {
-  background-color: #f44336; /* Red */
+  background-color: #f44336;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   text-transform: uppercase;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease-in-out;
   padding: 10px 20px;
   margin-top: 20px;
 }
@@ -41,5 +42,4 @@ export default {
   box-shadow: 3px 3px grey;
   background-color: #ba2a2a;
 }
-
 </style>

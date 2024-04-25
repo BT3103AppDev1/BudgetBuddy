@@ -41,7 +41,6 @@
           <option value="shopping">Shopping</option>
           <option value="food">Food</option>
           <option value="food">Others</option>
-          <!-- Add more categories here -->
         </select>
       </div>
 
@@ -94,7 +93,7 @@ export default {
     };
   },
   created() {
-    this.auth = getAuth(firebaseApp); // Initialize Firebase Auth here
+    this.auth = getAuth(firebaseApp);
   },
   mounted() {
     this.fetchBudgets();
@@ -105,7 +104,7 @@ export default {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -125,7 +124,7 @@ export default {
           budgetTakenFrom: this.selectedBudget,
         });
         console.log("Document written with ID:", docRef.id);
-        // Reset the transaction object
+
         this.transaction = {
           name: "",
           amount: null,
@@ -143,7 +142,7 @@ export default {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -163,14 +162,13 @@ export default {
 </script>
 
 <style scoped>
-/* You can adjust the values below to match your design exactly */
 .add-transaction {
-  max-width: 600px; /* Adjust the width as needed */
-  margin: 0 auto; /* This centers your form on the page */
+  max-width: 600px;
+  margin: 0 auto;
   padding: 2rem;
-  background-color: #fff; /* Use color from your design */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -179,13 +177,13 @@ export default {
 
 .add-transaction h2 {
   margin-bottom: 1.5rem;
-  color: #333; /* Use color from your design */
+  color: #333;
   text-align: center;
 }
 
 .form-group {
   width: 100%;
-  margin-bottom: 1rem; /* Adjust this value to increase or decrease the space between form groups */
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
 }
@@ -193,7 +191,7 @@ export default {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #666; /* Use color from your design */
+  color: #666;
 }
 
 .form-group input[type="number"],
@@ -202,28 +200,11 @@ export default {
 .form-group select {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd; /* Use color from your design */
+  border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
 }
-/*
-.btn {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  font-size: 25px;
-  color: white;
-  margin-top: 20px;
-  width: 100%;
-  padding: 2%;
-  background-color: #474745;
-  cursor: pointer;
-}
 
-.btn:hover {
-  text-decoration: underline;
-  font-weight: 900;
-}
-*/
 .btn {
   padding: 10px 20px;
   border: none;
@@ -231,32 +212,31 @@ export default {
   font-size: 20px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color: #4CAF50; /* A green shade */
+  transition: background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease-in-out;
+  background-color: #4caf50;
   color: white;
 }
 
 .btn:hover {
   box-shadow: 3px 3px grey;
-  background-color:rgb(0, 119, 0); /* Darker shade on hover */
+  background-color: rgb(0, 119, 0);
 }
 
-Adjust this path to wherever your icons are coming from .form-group select {
+.form-group select {
   background-image: url("path-to-your-icon.svg");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   -moz-appearance: none;
   -webkit-appearance: none;
-  appearance: none; /* To remove default arrow from select */
+  appearance: none;
 }
 
-/* If you want to show an error message, you can style it like this */
 .error-message {
-  color: #ff3860; /* Error color */
+  color: #ff3860;
   margin-top: 0.5rem;
 }
 
-/* Add responsiveness if needed */
 @media (max-width: 768px) {
   .add-transaction {
     padding: 1rem;

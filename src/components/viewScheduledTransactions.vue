@@ -1,64 +1,81 @@
 <template>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
   <div class="scheduled-transaction-history-page">
-  <div class="filter-options">
-    <select v-model="selectedFilter">
-      <option value="category">Filter by Category</option>
-      <option value="recurrence">Filter by Recurrence</option>
-    </select>
+    <div class="filter-options">
+      <select v-model="selectedFilter">
+        <option value="category">Filter by Category</option>
+        <option value="recurrence">Filter by Recurrence</option>
+      </select>
 
-    <!-- Dropdown for Category -->
-    <select v-model="selectedCategory" v-if="selectedFilter === 'category'">
-      <option value="">Select a Category</option>
-      <option value="income">Income</option>
-      <option value="allowance">Allowance</option>
-      <option value="expenses">Expenses</option>
-      <option value="subscriptions">Subscriptions</option>
-      <option value="others">Others</option>
-    </select>
+      <select v-model="selectedCategory" v-if="selectedFilter === 'category'">
+        <option value="">Select a Category</option>
+        <option value="income">Income</option>
+        <option value="allowance">Allowance</option>
+        <option value="expenses">Expenses</option>
+        <option value="subscriptions">Subscriptions</option>
+        <option value="others">Others</option>
+      </select>
 
-    <!-- Dropdown for Recurrence Options -->
-    <select v-model="selectedRecurrence" v-if="selectedFilter === 'recurrence'">
-      <option value="">Select a Recurrence Range</option>
-      <option value="monthly">Monthly</option>
-      <option value="yearly">Yearly</option>
-    </select>
-  </div>
-  <div class="view-scheduled-transactions-page">
-    <div class="scheduled-transactions-list">
-      <ul>
-        <li
-          v-for="transaction in filteredTransactions"
-          :key="transaction.id"
-          class="transaction-item"
-        >
-          <div class="transaction-details">
-            <h3 class="transaction-name">{{ transaction.name }}</h3>
-            <p class="transaction-date">{{ transaction.date }}</p>
-            <p class="transaction-recurrence">
-              {{ transaction.recurrence }} {{ transaction.category }}
-            </p>
-          </div>
-          <div class="transaction-actions">
-            <i class="fas fa-pencil-alt" @click="enableScheduledTransactionEdit(transaction)"></i>
-            <i class="fas fa-trash" @click="deleteScheduledTransaction(transaction.id)"></i>
-          </div>
-          <div
-            class="transaction-amount"
-            :class="{
-              negative: transaction.amount < 0,
-              positive: transaction.amount >= 0,
-            }"
+      <select
+        v-model="selectedRecurrence"
+        v-if="selectedFilter === 'recurrence'"
+      >
+        <option value="">Select a Recurrence Range</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
+    </div>
+    <div class="view-scheduled-transactions-page">
+      <div class="scheduled-transactions-list">
+        <ul>
+          <li
+            v-for="transaction in filteredTransactions"
+            :key="transaction.id"
+            class="transaction-item"
           >
-            {{ transaction.amount.toFixed(2) }}
-          </div>
-        </li>
-      </ul>
-      <div v-if="editingScheduledTransactionId" class="overlay">
+            <div class="transaction-details">
+              <h3 class="transaction-name">{{ transaction.name }}</h3>
+              <p class="transaction-date">{{ transaction.date }}</p>
+              <p class="transaction-recurrence">
+                {{ transaction.recurrence }} {{ transaction.category }}
+              </p>
+            </div>
+            <div class="transaction-actions">
+              <i
+                class="fas fa-pencil-alt"
+                @click="enableScheduledTransactionEdit(transaction)"
+              ></i>
+              <i
+                class="fas fa-trash"
+                @click="deleteScheduledTransaction(transaction.id)"
+              ></i>
+            </div>
+            <div
+              class="transaction-amount"
+              :class="{
+                negative: transaction.amount < 0,
+                positive: transaction.amount >= 0,
+              }"
+            >
+              {{ transaction.amount.toFixed(2) }}
+            </div>
+          </li>
+        </ul>
+        <div v-if="editingScheduledTransactionId" class="overlay">
           <div class="edit-transaction-form">
             <h2>Edit Scheduled Transaction</h2>
-            <input v-model="editedScheduledTransactionDetails.name" placeholder="Scheduled Transaction Name" />
-            <input v-model="editedScheduledTransactionDetails.amount" type="number" placeholder="Amount" />
+            <input
+              v-model="editedScheduledTransactionDetails.name"
+              placeholder="Scheduled Transaction Name"
+            />
+            <input
+              v-model="editedScheduledTransactionDetails.amount"
+              type="number"
+              placeholder="Amount"
+            />
             <select v-model="editedTransactionDetails.category">
               <option value="income">Income</option>
               <option value="allowance">Allowance</option>
@@ -67,21 +84,25 @@
               <option value="others">Others</option>
             </select>
             <input v-model="editedTransactionDetails.date" type="date" />
-            <button @click="updateScheduledTransaction" class="save-btn">Save Changes</button>
-            <button @click="cancelScheduledTransactionEdit" class="cancel-btn">Cancel</button>
+            <button @click="updateScheduledTransaction" class="save-btn">
+              Save Changes
+            </button>
+            <button @click="cancelScheduledTransactionEdit" class="cancel-btn">
+              Cancel
+            </button>
           </div>
         </div>
-        <br>
-      <router-link
-        to="/addScheduledTransaction"
-        tag="button"
-        class="add-sched-transaction-btn"
-      >
-        Add New Scheduled Transaction
-      </router-link>
+        <br />
+        <router-link
+          to="/addScheduledTransaction"
+          tag="button"
+          class="add-sched-transaction-btn"
+        >
+          Add New Scheduled Transaction
+        </router-link>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -117,14 +138,14 @@ export default {
     this.fetchScheduledTransactions();
   },
   created() {
-    this.auth = getAuth(firebaseApp); // Initialize Firebase Auth here
+    this.auth = getAuth(firebaseApp);
   },
   methods: {
     fetchScheduledTransactions() {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -143,15 +164,13 @@ export default {
           this.scheduledTransactions = querySnapshot.docs
             .map((doc) => ({
               id: doc.id,
-              name: doc.data().schedTransactionName, // Make sure this field exists in your Firestore documents
-              amount: doc.data().schedTransactionAmount, // Make sure this field exists in your Firestore documents
-              category: doc.data().schedTransactionsCategory, // Make sure this field exists in your Firestore documents
-              currency: doc.data().schedTransactionsCurrency, // Make sure this field exists in your Firestore documents
-              date: doc.data().schedTransactionsDate, // Make sure this field exists in your Firestore documents
-              recurrence: doc.data().schedTransactionsRecurrence, // Make sure this field exists in your Firestore documents
+              name: doc.data().schedTransactionName,
+              amount: doc.data().schedTransactionAmount,
+              category: doc.data().schedTransactionsCategory,
+              date: doc.data().schedTransactionsDate,
+              recurrence: doc.data().schedTransactionsRecurrence,
             }))
             .sort((a, b) => {
-              // Convert date strings to Date objects
               const dateA = new Date(a.date);
               const dateB = new Date(b.date);
               // Sort in descending order (latest first)
@@ -175,18 +194,24 @@ export default {
       const db = getFirestore(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
         return;
       }
       const userId = user.uid;
-      const scheduledTransactionDocRef = doc(db, 'users', userId, 'scheduledTransaction', scheduledTransactionId);
+      const scheduledTransactionDocRef = doc(
+        db,
+        "users",
+        userId,
+        "scheduledTransaction",
+        scheduledTransactionId
+      );
 
       try {
         await deleteDoc(scheduledTransactionDocRef);
-        this.fetchScheduledTransactions(); // Refresh the list
+        this.fetchScheduledTransactions();
       } catch (error) {
         console.error("Error deleting scheduled transaction:", error);
       }
@@ -195,7 +220,7 @@ export default {
       const auth = getAuth(firebaseApp);
       const user = auth.currentUser;
       if (user) {
-        console.log("User ID:", user.uid); // Make sure you can retrieve the user ID
+        console.log("User ID:", user.uid);
       }
       if (!user) {
         console.error("No user logged in!");
@@ -205,17 +230,22 @@ export default {
       if (!this.editingScheduledTransactionId) return;
 
       const db = getFirestore(firebaseApp);
-      const scheduledTransactionDocRef = doc(db, 'users', userId, 'scheduledTransaction', this.editingScheduledTransactionId);
+      const scheduledTransactionDocRef = doc(
+        db,
+        "users",
+        userId,
+        "scheduledTransaction",
+        this.editingScheduledTransactionId
+      );
 
       const updates = {
         ...this.editedScheduledTransactionDetails,
-        currency: deleteField(), // This line will remove the 'currency' field from the document
       };
       try {
         await updateDoc(scheduledTransactionDocRef, updates);
-        this.editingScheduledTransactionId = null; // Reset editing mode
-        this.fetchScheduledTransactions(); // Refresh the list
-        this.editedScheduledTransactionDetails = {}; // Clear the form
+        this.editingScheduledTransactionId = null;
+        this.fetchScheduledTransactions();
+        this.editedScheduledTransactionDetails = {};
       } catch (error) {
         console.error("Error updating scheduled transaction:", error);
       }
@@ -264,7 +294,8 @@ export default {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.edit-transaction-form input, .edit-transaction-form select {
+.edit-transaction-form input,
+.edit-transaction-form select {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -286,7 +317,6 @@ export default {
   background-color: grey;
 }
 
-
 .edit-transaction-form button.save-btn:hover {
   background-color: #45a049;
 }
@@ -307,11 +337,11 @@ export default {
 }
 
 .transaction-item {
-  background-color: #f9f9f9; /* Light grey background */
+  background-color: #f9f9f9;
   border-radius: 8px;
   padding: 15px;
-  margin-bottom: 10px; /* Space between items */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -349,22 +379,23 @@ export default {
   font-size: 20px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color: #4CAF50; /* A green shade */
+  transition: background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease-in-out;
+  background-color: #4caf50;
   color: white;
   text-decoration: none;
 }
 
 .add-sched-transaction-btn:hover {
   box-shadow: 3px 3px grey;
-  background-color:rgb(0, 119, 0); /* Darker shade on hover */
+  background-color: rgb(0, 119, 0);
 }
 
 .positive {
-  color: #5cb85c; /* Green color for positive amounts */
+  color: #5cb85c;
 }
 
 .negative {
-  color: #ff3860; /* Red color for negative amounts */
+  color: #ff3860;
 }
 </style>
