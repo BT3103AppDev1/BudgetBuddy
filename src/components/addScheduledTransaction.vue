@@ -230,14 +230,14 @@ export default {
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color: #b6b6b6; /* A green shade */
+  background-color: #7e7e7e; /* A green shade */
   color: white;
   text-decoration: none; /* Removes underline */
 
 }
 .view-sched-transaction-btn:hover {
   box-shadow: 3px 3px grey;
-  background-color:rgb(97, 97, 97); /* Darker shade on hover */
+  background-color:rgb(51, 51, 51); /* Darker shade on hover */
 }
 
 /* Add responsive styles as necessary */

@@ -72,7 +72,7 @@ export default {
   top: 0;
   bottom: 0;
   left: 0;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   overflow: hidden;
   transition: all 0.5s linear;
   /* Additional styling */

@@ -139,9 +139,14 @@ export default {
 .filter-buttons button {
   padding: 10px 20px;
   border: none;
-  background-color: #d0d0d0;
+  background-color: #8e8e8e;
   cursor: pointer;
   border-radius: 5px; /* Rounded corners for buttons */
+}
+
+.filter-buttons button:hover {
+ box-shadow: 3px 3px grey;
+ background-color:rgb(148, 148, 148); /* Darker shade on hover */
 }
 
 .filter-buttons button.active {
