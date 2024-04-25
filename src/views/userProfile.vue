@@ -31,9 +31,6 @@
 </template>
 
 <script>
-import firebase from "@/uifire.js";
-//import 'firebase/compat/auth'
-import firebaseApp from "@/firebase.js";
 import Logout from "@/components/Logout.vue";
 import sidebar from "../components/sidebar.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -64,7 +61,7 @@ export default {
   },
   methods: {
     editProfile() {
-      window.location.href = "/editProfile";
+      this.$router.push("/editProfile");
     },
   },
 };
