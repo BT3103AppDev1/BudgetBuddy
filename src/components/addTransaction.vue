@@ -113,6 +113,12 @@ export default {
       const userId = user.uid;
 
       const transactionsRef = collection(db, "users", userId, "transactions");
+      alert(
+        "Saving data for Transaction : " +
+          this.transaction.name +
+          " " +
+          this.transaction.amount
+      );
 
       try {
         const docRef = await addDoc(transactionsRef, {
