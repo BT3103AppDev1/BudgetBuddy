@@ -130,7 +130,7 @@ export default {
       alert(
         "Saving data for Scheduled Transaction : " +
           this.scheduledTransaction.schedTransactionName +
-          " " +
+          ": " +
           this.scheduledTransaction.schedTransactionAmount
       );
       try {

@@ -116,7 +116,7 @@ export default {
       alert(
         "Saving data for Transaction : " +
           this.transaction.name +
-          " " +
+          ": " +
           this.transaction.amount
       );
 
