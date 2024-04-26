@@ -2,15 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="5;url=/loginPage" />
     <title>Page Not Found</title>
+    <script>
+      setTimeout(function () {
+        window.location.href = "/";
+      }, 3000);
+    </script>
   </head>
   <body>
-    <h1>Page Not Found</h1>
-    <p>You will be redirected to the login page in 5 seconds.</p>
+    <h1>Oops! Page Not Found.</h1>
+    <p>You will be redirected to the login page shortly.</p>
     <p>
-      If you are not redirected, <a href="/loginPage">click here</a> to go to
-      the login page.
+      If you are not redirected, <a href="/">click here</a> to go to the login
+      page.
     </p>
   </body>
 </html>
