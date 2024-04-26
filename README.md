@@ -27,21 +27,3 @@ npm run dev
 ```sh
 npm run build
 ```
-
-### tesging pull request
-'''
-asdf
-asdf
-asd
-fas
-df
-asdf
-
-asdfasdf
-asdf
-asd
-fa
-sdf
-
-
-'''
