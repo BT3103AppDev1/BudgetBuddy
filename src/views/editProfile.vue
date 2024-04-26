@@ -86,6 +86,8 @@ export default {
         this.email = user.email;
         this.profilePictureUrl = user.photoURL || this.defaultProfilePicture;
         console.log("Profile Picture URL:", this.profilePictureUrl);
+      } else {
+        this.$router.push("/");
       }
     });
   },
@@ -186,7 +188,7 @@ export default {
   display: flex;
   align-items: center;
   position: fixed;
-  top: 5%; 
+  top: 5%;
   left: 300px;
   font-size: 20px;
   cursor: pointer;
@@ -198,16 +200,16 @@ export default {
 }
 .user-profile {
   max-width: 600px;
-  margin: 100px auto 0; 
+  margin: 100px auto 0;
   padding: 2rem;
   width: 80%;
-  background-color: #fff; 
-  border-radius: 10px; 
+  background-color: #fff;
+  border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .user-profile h2 {
   margin-bottom: 1.5rem;
-  color: #333; 
+  color: #333;
   text-align: center;
 }
 .user-profile img {
@@ -228,7 +230,7 @@ export default {
 .form-group input[type="password"] {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd; 
+  border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
   margin-left: -15px;
@@ -240,14 +242,15 @@ export default {
   font-size: 20px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color: #a5a5a5; 
+  transition: background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease-in-out;
+  background-color: #a5a5a5;
   color: white;
   text-decoration: none;
 }
 .btn:hover {
   box-shadow: 3px 3px grey;
-  background-color:rgb(88, 88, 88);
+  background-color: rgb(88, 88, 88);
 }
 
 .button-container {

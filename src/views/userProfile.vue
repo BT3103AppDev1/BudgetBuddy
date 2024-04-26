@@ -56,6 +56,8 @@ export default {
         this.userEmail = user.email;
         this.username = user.displayName;
         this.userPicture = user.photoURL;
+      } else {
+        this.$router.push("/");
       }
     });
   },

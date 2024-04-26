@@ -5,7 +5,7 @@
     </div>
     <div class="maincontent">
       <addScheduledTransaction></addScheduledTransaction>
-      <br>
+      <br />
       <Logout :user="user" />
     </div>
   </div>
@@ -36,6 +36,8 @@ export default {
       if (user) {
         this.user = user;
         this.userEmail = user.email;
+      } else {
+        this.$router.push("/");
       }
     });
   },

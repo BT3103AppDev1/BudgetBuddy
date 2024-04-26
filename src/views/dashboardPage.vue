@@ -41,25 +41,33 @@
 
         <div class="recent-budgets">
           <h2>Recent Budgets</h2>
-          <goalSetting :goals="recentBudgets" :limit="2" :showAddButton="false" />
+          <goalSetting
+            :goals="recentBudgets"
+            :limit="2"
+            :showAddButton="false"
+          />
         </div>
       </div>
-        <Logout :user="user" />
+      <Logout :user="user" />
     </div>
   </div>
-
-  
 </template>
 
 <script>
 import firebaseApp from "../firebase.js";
-import { getFirestore, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+} from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Logout from "@/components/Logout.vue";
 import Sidebar from "@/components/sidebar.vue";
 import PieChart from "@/components/pieChart.vue";
-import goalSetting from "@/components/goalSetting.vue"; 
-
+import goalSetting from "@/components/goalSetting.vue";
 
 export default {
   name: "DashboardPage",
@@ -93,8 +101,10 @@ export default {
         this.username = user.displayName;
         this.fetchTransactions();
         this.fetchGoals().then(() => {
-            console.log("Recent Budgets in Dashboard:", this.recentBudgets);
-          });
+          console.log("Recent Budgets in Dashboard:", this.recentBudgets);
+        });
+      } else {
+        this.$router.push("/");
       }
     });
   },
@@ -114,7 +124,11 @@ export default {
       const db = getFirestore();
       const transactionsCol = collection(db, "users", userId, "transactions");
       const transQueryAll = query(transactionsCol, orderBy("date", "desc"));
-      const transQueryRecent = query(transactionsCol, orderBy("date", "desc"), limit(5));
+      const transQueryRecent = query(
+        transactionsCol,
+        orderBy("date", "desc"),
+        limit(5)
+      );
 
       try {
         const allSnapshot = await getDocs(transQueryAll);
@@ -124,11 +138,9 @@ export default {
           name: doc.data().name,
           amount: doc.data().amount,
           category: doc.data().category,
-          date: doc.data().date
+          date: doc.data().date,
         }));
         console.log("All Transactions:", this.rawTransactions);
-
-
 
         const recentSnapshot = await getDocs(transQueryRecent);
         this.recentTransactions = recentSnapshot.docs.map((doc) => ({
@@ -136,14 +148,12 @@ export default {
           name: doc.data().name,
           amount: doc.data().amount,
           category: doc.data().category,
-          date: doc.data().date
+          date: doc.data().date,
         }));
-        
-
 
         this.applyFilters();
       } catch (error) {
-          console.error("Error fetching transactions:", error);
+        console.error("Error fetching transactions:", error);
       }
     },
 
@@ -157,11 +167,15 @@ export default {
       }
       const userId = user.uid;
       const budgetsCol = collection(db, "users", userId, "budgets");
-      const budgetsQuery = query(budgetsCol, orderBy("endDate", "asc"), limit(2));
+      const budgetsQuery = query(
+        budgetsCol,
+        orderBy("endDate", "asc"),
+        limit(2)
+      );
 
       try {
         const snapshot = await getDocs(budgetsQuery);
-        this.recentBudgets = snapshot.docs.map(doc => ({
+        this.recentBudgets = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
@@ -171,21 +185,20 @@ export default {
       }
     },
 
-  
     applyFilters() {
       let filtered = this.rawTransactions;
 
       if (this.startDate && this.endDate) {
         const start = new Date(this.startDate).getTime();
         const end = new Date(this.endDate).getTime();
-        filtered = filtered.filter(tx => {
+        filtered = filtered.filter((tx) => {
           const txDate = new Date(tx.date).getTime();
           return txDate >= start && txDate <= end;
         });
       }
       this.filteredTransactions = filtered;
     },
-    
+
     beforeRouteLeave(to, from, next) {
       if (this.loadingChart) {
         this.destroyChart();
@@ -195,20 +208,20 @@ export default {
   },
 
   watch: {
-    '$route' (to, from) {
-      if (to.name === 'dashboardPage' && from.name !== to.name) {
+    $route(to, from) {
+      if (to.name === "dashboardPage" && from.name !== to.name) {
         this.fetchTransactions();
         this.createChart();
         this.fetchGoals();
       }
-    }
+    },
   },
 
   computed: {
-  displayedGoals() {
-    return this.recentGoals.slice(0, 2);
-  }
-},
+    displayedGoals() {
+      return this.recentGoals.slice(0, 2);
+    },
+  },
 };
 </script>
 
@@ -227,7 +240,8 @@ export default {
   flex-grow: 1;
 }
 
-.maincontent input[type="date"], .maincontent select {
+.maincontent input[type="date"],
+.maincontent select {
   padding: 5px;
   margin-right: 10px;
   border: 1px solid #ccc;
@@ -235,7 +249,7 @@ export default {
 
 .maincontent button {
   padding: 5px 10px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -246,23 +260,24 @@ button {
   font-size: 15px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease-in-out;
-  background-color: #4CAF50;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease-in-out;
+  background-color: #4caf50;
   color: white;
   text-decoration: none;
 }
 
 button:hover {
   box-shadow: 3px 3px grey;
-  background-color:rgb(0, 119, 0);
+  background-color: rgb(0, 119, 0);
 }
 
 .transaction-item {
   background-color: #f0f0f0;
-  border-radius: 10px; 
+  border-radius: 10px;
   padding: 15px;
-  margin-bottom: 10px; 
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -271,18 +286,19 @@ button:hover {
 .dashboard-columns {
   display: flex;
   justify-content: space-between;
-  width: 100%; 
+  width: 100%;
 }
 
-.recent-transactions, .recent-budgets {
+.recent-transactions,
+.recent-budgets {
   flex: 1;
   margin: 0 10px;
-  box-sizing: border-box; 
-  min-width: 0; 
+  box-sizing: border-box;
+  min-width: 0;
 }
 
-.transaction-item, .budget-item {
-  box-sizing: border-box; 
+.transaction-item,
+.budget-item {
+  box-sizing: border-box;
 }
-
 </style>

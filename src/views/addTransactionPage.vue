@@ -35,6 +35,8 @@ export default {
       if (user) {
         this.user = user;
         this.userEmail = user.email;
+      } else {
+        this.$router.push("/");
       }
     });
   },
@@ -55,5 +57,4 @@ export default {
   margin: 0 auto;
   flex-grow: 1;
 }
-
 </style>

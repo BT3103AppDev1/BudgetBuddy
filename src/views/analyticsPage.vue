@@ -82,6 +82,8 @@ export default {
       if (user) {
         this.user = user;
         this.userEmail = user.email;
+      } else {
+        this.$router.push("/");
       }
     });
   },
