@@ -76,14 +76,18 @@
               type="number"
               placeholder="Amount"
             />
-            <select v-model="editedTransactionDetails.category">
+            <select v-model="editedScheduledTransactionDetails.category">
               <option value="income">Income</option>
               <option value="allowance">Allowance</option>
               <option value="expenses">Expenses</option>
               <option value="subscriptions">Subscriptions</option>
               <option value="others">Others</option>
             </select>
-            <input v-model="editedTransactionDetails.date" type="date" />
+            <input v-model="editedScheduledTransactionDetails.date" type="date" />
+            <select v-model="editedScheduledTransactionDetails.recurrence">
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
             <button @click="updateScheduledTransaction" class="save-btn">
               Save Changes
             </button>
@@ -239,7 +243,11 @@ export default {
       );
 
       const updates = {
-        ...this.editedScheduledTransactionDetails,
+        schedTransactionName: this.editedScheduledTransactionDetails.name,
+        schedTransactionAmount: this.editedScheduledTransactionDetails.amount,
+        schedTransactionsCategory: this.editedScheduledTransactionDetails.category,
+        schedTransactionsDate: this.editedScheduledTransactionDetails.date,
+        schedTransactionsRecurrence: this.editedScheduledTransactionDetails.recurrence
       };
       try {
         await updateDoc(scheduledTransactionDocRef, updates);
